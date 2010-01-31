@@ -1,0 +1,38 @@
+%If you have a single appendix, you need to change {\chapter*{APPENDIX: THIS IS THE FIRST APPENDIX}
+%to {\chapter*{APPENDIX: YOUR APPENDIX TITLE HERE} if you have two or more appendices
+%you need to change {\chapter{THIS IS THE FIRST APPENDIX}} to
+%{\chapter{YOUR APPENDIX TITLE HERE}}
+%
+%If you make these changes correctly Latex will complain bitterly about the additions to the TOC
+%but will make them correctly in a manner acceptable to the Editorial Office.
+
+\ifthenelse{\value{noa} = 1}
+%...................then
+{\chapter*{APPENDIX: EVALUATION TOOLS}
+\label{evaluation_tools}
+\addcontentsline{toc}{chapter}{APPENDIX: EVALUATION TOOLS}
+\chaptermark{Appendix}
+\markboth{Appendix}{Appendix}
+\setcounter{chapter}{1}}
+%...................else
+{\chapter{EVALUATION TOOLS}
+\label{evaluation_tools}}
+%...................
+
+Netperf~\cite{netperf} is used to estimate the latency and bandwidth of the
+different VN models. The latency is measured by deploying Netperf in the
+TCP\_RR mode, which measures the number of 1-byte request-receive transactions
+that can be completed in a second. The bandwidh is estimated by running Netperf
+in the TCP\_STREAM mode, which is a bulk transfer mode. It should be noted that
+in situations where the link bandwidths were asymetric, Netperf is deployed in
+both directions.  Since both latency and bandwidth are dependent on the CPU
+comparison, evaluations that include CPU utilization tasks require creating
+a baseline first where only Netperf is the only active workload.
+
+SPECjbb~\cite{specjbb} simulates a three-tier web application with all the
+clients, the middle tier, and the database running on a single system in a
+single address space (inside a JVM). On completion, the benchmark provides the
+metric in terms of business of operations per second (bops). The bops score of
+the system under test depends on both the CPU and the memory in the system, as
+the entire database for the benchmark is held in memory. This benchmark
+generates negligible disk activity and no network activity. 

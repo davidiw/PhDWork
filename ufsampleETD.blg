@@ -1,52 +1,156 @@
 This is BibTeX, Version 0.99c (TeX Live 2009/Arch Linux)
 The top-level auxiliary file: ufsampleETD.aux
-The style file: mla-good.bst
-A level-1 auxiliary file: acknowledgements.aux
+The style file: abbrv.bst
 A level-1 auxiliary file: TOC.aux
 A level-1 auxiliary file: abstract.aux
+A level-1 auxiliary file: chapter1.aux
+A level-1 auxiliary file: chapter2.aux
+A level-1 auxiliary file: chapter3.aux
+A level-1 auxiliary file: chapter4.aux
+A level-1 auxiliary file: chapter5.aux
+A level-1 auxiliary file: chapter6.aux
+A level-1 auxiliary file: chapter7.aux
 A level-1 auxiliary file: appendix.aux
 A level-1 auxiliary file: bio.aux
-I found no \citation commands---while reading file ufsampleETD.aux
 Database file #1: ufsampleETD.bib
-You've used 0 entries,
-            2992 wiz_defined-function locations,
-            617 strings with 4788 characters,
-and the built_in function-call counts, 29 in all, are:
-= -- 0
-> -- 0
-< -- 0
-+ -- 0
-- -- 0
-* -- 2
-:= -- 8
-add.period$ -- 0
-call.type$ -- 0
-change.case$ -- 0
+Warning--entry type for "kvm" isn't style-file defined
+--line 599 of file ufsampleETD.bib
+Warning--entry type for "globus_toolkit" isn't style-file defined
+--line 775 of file ufsampleETD.bib
+Warning--entry type for "wippien" isn't style-file defined
+--line 811 of file ufsampleETD.bib
+Warning--entry type for "openvpn" isn't style-file defined
+--line 827 of file ufsampleETD.bib
+Warning--entry type for "tap" isn't style-file defined
+--line 895 of file ufsampleETD.bib
+Warning--entry type for "tc" isn't style-file defined
+--line 909 of file ufsampleETD.bib
+Warning--entry type for "hamachi" isn't style-file defined
+--line 1461 of file ufsampleETD.bib
+Warning--entry type for "dtls" isn't style-file defined
+--line 1493 of file ufsampleETD.bib
+Warning--entry type for "tls" isn't style-file defined
+--line 1507 of file ufsampleETD.bib
+Warning--entry type for "skype" isn't style-file defined
+--line 1675 of file ufsampleETD.bib
+Warning--entry type for "skype_auth" isn't style-file defined
+--line 1687 of file ufsampleETD.bib
+Warning--entry type for "turn" isn't style-file defined
+--line 1719 of file ufsampleETD.bib
+Warning--entry type for "RFC0925" isn't style-file defined
+--line 1959 of file ufsampleETD.bib
+Warning--entry type for "RFC1027" isn't style-file defined
+--line 1975 of file ufsampleETD.bib
+Warning--entry type for "p2pvpn" isn't style-file defined
+--line 2017 of file ufsampleETD.bib
+Warning--entry type for "tinc" isn't style-file defined
+--line 2031 of file ufsampleETD.bib
+Warning--entry type for "cloudvpn" isn't style-file defined
+--line 2047 of file ufsampleETD.bib
+Warning--entry type for "gbridge" isn't style-file defined
+--line 2245 of file ufsampleETD.bib
+Warning--entry type for "robotca" isn't style-file defined
+--line 2401 of file ufsampleETD.bib
+Warning--entry type for "stun" isn't style-file defined
+--line 2415 of file ufsampleETD.bib
+Warning--entry type for "bittorrent_security" isn't style-file defined
+--line 2427 of file ufsampleETD.bib
+Warning--entry type for "logmein" isn't style-file defined
+--line 2441 of file ufsampleETD.bib
+Warning--entry type for "hamachi_security" isn't style-file defined
+--line 2455 of file ufsampleETD.bib
+Warning--entry type for "irc" isn't style-file defined
+--line 2577 of file ufsampleETD.bib
+Warning--entry type for "irc_arch" isn't style-file defined
+--line 2591 of file ufsampleETD.bib
+Warning--entry type for "openssl.net" isn't style-file defined
+--line 2605 of file ufsampleETD.bib
+I was expecting a `,' or a `}'---line 2877 of file ufsampleETD.bib
+ :   
+ :   month = {March},
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Repeated entry---line 2885 of file ufsampleETD.bib
+ : @inproceedings{icdcs10
+ :                       ,
+I'm skipping whatever remains of this entry
+Warning--entry type for "facebook" isn't style-file defined
+--line 2929 of file ufsampleETD.bib
+Warning--entry type for "myspace" isn't style-file defined
+--line 2943 of file ufsampleETD.bib
+Repeated entry---line 2993 of file ufsampleETD.bib
+ : @manual{p2p_nats_rfc
+ :                     ,
+I'm skipping whatever remains of this entry
+Warning--I didn't find a database entry for "boinc"
+Warning--I didn't find a database entry for "grid_appliance"
+Warning--I didn't find a database entry for "vpns"
+Warning--I didn't find a database entry for "gpu"
+Warning--to sort, need author or key in facebook
+Warning--to sort, need author or key in myspace
+Warning--to sort, need author, organization, or key in p2psip
+Warning--to sort, need author, organization, or key in nat_stun
+Warning--to sort, need author or key in p2pns
+Warning--to sort, need author or key in bittorrent_security
+Warning--to sort, need author or key in robotca
+Warning--to sort, need author, organization, or key in mpls
+Warning--empty title in p2psip
+Warning--empty title in nat_stun
+Warning--empty author in p2pns
+Warning--empty title in p2pns
+Warning--empty booktitle in p2pns
+Warning--empty year in p2pns
+Warning--empty title in mpls
+Warning--empty year in kosha
+Warning--empty year in unstructured_v_structured
+Warning--empty year in matryoshka
+Warning--empty booktitle in cops08
+Warning--empty year in cops08
+Warning--empty booktitle in ip_vpns
+Warning--empty year in king_data
+Warning--empty year in can_multicast
+Warning--empty year in pvc
+Warning--empty year in past
+Warning--empty institution in vis-a-vis
+You've used 92 entries,
+            2118 wiz_defined-function locations,
+            894 strings with 16817 characters,
+and the built_in function-call counts, 27010 in all, are:
+= -- 2382
+> -- 1489
+< -- 10
++ -- 602
+- -- 502
+* -- 1651
+:= -- 4405
+add.period$ -- 257
+call.type$ -- 92
+change.case$ -- 519
 chr.to.int$ -- 0
-cite$ -- 0
-duplicate$ -- 0
-empty$ -- 1
-format.name$ -- 0
-if$ -- 1
-int.to.chr$ -- 1
-int.to.str$ -- 1
-missing$ -- 0
-newline$ -- 7
-num.names$ -- 0
-pop$ -- 0
+cite$ -- 118
+duplicate$ -- 1058
+empty$ -- 2345
+format.name$ -- 502
+if$ -- 5718
+int.to.chr$ -- 0
+int.to.str$ -- 92
+missing$ -- 49
+newline$ -- 437
+num.names$ -- 168
+pop$ -- 874
 preamble$ -- 1
-purify$ -- 0
+purify$ -- 435
 quote$ -- 0
-skip$ -- 1
+skip$ -- 759
 stack$ -- 0
-substring$ -- 0
-swap$ -- 0
-text.length$ -- 0
+substring$ -- 764
+swap$ -- 208
+text.length$ -- 10
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 0
-warning$ -- 0
-while$ -- 0
-width$ -- 0
-write$ -- 6
-(There was 1 error message)
+type$ -- 368
+warning$ -- 26
+while$ -- 200
+width$ -- 94
+write$ -- 875
+(There were 3 error messages)

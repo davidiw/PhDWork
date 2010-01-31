@@ -8,46 +8,40 @@
 
 \ifthenelse{\value{noa} = 1}
 %...................then
-{\chapter*{APPENDIX: THIS IS THE FIRST APPENDIX}
-\addcontentsline{toc}{chapter}{APPENDIX: THIS IS THE FIRST APPENDIX}
+{\chapter*{APPENDIX: STRUCTURED OVERLAY BROADCAST}
+\label{broadcast}
+\addcontentsline{toc}{chapter}{APPENDIX: STRUCTURED OVERLAY BROADCAST}
 \chaptermark{Appendix}
 \markboth{Appendix}{Appendix}
 \setcounter{chapter}{1}}
 %...................else
-{\chapter{THIS IS THE FIRST APPENDIX}}
+{\chapter{STRUCTURED OVERLAY BROADCAST}
+\label{broadcast}}
 %...................
 
 
+Brunet has an efficient broadcast model called bounded-broadcast because it is
+capable of broadcasting to a subset of nodes, though it is also capable of
+broadcasting to the entire overlay.  A bounded broadcast uses the following
+recursive algorithm:  Begin with node $x$ triggering a broadcast message over
+the region $[x, y]$.  $x$ has $F$ connections to nodes in the range $[x, y]$.
+Denoting the $i^{th}$ such neighbor as $b_i$, the node $x$ sends a bounded
+broadcast over a sub-range, $[b_i, b_{i+1})$, to $b_i$, except the final
+neighbor.  Differently stated, $b_i$ is in charge of bounded-broadcasting 
+in the sub-range $[b_i, b_{i+1})$. If there is no connection to a node in the
+sub-range, the recursion has ended.  The final neighbor, ($b_F$), is responsible
+for continuing the bounded broadcast from $[b_F, y]$.  When a node receives a
+message to a range that contains its own address the message is delivered to
+that node and then routed to others in that range.  Figure \ref{fig:tree} shows
+how this bounded broadcast forms a local tree recursively.   The time required
+for a bounded broadcast is $O(\log^2 N)$ as shown in~\cite{small_world}.  To
+perform a broadcast on the entire overlay, a peer performs the bounded-broadcast
+starting from its node ID with the end address being the node ID immediately
+preceding its own in the address space.  
 
-Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Maecenas
-eget magna. Aenean et lorem. Ut dignissim neque at nisi. In hac
-habitasse platea dictumst. In porta ornare eros. Nunc eu ante. In
-non est vehicula tellus cursus suscipit. Proin sed libero. Sed risus
-enim, eleifend in, pellentesque ac, nonummy quis, nulla. Phasellus
-imperdiet libero nec massa. Ut sapien libero, adipiscing eu,
-volutpat porttitor, ultricies eget, nisi. Sed odio. Suspendisse
-potenti. Duis dolor augue, viverra id, porta in, dignissim id, nisl.
-Vivamus blandit cursus eros. Maecenas sit amet urna sit amet orci
-nonummy pharetra.
-
-Praesent cursus nibh et mauris. In aliquam felis sit amet ligula.
-Nulla faucibus nisl eget nisl. Aliquam tincidunt. Mauris eget elit
-sed massa luctus posuere. Pellentesque suscipit. In odio urna,
-semper ut, convallis ut, porta et, nibh. Nulla sodales metus nec
-velit posuere gravida. Cras tristique. Etiam urna risus, accumsan
-ut, placerat sed, iaculis id, est.
-
-Nullam mi. Pellentesque habitant morbi tristique senectus et netus
-et malesuada fames ac turpis egestas. Duis vitae metus in massa
-hendrerit rhoncus. Fusce tortor justo, laoreet eu, facilisis at,
-gravida et, felis. Donec imperdiet mollis erat. Integer tempus nulla
-ac lorem. Fusce porttitor. Aenean quis arcu. Morbi consectetuer, leo
-eu mollis elementum, urna massa malesuada risus, euismod tempor
-lorem elit ut mauris. Cras elit orci, facilisis ac, mattis iaculis,
-cursus ac, augue. Donec eget nisl. Pellentesque fermentum sodales
-nibh. Vivamus non risus. Donec est libero, tincidunt sit amet,
-pretium vitae, blandit sed, tellus. Nunc diam risus, interdum sed,
-laoreet quis, varius ac, turpis. In et purus eget nibh vehicula
-rhoncus. Aenean et neque. Praesent nisl nisi, tempus quis, nonummy
-ac, auctor a, neque. Suspendisse et metus. Suspendisse non metus eu
-mauris auctor sagittis.
+\begin{figure}[ht]
+\centering
+\includegraphics[width=4in]{tree.eps}
+\caption{Bounded Broadcast in range $[x, y]$}
+\label{fig:tree}
+\end{figure}
