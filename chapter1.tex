@@ -20,7 +20,7 @@ emote machine despite networking constraints so long as the user has an
 Internet connection.  When traveling abroad, a user may wish that their
 Internet traffic be kept private from the local network, a VPN can be
 used to route all Internet packets through the users home network, ensuring
-the user's privacy.  Older computer and video games have multiplayer networking
+the user's privacy.  Many computer and video games have multiplayer networking
 components that require direct connectivity and even modern games with
 centralized gaming components stop being supported, players of these games
 can continue playing with their remote friends through VPNs.  Small and medium
@@ -30,7 +30,7 @@ independent organizations that each have their few of their own or no resources
 can combine together their resources through a VPN to create a powerful
 computing grid.
 
-There are various VPN architecture that attempt to deal with the challenges
+There are various VPN architectures that attempt to deal with the challenges
 presented in these use cases.  In some cases one VPN approach may work,
 where another is not applicable, and in some no current VPN approach is
 applicable.  In general VPNs face the following challenges:  
@@ -51,8 +51,8 @@ is private.  VPNs that establish their links through a centralized system are
 susceptible to man-in-the-middle attacks, though setting up decentralized
 systems can be significantly more complicated.
 \item \textbf{Permissions}:  Users must be administrators or given the ability
-to run a VPN by an administrator.  Strict environments such as computing labs,
-novice users, or where existing VPNs run may prevent the user from being able
+to run a VPN by an administrator.  Strict environments such as computing labs
+or in environments with existing VPNs may prevent the user from being able
 to use their own VPN.
 \end{itemize}
 
@@ -96,8 +96,8 @@ overlay can out weigh the advantages in collaborative environments.  I extend
 my work from approaches that use P2P to implement scalable virtual networks,
 IPOP~\cite{ipop} and I3~\cite{i3}, finishing the work of my predecessors by
 designing and implementing a system that provides privacy or user-friendly
-configurability.  At the heart of my contribution are methods enabling secure
-P2P systems and self-configuring collaborative P2P systems and VPNs.
+configurability.  At the heart of my contribution are methods enabling secure,
+user-friendly VPNs through the use of P2P systems.
 
 \section{Virtual Private Network Basics}
 VPNs consist of two components: clients that communicate with each other and
@@ -107,7 +107,7 @@ environment provided by a VPN client is the same regardless of how the server
 or overlay is implemented.  The clients interface with the server can also
 be abstracted such that clients are quite generic.
 
-In Figure~\ref{fig:vpn}, we abstract the common features of all VPNs clients, a
+igure~\ref{fig:vpn} abstracts the common features of all VPNs clients, a
 service that communicates with the VPN system and a virtual network (VN) device
 for host integration.  During initialization, the VPN services authenticates
 with the system~\footnote{A system in this context refers any portion of the
@@ -127,8 +127,8 @@ approaches come in terms of security, usability, and management.  While the use
 of signed certificates provides better security than shared secrets,
 certificates require more configuration and maintenance.  In a system comprising
 of non-experts, the usual setup uses a shared secret and individual user
-accounts.  The secret is packaged with the VPN application, which is distributed
-through secure channels such as authenticated HTTPS.
+accounts.  Secrets can be packaged with the VPN application, so long as it is
+distributed through secure channels such as authenticated HTTPS.
 
 A VN device allows applications to communicate transparently over the VPN.  The
 VN device provides mechanisms for injecting incoming packets into and retrieving
@@ -263,18 +263,19 @@ information using secure messages.  Only peers with appropriate security
 credentials are able to join the private overlay.
 \item \textbf{Overlay Communication Models}: In my experience, when using the
 overlay based connections, performance suffers due to being processed by the
-overlay's state machine.  To address this issue, I will present three different
-models for using overlays to establish direct communication:  communicating
-through the overlays state machine, bypassing the overlays state machine but
-reusing its connection management, and creating links unused by the overlay.
+overlay's state machine.  I will work towards addressing this issue by
+investigating different models for using overlays to establish direct
+communication:  communicating through the overlays state machine, bypassing the
+overlays state machine but reusing its connection management, and creating
+links unused by the overlay.
 \item \textbf{Overlay-Aware TCP}: Overlays consist of peers connecting and
 disconnecting at random and in order to provide light-weight approaches that
 provide reasonable NAT and firewall traversal are connected using UDP.  As such
 large streams of data cannot be sent reliably through the overlay.  This is not
 an issue when a VPN has administrator permission enabling the reuse of the OS'
-network stack including TCP, though those that do not need an alternative.  To
-address this issue, I will propose a TCP stack with focus on efficient and
-reliable streaming using overlays.
+network stack including TCP.  For situations that lack this ability, I will
+design a TCP stack with focus on efficient and reliable streaming using
+overlays.
 \item \textbf{Self-Configuring VPN Architectures}: Many existing VPN approaches
 require the users to setup their environment and do not provide a plug and play
 system.  In addition, different environments call for different types of VPNs,
