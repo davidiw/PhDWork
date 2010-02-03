@@ -12,11 +12,11 @@ follows some form of these abstracted steps:
 \begin{enumerate}
 \item generate or obtain a unique identification number (node ID) on the
 order of 128-bits to 256-bits,
-\item connect to random addresses on a pre-shared well-known endpoints list,
-\item becomes connected to at least one peer in the list (leaf connection),
+\item connect to a random address from a pre-shared well-known endpoints list,
+\item become connected to at least one peer in the list (leaf connection),
 \item find the peers closest in the address space to the selected node ID,
 \item connect to nodes whose IDs are immediately smaller and / or larger than
-its (neighbor connections),
+itself (neighbor connections),
 \item and finally connect to other nodes in the overlay that are not local in
 the address space (shortcut connections).
 \end{enumerate}
@@ -24,40 +24,39 @@ the address space (shortcut connections).
 Each node must have a unique node ID, address collisions can prevent nodes from
 participating in the overlay and can potentially fragment overlays preventing
 them from working properly.  Having node IDs well distributed assists in
-providing better scalability in structured overlays routing enabling fewer
-shortcut connections due to the uniformly distributed nature of the system.
+providing better scalability in ring-based structured overlays routing enabling
+fewer shortcut connections due to the uniformly distributed nature of the system.
 Each node can generate their own address if they use a cryptographically strong
 random number generator.  Another approach for distributing node IDs relies
-using a trusted third party to generate node IDs and cryptographically sign
+using a trusted third-party to generate node IDs and cryptographically sign
 them~\cite{secure_routing}.
 
-Depending on the protocol, a node must be connected to closest neighbors in the
-node ID address space; optimizations for fault tolerance suggest that for ring
-topologies the amount should be between 2 to $\log(N)$ on both sides.  In the
-case of overlay disconnectivity especially when related to churn, when a peer
-does not know the address of its immediate predecessor or successor and a
-message is routed through it destined for them, depending on the message type,
-it may either be locally consumed or thrown away, never arriving at its
-intended destination.  Having multiple neighbors assists in stabilizing the
-overlay structure when experiencing churn, particularly when peers leave 
-suddenly without warning.
+A node must be connected to closest neighbors in the node ID address space;
+optimizations for fault tolerance suggest that for ring topologies the amount
+should be between 2 to $\log(N)$ on both sides.  In the case of overlay
+disconnectivity especially when related to churn, when a peer does not know the
+address of its immediate predecessor or successor and a message is routed
+through it destined for them, depending on the message type, it may either be
+locally consumed or thrown away, never arriving at its intended destination.
+Having multiple neighbors assists in stabilizing the overlay structure when
+experiencing churn, particularly when peers leave suddenly without warning.
 
-Overlay shortcuts enable efficient routing in ring-structured P2P systems.  The
-different shortcut selection methods include: maintaining large tables without
-using connections and only verifying usability when routing
+Overlay shortcuts enable efficient routing in ring-based structured overlays.
+The different shortcut selection methods include: maintaining large tables
+without using connections and only verifying usability when routing
 messages~\cite{pastry, kademlia}, maintaining a connection with a peer every
 set distance in the P2P address space~\cite{chord}, or using locations drawn
 from a harmonic distribution in the node address space~\cite{symphony}.
 
-Most structured P2P overlays support decentralized storage/look-up of information by
-mapping keys to specific node IDs in an overlay.  At a minimum, the data is stored
-at the node ID either smaller or larger to the data's node ID and for fault
-tolerance the data can be stored at other nodes.  This sort of mapping
-and data storage is called a distributed hash table (DHT).  DHTs provide the
-building blocks to form more complex distributed data stores as presented in
-Past~\cite{past} and Kosha~\cite{kosha}.
+Most structured P2P overlays support decentralized storage/look-up of
+information by mapping keys to specific node IDs in an overlay.  At a
+minimum, the data is stored at the node ID either smaller or larger to the
+data's node ID and for fault tolerance the data can be stored at other nodes.
+This sort of mapping and data storage is called a distributed hash table (DHT).
+DHTs provide the building blocks to form more complex distributed data stores
+as presented in Past~\cite{past} and Kosha~\cite{kosha}.
 
-There are two mechanisms for message routing in a P2P overlay: iterative or
+There are two mechanisms for communication  in a P2P overlay: iterative or
 recursive.  In iterative routing, the sender of a packet will directly contact
 each successive member in a path querying it for the next until arriving at the
 destination node, sending the packet directly to the destination.  In recursive
@@ -70,17 +69,17 @@ quickly, whereas recursive routing provides stable connections due to a single
 NAT traversal during the connection phase.
 
 \section{Network Address Translation Hampering P2P Systems}
-As of 2009, the majority of the Internet is connected via Internet Protocol (IP)
+As of 2010, the majority of the Internet is connected via Internet Protocol (IP)
 version 4.  A limitation in this protocol is that there are only $2^{32}$
-addresses total though or approximately 4 billion addresses.  With the
-Earth already having a population of over 8 billion and each individual having
-multiple devices that have Internet connectivity the IPv4 limitation is becoming
-more and more apparent.  IPv6 provides an alternative, supporting $2^{128}$
-addresses, it is not pervasive with only X\% of the Internet reachable via IPv6. 
-In the meantime during the transition from IPv4 to IPv6, network address
-translation (NAT) enables many machines and devices to share a single IP
-address.  The cost of this operation means that such machines lose direct
-addressability on the Internet.
+addresses (approximately 4 billion) available.  With the Earth's population of
+over 8 billion and each individual potentially having multiple devices that
+have Internet connectivity, the IPv4 limitation is becoming more and more
+apparent.  To address this issue there have been two approaches:  1) the use of
+network address translation (NAT) to enable many machines and devices to share
+a single IP address but preventing bidirectional connection initiation, and 2)
+IPv6 which supports $2^{128}$ addresses.  IPv6 does not necessarily imply
+direct connectivity as there are no guarantees of NAT disappearing and outbound
+only firewalls allowing incoming connections.
 
 When a machine, \textit{A}, behind a typical NAT, \textit{B}, sends out a
 packet to an Internet host, \textit{C}, the NAT box translates the packet so
@@ -108,16 +107,16 @@ NAT will pass packets,
 a machine receiving a message from an internal host can send a message back.
 \end{itemize}
 
-Peers on cone NATs can easily be traversed so long as a third party assists in
-determining the port allocated by the NAT and they exchange NAT penetration
-messages.  Peers behind symmetric NATs cannot easily communicate with each
-other, since there is no relation between remote hosts and ports and local
-ports.  Further complicating the matter is that there are various types of
-symmetric NATs, having behaviors similar to full, restricted, and port
-restricted cone NATs.  \cite{nat_stun} describes methods to traverse these
-NATs so long as there is a predictable pattern to port selection.  In general,
-these approaches use UDP because of the lack of additional protocol states,
-that require replay and ignoring reject methods that occur with the TCP
+Peers on cone NATs can easily be traversed so long as a third-party assists in
+determining the port allocated by the NAT and as a medium for the peers to
+exchange this information.  Peers behind symmetric NATs cannot easily
+communicate with each other, since there is no relation between remote hosts
+and ports and local ports.  Further complicating the matter is that there are
+various types of symmetric NATs, having behaviors similar to full, restricted,
+and port restricted cone NATs.  \cite{nat_stun} describes methods to traverse
+these NATs so long as there is a predictable pattern to port selection.  In
+general, these approaches use UDP because of the lack of additional protocol
+states, that require replay and ignoring reject methods that occur with the TCP
 handshake,  though there is reasonable amount of work describing TCP NAT
 traversal such as~\cite{tcp_nat}.  TCP NAT traversal is complicated by stateful
 firewalls, or those that watch connections and connection attempts preventing
@@ -141,52 +140,59 @@ all known IP addresses and ports, which it knows directly and from external
 overlay nodes.  This enables the traversal of all forms of cone NATs, but
 symmetric NATs require iterative rounds of traversal attempts and cannot be
 traversed.  If two peers cannot connect, they exchange list of peers, if an
-overlap exists, they will forward packets through it to each
-other~\cite{hpdc08_1}, this approach was used to ensure the structure of
-the overlay and cannot be used to form arbitrary relay connections.  To address
-this as my interest lie in forming efficient VPNs, I have designed a technique
-that causes peers to proactively creates overlap and when multiple overlap
-exist to route through the most attractive candidate, as represeted in
-Figure~\ref{fig:relay}.
+overlap exists, which is highly likely for peers adjacent on the overlay, they
+will forward packets through it to each other other~\cite{hpdc08_1}.  This
+approaches emphasis was on having a complete ring not for forming abitrary
+two-hop connections for high performance purposes.  This can be addressed by
+having peers connect to each other's neighbor set proactively creating overlap,
+as represented in Figure~\ref{fig:relay}.
 
-To assist in the selection of overlap connection, peers exchange arbitrary
-information along with the neighbor lists.  So far I have implemented systems
-that share information about node stability (measured by the age of a
-connection) and proximity (based upon ping latency to neighbors).  When overlap
-changes, peers can select to use only a subset of the overlap, thus only the
-fastest or most stable peers are used with extras in reserve.
+In addition to exchanging overlap sets, peers also exchange some state of their
+connections with the neighbors.  For example, the data shared could be
+regarding node stability as measured by the age of a connection and proximity
+as measured by ping latency to the neighbor.  When creating overlap or overlap
+changes, peers review these metrics to decide which subset of the overlap to
+use as a proxy leaving the remaining peers as reserves.
 
 \subsection{Usefulness of Relays}
-To verify the usefulness of two-hop over overlay routing, I have evaluted
-the latency approach using an event-driven simulator that reuses the code
-base of IPOP to faithfully implement its functionality using event-driven
-simulated times to emulate WAN latencies.  For this experiment, I chose
-latencies based upon the MIT King Data Set~\cite{king_data}, which consists of
-all-to-all latencies between 1,740 well-distributed Internet hosts.  We
-then evaluated overlays using various network sizes up to 1,740.  After
-starting the overlay and the system reaches steady state, that is the overlay
-is completely formed and no new connections are created, I measured
-the average all-to-all latency for all messages that would have taken two
-overlay hops or more, the average of the low latency relay model, and the
-average of single hop communication.  In the low latency relay model, each
-destination node form a connection to the source node's physically closest peer
-as determined via latency (in a live system by application level ping).  Then
-this pathway is used as a two-hop relay between source and node.  We only look
-at two overlay hops and more, as a single hop would only benefit under
-triangular inequalities that are not a consideration in my work.  
+This experiment verifies the usefulness of two-hop over overlay routing using
+an event-driven simulator that reuses the code base of our structured P2P VPN to
+faithfully implement its functionality using event-driven simulated times to
+emulate WAN latencies.  Pair-wise latency in this experiment is set using
+the MIT King Data Set~\cite{king_data}, which consists of all-to-all latencies
+among 1,740 distributed Internet hosts.  After starting the overlay and after
+it has reached steady state, the simulator sends packets amongst all peers to
+derive the average all-to-all latency and hop count for messaging in the
+overlay.  In the low-latency relay model, each destination node forms a
+connection to the source node's physically closest peer as determined via
+latency (in a live system by application level ping).  Then this pathway is
+used as a two-hop relay between source and node.  Only peers with two hops or
+more are analyzed, as a single hop would only benefit under triangular
+inequalities, which are not a consideration in this work.
 
-The results are presented in Figure~\ref{fig:simulated_relays}.  I performed
-the tests for varying network sizes.  Tests began with network sizes of 25, 
-sizes around 20 and under tend to be fully connected due to the connectivity
-requirements of the system.  It is not until the network size expands past 100
-and towards 200 nodes that relays become significantly beneficial.  At
-100 nodes, there is approximately a 54\% performance increase, whereas at
-200 there is an 87\% increase and it appears to grow proportionately to the size
-of the pool.  The key take away is that latency-bound applications
-using a reasonably sized overlay would significantly benefit from
-the use of two-hop relays.
+Results are presented in Figure~\ref{fig:simulated_relays}. The network sizes
+considered begin at 25 nodes because small networks of sizes 20 and under tend
+to be fully connected in the underlying structured overlay.  It is not until
+the network size expands past 100 and towards 200 nodes that relays become
+significantly beneficial.  At 100 nodes, there is approximately a 54\%
+performance increase, whereas at 200 there is an 87\% increase and it appears
+to grow proportionately to the size of the pool, demonstrating the performance
+advantage of two-hop autonomous relays.
+
+In addition, the autonomous relays functionality were verified in a reference
+implementation of a structured P2P VPN using a real system.  The environment
+consists of PlanetLab as the public overlay and our Archer environment as the
+VPN environment.  PlanetLab~\cite{planetlab} provides a set of over 500
+distributed computing nodes all with public IP addresses.  Archer provides grid
+computing to computer architecture researchers and consists of over 500 nodes
+located at various academic sites.  To ensure that peers under study formed
+two-hop connections, we instituted a firewall preventing direct communication
+between the two.  In tests, we found that the overlay was always able to
+self-configure a relay; the bandwidth and latency averages and deviations were
+2245 Kbit/s $\pm$ 1080 and 58.1 ms $\pm$ 35.5, respectively.
 
 \section{Using Structured Overlays for Direct Communication}
+\label{direct_communication}
 Applications like VPNs, games, media, and communication can benefit from using
 an overlay for discovery and limited communication, though as communication
 increases in frequency direct communication may be perferred.  In previous
@@ -194,9 +200,9 @@ work~\cite{wow}, the authors describe a method for transparently detecting this
 behavior and creating direct links as a result.  In comparing a VPN built on
 top of an overlay with a point-to-point direct approach, the VPN using the
 overlay has significant overheads due to each IP packet traversing the overlays
-state machine prior to being sent to the VPN.  Thus for high bandwidth
-applications, this approach does not scale and costs significant CPU
-utilization.
+state machine prior to being sent to the VPN, established by
+Table~\ref{tab:vpn_eval_comp}.  Thus for high bandwidth applications, this
+approach does not scale and costs significant CPU utilization.
 
 To address this issue, I propose two models in addition to the existing
 approach to using an overlay for high bandwidth purposes.  These two
@@ -215,25 +221,29 @@ This can be addressed by creating a unique thread for processing packets in the
 application as well as the overlay stacks.  Since the connections are shared,
 this approach will require additional thread sychronization.
 
-The second approach is more complex but both components reside in completely
-different memory spaces.  The application might be easily coded through code
-reuse, but this still significantly increases the complexity of the solutions.
-Because the stacks each component has its own stack, there is no need to
-handle synchronization.  The VPN will have unfettered access to the connections
-it has established.
+The second approach is more complex than the first, the components, the
+application and structured overlay, reside in completely different memory
+spaces.  Thus the application organizes communication links through the overlay
+but does not communicate through it.  Though this is significantly more
+complicated than the first solution, the application may be easier to code by
+reusing existing overlay code.  Because each component has its own connections
+and communication stacks, there is no need to handle synchronization between
+the overlay and application.  Essentially, the application will have unfettered
+access to the connections it has established.
 
 \section{Overlay-Aware TCP}
 When sending a message via an overlay, if a packet is lost in transit, there
 are no built-in methods for recovering the transmission, the overlay acts like
-a datagram system.  Even when links are connected by TCP, a disconnectivity
-or failure in the overlay will not trigger successful TCP transmissions to
-transmit the packet to another host.  When using UDP, there are no built-in
-methods.  Current approaches either fail or attempt a simple retry mechanism.
-Even in the case of retrying, UDP does not handle fragmentation well and to
-support retrying either requires complicated state to handle large packets
-or a simple state that cannot support large packets.  I implement an overlay
-TCP system and use it in real system to determine other challenges that exist
-when using it.
+large, lossy datagram system.  Even when links are connected by TCP, a
+disconnectivity or failure in the overlay will not trigger successful TCP
+transmissions to transmit the packet to another host.  When using UDP, there
+are no built-in methods.  Current approaches either fail or attempt a simple
+retry mechanism.  Even in the case of retrying, UDP does not handle
+fragmentation well and to support retrying either requires complicated state to
+handle large packets or a simple state that cannot support large packets.  I
+plan on implementing an overlay TCP system, evaluate different approaches to
+improving reliability when communicating through an overlay, and apply the
+techniques to real systems.
 
 \section{Figures and Tables}
 
@@ -271,3 +281,8 @@ environment, Brunet, using the King data set.}
 \caption{Direct communication models}
 \label{fig:direct_communication}
 \end{figure}
+
+\begin{table}[ht]
+\caption{VN Stack Comparison}
+\centering
+\end{table}

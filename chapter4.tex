@@ -19,7 +19,7 @@ of the virtual network in order to have be a destination and recognized source
 for remote packets consitute the local organization.  Whereas the routing of
 the packets amongst peers is handled by the network organization.  Prior
 research works primarily focused on the latter issue, while ignoring the former.
-This meant that users were left setup their own address allocations either
+This meant that users were left to setup their own address allocations either
 through manually configuring each environment or dealing with the head aches of
 caused by DHCP servers in cross domain network construction as well as their
 own security distribution systems.  In addition, organizing a network can be an
@@ -36,24 +36,25 @@ below.
 
 \subsection{Centralized VPN Systems}
 OpenVPN is an open and well-documented platform for deploying centralized VPNs.
-We use it as the basis for understanding centralized VPNs as it represents
-features common to most centralized VPNs.  In centralized VPN systems, clients
-forward all VPN related packets to the server.  Clients responsibilities are
-limited to configuring the VN device and authenticating with the VPN server;
-whereas the servers are responsible for authentication and routing between
-clients and providing access to the servers' local resources and the Internet
-(full tunnel).
+In this paper, it is used as the basis for understanding centralized VPNs as it
+represents features common to most centralized VPNs.
 
-While central VPNs do support multiple servers, the client must know of all
-existing servers randomly selects a server, implementing a simple load
-balance.  Once connected, servers hand to the client an IP address in the
-VPN address space.  Depending on configuration this will allow a client to
-communicate with other clients, resources on the same network as the server,
-or Internet hosts via the VPN.  Additionally, servers must be configured to
-connect with all other servers otherwise clients behind remote servers will
-not be able to communicate with each other.
+In centralized VPN systems, clients forward all VPN related packets to the
+server.  Client responsibilities are limited to configuring the VN device and
+authenticating with the VPN server; whereas the servers are responsible for
+authentication and routing between clients and providing access to the servers'
+local resources and the Internet (full tunnel).  Likewise, broadcast and
+multicast packets also must pass through the central server.
 
-All inter-client communication flows through the central server.  By default, a
+Centralized VPNs can support multiple servers: upon starting, the client can
+randomly select from a list of known servers, implementing a simple load
+balance.  Once connected, the servers provide the client an IP address in the
+VPN address space. Depending on configuration this will allow a client to
+communicate with other clients, resources on the server's network,
+or Internet hosts via the VPN.  Servers require additional configuration to
+communicate with each other.
+
+All inter-client communication flows through a central server.  By default, a
 client encrypts a packet and sends it to the server.  Upon receiving the packet,
 the server decrypts it, determines where to relay it, encrypts it, and then
 sends the packet to its destination.  This model allows a server to eavesdrop on
@@ -61,21 +62,22 @@ communication.  While a second layer of encryption is possible through a shared
 secret, it requires out-of-band communication and increases the computing
 overhead on communication.
 
+
 \subsection{Centralized P2P VPN Systems}
-Hamachi~\cite{hamachi} is the first well known centralized VPN that used the
-ambiguous moniker ``P2P VPN''.  In reality, these systems would be best
-classified as centralized VPN servers with P2P clients.  Other similar VPNs
-include Wippien~\cite{wippien}, Gbridge~\cite{gbridge}, and PVC~\cite{pvc}.
-Specifically, P2P in these systems is limited to direct connectivity between
-clients orchestrated through a central server.  In the case where direct
-connectivity is unavailable due to NATs or firewalls, the central server can
-act as a relay and if not peers will be unable to communicate.  Each approach
-uses their own security protocols that involve using a server to verify the
-authenticity and setup secure connections between clients.  Furthermore, most
-of these projects are closed preventing users from hosting their own
-authentication servers and relays and verifying the code for security purposes
-forcing users to trust the third-party server to not eavesdrop or perform other
-man-in-the-middle attacks.
+Hamachi~\cite{hamachi} is the first well-known centralized VPN that used the
+ambiguous moniker ``P2P VPN''.  In reality, these systems are better classified
+as centralized VPN servers with P2P links.  Similar VPNs include
+Wippien~\cite{wippien}, Gbridge~\cite{gbridge}, PVC~\cite{pvc}, and
+P2PVPN\footnote{Due to the similarities between the name P2PVPN and focus of
+this paper, ``P2PVPN'' refers to ~\cite{p2pvpn} and ``P2P VPN'' to to the use
+of P2P in VPNs.}~\cite{p2pvpn}.  The P2P in these systems is limited to direct
+connectivity between clients orchestrated through a central server: in Wippien
+it is a chat server, while P2PVPN uses a BitTorrent tracker.  If NAT traversal
+or firewalls prevent direct connectivity, the central server can act as a
+relay.  Each approach uses their own security protocols with most using a
+server to verify the authenticity and setup secure connections between clients.
+In regards to the P2PVPN, long term goals involve the creation of an
+unstructured, which would provide a method of decentralized organization.
 
 \subsection{Decentralized VPN Systems}
 Some examples of systems that assist in distributing load in VPN systems are
@@ -85,30 +87,22 @@ specification of links between resources.  This means that, like OpenVPN, these
 systems can suffer VPN outages when nodes go offline, thus administrators must
 maintain the VPN connection table.  Unlike OpenVPN, these approaches typically
 do not require all-to-all direct connectivity for all-to-all communication.
-Users can either setup out-of-band NAT traversal or route through relays.  Users
-must manually create links with those whom they desire maximum network
-performance.
+Users can either setup out-of-band NAT traversal or route through relays.  Links
+are manually configured.
 
 \subsection{Unstructured P2P VPN Systems}
-Unlike centralized and decentralized systems, P2P environments are
-self-configuring requiring the only task for the user is to connect to the
-P2P overlay.  The most simplest form of overlays are unstructured, where peers
-form random connections with each other and use broadcast and stochastic
-techniques to find information and other peers, though due to its unstructured
-nature, the system cannot guarantee distance and routability between peers.
-Two examples of unstructured P2P VPNs are N2N~\cite{n2n} and P2PVPN\footnote{Due
-to the similarities between the name P2PVPN and focus of this proposal, we use
-``P2PVPN'' to refer only to ~\cite{p2pvpn} and ``P2P VPN'' to refer explicitly
-to the use of P2P in VPNs.}~\cite{p2pvpn}.  P2PVPN is somewhat of a hybrid
-using a centralized BitTorrent tracker to assist in peers finding each other,
-they eventually will also be able to search for each other using the overlay.
-In N2N, peers first connect to super nodes and then to find another peer they
-broadcast discovery messages to the entire overlay.  In the case that peers
-cannot form direct connection, peers can route to each other over the N2N
-overlay.  While unstructured P2P systems have some scalability concerns, they
-provide a server-less approach.  In the realm of VPNs, all client VPNs are also
-servers performing authentication though neither approach deals with
-decentralized address allocation.
+Unlike centralized and decentralized systems, P2P environments require the
+user to connect to the overlay, which then automatically configures links.
+The simplest form of overlays are unstructured, where peers form random
+connections with each other and use broadcast and stochastic techniques to find
+information and other peers, though due to its unstructured nature, the system
+cannot guarantee distance and routability between peers.  The only example of
+an unstructured VPN is N2N~\cite{n2n}.  In N2N, peers first connect to a super
+node and then, to find another peer, they broadcast discovery messages to the
+entire overlay.  In the case that peers cannot form direct connection, peers
+can route to each other over the N2N overlay.  In the realm of VPNs, all client
+VPNs are also servers performing authentication though neither approach deals
+with decentralized address allocation.
 
 \subsection{Structured P2P VPN Systems}
 To address the scalability concerns in unstructured systems, this work uses
@@ -340,20 +334,21 @@ DHCP to indicate that the machine has no address prior to the request.
 Name services allow machines to be addressed with names that are more
 meaningful to users than numeric addresses.  Certain applications and
 services require domain name checking, such as Condor.  To support DNS, this
-requires that the OS be programmed with the VN's DNS servers IP, which we take
-generically to be the lowest available IP address in a subnet.  In static
-configuration, this process requires the user to manually add this address,
-though through DHCP this is set automatically.
+requires that the OS be programmed with the VN's DNS servers IP, typically
+the lowest available IP address in a subnet.  In static configuration, this
+process requires the user to manually add this address, though through DHCP
+this is set automatically.
 
-In the state representation of the VN (Figure~\ref{fig:vn}), the VN checks the IP packet
-to ensure that the destination IP and port match that of the virtual DNS
-server and the well-known DNS port, 53.  In the event of a match, the packet is
-passed to the VN's handler for domain names.  From our experience, there are
-two common uses for names, 1) because applications require it, and 2) to assist
-users in finding resources.  For 1), we have implemented a system
-that takes in an IP address and maps it directly to a name, such as, 10.250.5.5
-maps to C250005005.  For 2), we take advantage of the DHT and perform a Put
-in the key namespace:hostname with the value being the mapped IP address.
+In the state representation of the VN (Figure~\ref{fig:vn}), the VN checks the
+IP packet to ensure that the destination IP and port match that of the virtual
+DNS server and the well-known DNS port, 53.  In the event of a match, the
+packet is passed to the VN's handler for domain names.  Names are typically
+used for the following purposes: 1) because applications require it, and 2) to
+assist users in finding resources.  To deal with 1), the DNS can
+deterministically maps IP addresses to names, such as 10.250.5.5 maps to
+C250005005.  2) can be solved by using the DHT and placing key:value pairs of
+the form hash(namespace:hostname) to IP address and hash(namespace:IP address)
+to hostname.
 
 \section{Supporting Migration}
 There has been a rapid increase in the deployment of Virtual Machines (VMs) for
@@ -495,17 +490,34 @@ secure communication amongst the VPN peers.
 
 \subsection{Broadcasting IP Broadcast and Multicast Packets Via the Overlay}
 The use of a private virtual overlay enables a new method for sending multicast
-and broadcast packets.  Instead of using unicast overlay messages to share
-IP broadcast and unicast messages, the same method used to perform broadcast
-revocation, described in Appendix~\ref{broadcast}, can be used to efficiently
-distribute these messages.  Though in VPN situations, many peers may already
-have connections to most if not all of their VPN peers, thus the broadcast
-algorithm must be modified to route to only connections created for structured
-overlay purposes and not explicitly only for VPN purposes.  Otherwise in many
-cases, this algorithm will degenerate into one similar to the previous
-approach.  As shown by Figure~\ref{fig:broadcast}, the approach scales
-significantly better, though the approach still lacks intelligent path creation
-for bandwidth heavy applications.
+and broadcast packets. Approaches such as broadcasting to the entire overlay
+are not suitable because the overlay could consist of peers from other VPNs and
+those not even involved with VPN operations, while approaches that generate
+unicast messages when a broadcast or multicast packet arrives at the VPN (e.g.
+by querying a DHT key where all peers in the VPN would place their overlay
+address so that they could receive the packets) do not scale well. The
+abstraction of a private virtual overlay enables scalable broadcasting within a
+VPN because the only peers in the private overlay are peers for a single VPN.
+The broadcast method used is described in Appendix~\ref{broadcast} to
+efficiently distribute messages.  Though in VPN situations, many peers may
+already have connections to most if not all of their VPN peers, thus the
+broadcast algorithm has been modified to route to only connections created for
+structured overlay purposes and not explicitly only for VPN purposes.
+Otherwise in many cases, this algorithm will degenerate into one similar to
+the previous approach.  
+
+A validation of the overlay broadcast method for IP broadcast and multicast
+communication comparing it to the original DHT method is presented in
+Figure~\ref{fig:broadcast}.  Metrics measured include bandwidth used by
+the packet originator and time required for all peers to receive the packet.
+System bandwidth remains the same as bounded-broadcast requires exactly N
+messages to broadcast the message to the entire overlay.  By using a broadcast
+algorithm to route multicast and broadcast IP packets instead of the unicast
+packets, the sending node has much less used bandwidth.  The time required by
+the DHT approach involves the time to retrieve all entries from the DHT and the
+latency to the peer farthest away.  Whereas the broadcast approach has no DHT
+lookup and is somewhere around the average latency in the system multiplied by
+$O(\log^2 N)$.
 
 \section{Full Tunnel VPN Operations}
 \label{full_tunnel}
@@ -529,11 +541,11 @@ challenges in supporting full tunnels:  1) P2P traffic must not be routed
 to the VPN gateway and 2) there may be more than one VPN gateway.  We address
 these issues and provide a solution to this problem in Section~\ref{full_tunnel}.
 
-The challenges we face in our VPN are providing decentralized discovery of a
-VPN gateway and supporting full tunnel mode in a P2P environment such that
-all P2P traffic is sent to the intended receiver directly instead of through
-the gateway.  The remainder of this section covers our gateway and client
-solutions to address these challenges.
+The challenges faced in a decentralized P2P VPN are providing decentralized
+discovery of a VPN gateway and supporting full tunnel mode in a P2P environment
+such that all P2P traffic is sent to the intended receiver directly instead of
+through the gateway.  The remainder of this section covers gateway and
+client solutions to address these challenges.
 
 \subsection{The Gateway}
 \label{the_gateway}
@@ -558,10 +570,10 @@ explored to provide intelligent selection and load balancing of gateways.
 
 \subsection{The Client}
 VPN Clients wishing to use full tunnel must redirect their default traffic to
-their VN device.  In our VPN model, we use a virtual IP address for the purpose
-of providing distributed VN services DHCP and DNS.  This same address is used
-as the the default gateway's IP.  Because this IP address never appears in a
-Internet bound packet, only its Ethernet address does, as shown in
+their VN device.  In the protoype VPN model, a virtual IP address is allocated
+for the purpose of providing distributed VN services DHCP and DNS.  This same
+address is used as the the default gateway's IP.  Because this IP address never
+appears in a Internet bound packet, only its Ethernet address does, as shown in
 Figure~\ref{fig:tunnel_packet}, this approach enables the use of any and
 multiple remote gateways.
 
@@ -577,7 +589,7 @@ To select a remote gateway, peers query the DHT.  As there may be multiple
 gateways in the system, the peer randomly selects one, forwarding packets to
 that node.  To ensure reliability, when the client has not heard from the
 gateway recently, the client sends a liveness query to the gateway.  If the
-gateway is down, we take a pessimistic approach and find a new gateway when
+gateway is down, the taken pessimistic approach finds a new gateway when
 the next Internet packet arrives.
 
 The real challenge in applying full tunnel VPN mode to P2P VPNs is the nature
@@ -592,21 +604,21 @@ spoofed by remote peers enabling unsecured Internet packets to be leaked in the
 public environment.  Even if the connections are secured, it could take some
 time for the peers to recognize a false connection attempt and delete the rule.
 
-To solve the security problem, we propose an alternative, have all traffic
-directly routed to the VN device with no additional routing rules.  The VN is
-then responsible for filtering P2P traffic and forwarding it to the LAN's
-gateway via Ethernet packets.  In the VPN application, outgoing IP packets'
-source ports are compared to VPN application's source ports.  Upon a match,
-the VPN application directs the packet to the LAN's gateway.  The three steps
-involved in this process are 1) translating the source IP address to match the
-physical Ethernet's IP address, 2) encapsulating the IP packet in an Ethernet
-packet with a randomly source address~\cite{sc09} and the destination the
-LAN's gateway, and 3) sending the packet via the physical Ethernet device.
-Sending an Ethernet packet is not trivial as Windows lacks support for this
-operation and most Unix systems require administrator privilege.  Our platform
+A solution to the security problem is to have all traffic directly routed to
+the VN device with no additional routing rules.  The VN is then responsible for
+filtering P2P traffic and forwarding it to the LAN's gateway via Ethernet
+packets.  In the VPN application, outgoing IP packets' source ports are
+compared to VPN application's source ports.  Upon a match, the VPN application
+directs the packet to the LAN's gateway.  The three steps involved in this
+process are 1) translating the source IP address to match the physical
+Ethernet's IP address, 2) encapsulating the IP packet in an Ethernet packet
+with a randomly source address~\cite{sc09} and the destination the LAN's
+gateway, and 3) sending the packet via the physical Ethernet device.  Sending
+an Ethernet packet is not trivial as Windows lacks support for this operation
+and most Unix systems require administrator privilege.  Our platform
 independent solution uses a second TAP device bridged to the physical Ethernet
 device, allowing Ethernet packets to be sent indirectly through the Ethernet
-device via the TAP device.  Because our solution results in incoming packets to
+device via the TAP device.  Because the solution results in incoming packets to
 arrive at a different IP address than the actual original source IP address TCP
 does not work in this solution.  This method has been verified to work on both
 Linux and Windows using OS dependent TAP devices and bridge utilities.
@@ -618,18 +630,17 @@ of ensuring that all packets in a full tunnel will be secure, it raises an
 issue:  could the effect of having all packets traverse the VPN application be
 prohibitively expensive.  Analysis of this approach compares it with one that
 uses the traditional routing rule switch.  Figure~\ref{tab:full_tunnel_eval}
-present the ping time from a residential
-location to one of Google's IP addresses using a gateway located at the
-University of Florida when the VPN is in split tunnel mode, full tunnel using
-the routing rule switch, and full tunnel using Ethernet forwarding.  The
-results express that there is negligible difference between the full tunnel
-approaches.  One interesting result is the latency to gateways public address
-in the routing test, which most likely is a result of the ping being sent
-insecurely avoiding the VPN stack completely.
+present the ping time from a residential location to one of Google's IP
+addresses using a gateway located at the University of Florida when the VPN is
+in split tunnel mode, full tunnel using the routing rule switch, and full
+tunnel using Ethernet forwarding.  The results express that there is negligible
+difference between the full tunnel approaches.  One interesting result is the
+latency to gateways public address in the routing test, which most likely is a
+result of the ping being sent insecurely avoiding the VPN stack completely.
 
 \section{Evaluation of VPN Network Configuration}
 This experiments explores bandwidth and latency in a distributed VPN system to
-motivate the usage of P2P links in a VPN.  The VPNs used are include our
+motivate the usage of P2P links in a VPN.  The VPNs used are include the
 prototype (IPOP), OpenVPN, and Hamachi.  OpenVPN represents a typical
 centralized VPN, while Hamachi represents a well-tuned P2P-link VPN.  The
 evaluation was performed on Amazon EC2 using small instance sized
@@ -700,8 +711,8 @@ cost of VMMs, specifically the time required for a packet to traverse both VMMs
 networking stack as well as the hosts networking stack.  Another observation
 was that transactions per second (Figure~\ref{fig:gridevalcpu}
 \subref{fig:rr.spec}) do not improve significantly for \textbf{tc} bandwidth
-limit above 25 Mbps in all cases; thus we focus on the relevant data up to this
-limit.
+limit above 25 Mbps in all cases; thus focus is on only the relevent data up to
+this limit.
 
 Distinguishing features of the different VN models include the following.
 Figure~\ref{fig:gridevalnet}\subref{fig:stream.netperf} shows that bandwidth in
@@ -730,8 +741,9 @@ where all resources run in a VM. This experiment focused on the interplay
 between resource consumption by overlay routers and application performance.
 Optimized user-level overlay routers running on dedicated physical
 machines have been reported to achieve performance near Gbit/s in related
-work~\cite{vine2}; we expect that such cap can be raised substantially with
-improved VM handling of network packets and user-level router optimizations.
+work~\cite{vine2}; it is expected that the cap can be raised substantially
+with improved handling of network packets and user-level router optimizations
+as described in Chapter~\ref{direct_communication}.
 
 One thing that left unevaluated that may provide more interesting data would
 be providing the VN router dedicated hardware.  In the test environments, this
@@ -771,7 +783,7 @@ client-server interactions only. Amazon only supports Interface mode, thus it
 is only evaluated in the WAN experiment. It has been observed that, within
 Amazon, the VN is able to self-organize direct overlay connections~\cite{wow}.
 Each test was run 5 times for 30 seconds, the standard deviation for all
-results was less than 1.  Because of this, we only present the average in
+results was less than 1.  Because of this, only the average is presented in
 Table~\ref{tab:cloud-wan}.
 
 It can be seen in Table~\ref{tab:cloud-wan} that the VN adds little
@@ -781,13 +793,13 @@ may be attributed to the additional per-packet overhead of the VN and the small
 MTU set for the VN interface (1200).  The MTU, or maximum transmission unit, is
 the larget packet that is sent from an interface.  IPOP conservatively limits
 the VN MTU to 1200 down from the default 1500 to allow for overlay headers and
-to work properly with poorly configured routers, which we have encountered in
+to work properly with poorly configured routers, which has encountered in
 practical deployments.  A more dynamic MTU, which will improve performance, is
 left as future work.  The EC2 / GoGrid experiment had greater overhead
 which could possibly be attributed to by the VM encapsulation of cloud
 resources.
 
-Table~\ref{tab:cloud-lan} shows that some of our performance expectations
+Table~\ref{tab:cloud-lan} shows that some of the performance expectations
 for the different models in a LAN were accurately predicted while others
 were not so clear.  Stream results match the expectation that VN models hybrid
 and router bypass virtualization and get near physical speeds, whereas interface
