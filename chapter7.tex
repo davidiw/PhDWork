@@ -1,4 +1,5 @@
 \chapter{Conclusions}
+\label{conclusion}
 The proposal describes methods for designing VPNs, while much emphasis is
 placed upon the use of structured overlays, much of what described can be used
 generically.  The contributions so far describe a scalable, self-configuring,
@@ -21,9 +22,23 @@ patterns.  For each of these tasks, I will design, implement, and evaluate the
 approaches.  The results will lead to new interesting designs of VPNs using
 structured overlays.  A schedule for my work is shown in Figure~\ref{fig:gantt}.
 
+The VPN approaches described herein have been used to construct real systems,
+such as the GroupVPN~\cite{gridappliance} and a SocialVPN~\cite{cops08}.  The
+GroupVPN has been used to construct a Grid Appliance~\cite{grid_appliance} that
+enables the creation of distributed, decentralized, dynamic computing grids.
+Over the past 2 years, I have been the student lead in an active grid deployed
+for computer architecture research, Archer~\cite{archer}.  Archer currently
+spans four universities with 500 resources, we have had 100s of users who
+connect seamlessly to these resources from home, school, hotels, etc.  Most
+recently, a grid at La Jolla Institute for Allergy and Immunology went live
+with minimal communication with our group.  Researchers at the Clemson
+University and Purdue have opted for this approach over centralized VPNs as the
+basis of their future distributed compute clusters and have actively tested
+networks of over 1000 nodes.
+
 \begin{figure}[ht]
 \centering
 \epsfig{file=figs/schedule.eps, width=4in}
 \caption{Schedule for my proposed work.}
-\label{fig:latency}
+\label{fig:gantt}
 \end{figure}
