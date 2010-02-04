@@ -649,9 +649,9 @@ measures bandwidth for 60 minutes, the 60 minutes after the overlay is
 well-formed.  Reusing the simulation results changes has no effect on the
 results of this experiment and cuts down on the most expensive part of the
 procedure, the bootstrap phase.  The results are shown in
-Figure~\ref{fig:pvo_bandwidth}.
+Figure~\ref{fig:vpo_bandwidth}.
 
-As shown in Figure~\ref{fig:pvo_bandwidth}, when comparing the querying of the DHT
+As shown in Figure~\ref{fig:vpo_bandwidth}, when comparing the querying of the DHT
 using static and dynamic timers, the static timer's bandwidth is dominated by
 DHT queries.  Since the system is at steady state, i.e., no new nodes in the
 system, only a single DHT query is made using dynamic timers.  In both cases,
@@ -875,7 +875,7 @@ Those lines labeled ``static'' have DHT lists queried every 5 minutes whereas
 in ``dynamic'' queries are made using an exponential back-off policy starting
 at 30 seconds up to a maximum of 60 minutes.  Bandwidth is in bytes / second, a
 negligible amount of bandwidth for DSL and Cable Internet.}
-\label{fig:pvo_bandwidth}
+\label{fig:vpo_bandwidth}
 \end{figure}
 
 \begin{figure}[ht]
@@ -894,8 +894,6 @@ the revocation using simulations.  (Broadcast has been abreviated to
 \caption[Modeled broadcast revocation evaluation.]{The time delay and bytes
 transferred during the time between revoking a node and notifying nodes of the
 revocation using the modeler.  (Broadcast has been abreviated to ``Bcast'').}
-\caption{Time required and bytes transferred during a modeled DHT and broadcast
-revocation.}
 \label{fig:revocation_mod}
 \end{figure}
 

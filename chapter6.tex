@@ -182,7 +182,7 @@ message board for status updates or public messages.  This section explains how
 these components can be applied to a structured overlay dedicated to an
 individual profile.
 
-Using the techniques such as those described in~\cite{icdcs10}, it is feasible
+Using the techniques such as those described in Chapter~\ref{vpo}, it is feasible
 to efficiently multiplex a P2P system across multiple, virtual private overlays enabling
 each profile owner to have a profile overlay consisting of their online friends.
 For access control, a PKI is employed, where each member uses the signed certificate
@@ -191,7 +191,7 @@ encrypted using symmetric security algorithms established through the PKI,
 thus preventing uninvited guests from gaining direct access to the overlay and
 hence the profile.  Because the profile owner also is the CA for all members of
 the overlay, they can easily revoke users from access to the profile overlay.
-Chapter~\ref{pvo} describes mechanisms for overlay revocation through the
+Chapter~\ref{vpo} describes mechanisms for overlay revocation through the
 use of broadcasting for immediate revocation and the use of DHT for indirect
 and permanent revocation.
 
@@ -224,11 +224,10 @@ the new message.
 The directory overlay should be used to assist in finding currently active peers
 in the profile overlays.  By placing their node IDs at a well-known, unique
 per-profile overlay keys in the DHT, active peers can bootstrap incoming peers
-into the profile overlay.  We implemented and evaluated this concept
-in~\cite{icdcs10}.  Because the profile overlay members all use PKI to ensure
-membership, even if malicious peers insert their ID into the active list, it
-would be useless as the peer would only form connections with peers who also
-have a signed certificate.
+into the profile overlay.  Because the profile overlay members all use PKI to
+ensure membership, even if malicious peers insert their ID into the active
+list, it would be useless as the peer would only form connections with peers
+who also have a signed certificate.
 
 \section{Challenges}
 \label{outstanding}
@@ -272,12 +271,13 @@ for querying prior to using the public directory overlay.
 \begin{figure}[ht]
 \centering
 \epsfig{file=figs/subrings.eps, width=3.12in}
-\caption{An example social overlay network.  Alice has a friendship with Bob and
-Carol, hence both are members of her profile overlay. Bob has a
-friendship with Alice and Dave but not Carol; hence Alice and Dave are members of
-his profile overlay, while Carol is not.  Each peer has many overlay memberships
-but a single root represented by dashed lines in various shades of gray.
-For clarity, overlay shortcut connections are not shown.}
+\caption[An example social overlay network]{An example social overlay network.
+Alice has a friendship with Bob and Carol, hence both are members of her
+profile overlay. Bob has a friendship with Alice and Dave but not Carol; hence
+Alice and Dave are members of his profile overlay, while Carol is not.  Each
+peer has many overlay memberships but a single root represented by dashed lines
+in various shades of gray.  For clarity, overlay shortcut connections are not
+shown.}
 \label{fig:system}
 \end{figure}
 

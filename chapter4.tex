@@ -1130,21 +1130,20 @@ respectively.}
 \label{fig:tunnel_packet}
 \end{figure}
 
-\begin{figure}[ht]
-\begin{center}
+\begin{table}[ht]
+\centering
 \begin{tabular}{|c||c|c|c|} \hline
 & Google & GW Pri & GW Pub \\ \hline \hline
 Ethernet & 70.6 & 12.9 & 13.9 \\ \hline
 Routing & 71.4 & 13.2 & 11.0 \\ \hline
 None & 66.1 & N/A & 10.9 \\ \hline
 \end{tabular}
-\end{center}
-\label{tab:full_tunnel_eval}
 \caption[Full tunnel evaluation]{Latency results comparing full tunnel
 approaches measured in ms.  Legend: GW Pri - gateway's VPN address, GW Pub -
 gateway's VPN address, Ethernet - full tunnel Ethernet packet method, Routing -
 full tunnel routing rule switch, None - split tunnel or no VPN.}
-\end{figure}
+\label{tab:full_tunnel_eval}
+\end{table}
 
 \clearpage
 
@@ -1231,9 +1230,9 @@ Stream VN & 75.31 & 19.21 & 25.65\\ \hline
 RR Phys & 13.35 & 11.09  & 9.97 \\ \hline
 RR VN & 13.33 & 10.69 & 9.76 \\ \hline
 \end{tabular}
-\caption{WAN Results for inter-cloud networking.  Stream is in Mbs and RR
-is in trans/s (The inverse of trans/s would be equal to the average
-latency).}
+\caption[WAN Results for inter-cloud networking]{WAN Results for inter-cloud
+networking.  Stream is in Mbs and RR is in trans/s (The inverse of trans/s
+would be equal to the average latency).}
 \label{tab:cloud-wan}
 \end{table}
 
@@ -1244,8 +1243,9 @@ latency).}
 Stream & 109 & 325 & 324 & 327 \\ \hline
 RR & 1863 & 2277 & 2253 & 3121 \\ \hline
 \end{tabular}
-\caption{LAN results performed at GoGrid.  Stream is in Mbs and RR is in
-trans/s.  Interface and Physical used the eth0 NIC, while
-Router and Hybrid used eth1.  Different VLANs may give different results.}
+\caption[LAN results performed at GoGrid]{LAN results performed at GoGrid.
+Stream is in Mbs and RR is in trans/s.  Interface and Physical used the eth0
+NIC, while Router and Hybrid used eth1.  Different VLANs may give different
+results.}
 \label{tab:cloud-lan}
 \end{table}
