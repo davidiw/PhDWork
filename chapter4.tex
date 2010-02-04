@@ -811,8 +811,9 @@ interface.
 \section{Figures and Tables}
 
 \begin{table}[ht]
+{\small
 \centering
-\begin{tabular*}{0.75\textwidth}{|c||c|c|c|c|} \hline
+\begin{tabular}{|p{.8in}||p{1.25in}|p{1.2in}|p{1.25in}|p{1.25in}|} \hline
 & Overlay & Routing & Configuration & Miscellaneous \\ \hline\hline
 IPOP
 &
@@ -895,6 +896,17 @@ regular and ViNe networks, but no VN software needed on host.
 % Misc.
 Supports encrypted tunnels between ViNE routers, migration not discussed.
 \\ \hline
+\end{tabular}
+}
+\caption{Virtual Network Comparison (Part 1)}
+\label{tab:virtual_networks}
+\end{table}
+
+\begin{table}[ht]
+{\small
+\centering
+\begin{tabular}{|p{.8in}||p{1.25in}|p{1.25in}|p{1.25in}|p{1.25in}|} \hline
+& Overlay & Routing & Configuration & Miscellaneous \\ \hline\hline
 Violin
 &
 %Overlay
@@ -929,16 +941,130 @@ forward packets to local proxy.  Proxies configured to connect to other proxies.
 Security through the use of SSL and SSH Tunnels.  Layer 3 migration, product of
 layer 2 virtualization.
 \\ \hline
-\end{tabular*}
-\caption{Virtual Network Comparison}
-\label{tab:virtual_networks}
+OpenVPN
+&
+%Overlay
+Centralized
+&
+%Routing
+Central server
+&
+%Configuration
+Servers manually configured to connect with each other.  Clients randomly select
+server from pre-shared list
+&
+%Misc
+All communication traverses central server, end to end traffic by default is not
+protected from central server
+\\ \hline
+Tinc and CloudVPN
+&
+%Overlay
+Decentralized with explicitly configured overlay routes
+&
+%Routing
+Broadcast for discovery, messages traverse overlay
+&
+%Configuration
+Manual configuration
+&
+%Misc
+NAT traversal through relays only
+\\ \hline
+Hamachi
+&
+%Overlay
+Centralized Discovery, P2P links
+&
+%Routing
+Peers establish security links and end point information from a central
+server, attempt to form direct connections, if fails, relay through central
+server
+&
+%Configuration
+Select a network to join or create and specify a password, communicates with a
+centralized server to manage the VPN
+&
+%Misc
+Lacks portability, Linux version out of date, inability to run external relay
+servers, UDP NAT traversal
+\\ \hline
+\end{tabular}
+}
+\caption{Virtual Network Comparison (Part 2)}
+\label{tab:virtual_networks_part2}
+\end{table}
+
+\begin{table}[ht]
+{\small
+\centering
+\begin{tabular}{|p{.8in}||p{1.25in}|p{1.25in}|p{1.25in}|p{1.25in}|} \hline
+& Overlay & Routing & Configuration & Miscellaneous \\ \hline\hline
+GBridge
+&
+%Overlay
+Centralized Discovery, P2P links
+&
+%Routing
+Peers establish security links and end point information from a central
+server, attempt to form direct connections, if fails, relay through central
+server
+&
+%Configuration
+Select a network to join or create and specify a password, communicates with a
+centralized server to manage the VPN
+&
+%Misc
+Lacks portability and inability to run external relay servers, uses TCP NAT
+traversal
+\\ \hline
+Wippien
+&
+%Overlay
+Centralized Discovery, P2P links
+&
+%Routing
+Peers discover and authenticate each other through XMPP chat server, security
+provided unknown, peers attempt to form direct connections with each other, if
+that fails, no communication
+&
+%Configuration
+All peers must be members of associated XMPP chat rooms and be connected to the
+chat
+&
+Requires a GUI, difficulty penetrating NATs, claims to be open source though
+most of the code is unavailable, Linux client out of date and does not support
+NAT traversal
+%Misc
+\\ \hline
+P2PVPN
+&
+%Overlay
+Centralized Discovery, P2P links
+&
+%Routing
+Peers discover each other through a bittorrent tracker and attempt to form
+direct links with each other, attempts to form all-to-all connectivity, if
+direct links are unavailable, indirect links can be used to forward packets
+&
+%Configuration
+Peers must join the same tracker and use common shared secret
+&
+%Misc
+Work in progress to make more unstructured, currently a cross between
+centralized and decentralized
+\\ \hline
+\end{tabular}
+}
+\caption{Virtual Network Comparison (Part 333)}
+\label{tab:virtual_networks_part3}
 \end{table}
 
 \begin{table}[ht]
 \caption{VPN Classifications}
 \label{tab:vpn_types}
 \begin{center}
-\begin{tabular*}{0.75\textwidth}{|c|c|} \hline
+\begin{tabular}{|p{1.5in}|p{4.5in}|} \hline
 Type & Description \\ \hline
 Centralized & Clients communicate through one or more servers which are statically
 configured \\ \hline
@@ -953,7 +1079,7 @@ the entire network or use broadcast to discover routes between each other \\ \hl
 Structured P2P & No distinction between clients and servers; members are usually
 within $O(\log N)$ hops of each other via a greedy routing algorithm; use
 distributed data store for discovery \\ \hline
-\end{tabular*}
+\end{tabular}
 \end{center}
 \end{table}
 
@@ -974,7 +1100,7 @@ tunneling.}
 
 \begin{table}[ht]
 \centering
-\begin{tabular*}{0.75\textwidth}{|c||c|c|c|} \hline
+\begin{tabular}{|p{1in}||p{1.25in}|p{1.5in}|p{2.25in}|} \hline
  & Interface & Router & Hybrid \\ \hline\hline
 Host LAN 
 & 
@@ -1018,7 +1144,7 @@ Nodes are independent
 Router fault affects all LAN nodes
 &
 Nodes are independent \\ \hline
-\end{tabular*}
+\end{tabular}
 \caption{Qualitative comparison of the three deployment models}
 \label{tab:three_models}
 \end{table}
