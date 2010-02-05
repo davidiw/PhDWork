@@ -16,16 +16,16 @@ sets of machines through virtual routers to a virtual WAN environment.
 As a tool enabling collaborative environments, VPNs can be useful for many
 different types of users.  If friends and family require computer assistance
 and their computer guru no longer lives nearby, a VPN enables access to the
-emote machine despite networking constraints so long as the user has an
+remote machine despite networking constraints so long as the user has an
 Internet connection.  When traveling abroad, a user may wish that their
 Internet traffic be kept private from the local network, a VPN can be
 used to route all Internet packets through the users home network, ensuring
 the user's privacy.  Many computer and video games have multiplayer networking
 components that require direct connectivity and even modern games with
-centralized gaming components stop being supported, players of these games
-can continue playing with their remote friends through VPNs.  Small and medium
-businesses may find VPNs useful for connecting desktops and servers across
-distributed sites securing traffic to enterprised networked resources.
+centralized gaming components eventually are no longer supported, players of
+these games can continue playing with their remote friends through VPNs.  Small
+and medium businesses may find VPNs useful for connecting desktops and servers
+across distributed sites securing traffic to enterprise networked resources.
 independent organizations that each have their few of their own or no resources
 can combine together their resources through a VPN to create a powerful
 computing grid.
@@ -107,7 +107,7 @@ environment provided by a VPN client is the same regardless of how the server
 or overlay is implemented.  The clients interface with the server can also
 be abstracted such that clients are quite generic.
 
-igure~\ref{fig:vpn} abstracts the common features of all VPNs clients, a
+Figure~\ref{fig:vpn} abstracts the common features of all VPNs clients, a
 service that communicates with the VPN system and a virtual network (VN) device
 for host integration.  During initialization, the VPN services authenticates
 with the system~\footnote{A system in this context refers any portion of the
@@ -122,7 +122,7 @@ or a password.  Using accounts and passwords with or without a shared secret
 provides individualized authentication, allowing an administrator to block all
 users if the shared secret is compromised or individual users who act
 maliciously.  In the most secure approaches, each client has a unique signed
-certificate making brute force attacks very difficults.  The trade-offs in the
+certificate making brute force attacks very difficult.  The trade-offs in the
 approaches come in terms of security, usability, and management.  While the use
 of signed certificates provides better security than shared secrets,
 certificates require more configuration and maintenance.  In a system comprising
@@ -135,14 +135,14 @@ VN device provides mechanisms for injecting incoming packets into and retrieving
 outgoing packets from the networking stack, enabling the use of common network
 APIs such as Berkeley Sockets, thereby allowing existing application to work over
 the VPN without modification.  While there are many different types of VN
-devices, we focus on TAP~\cite{tap} due to its open source and pervasive nature.
-TAP allows the creation of one or more Virtual Ethernet and / or IP devices and
-is available for almost all modern operating systems including Windows, Linux,
-Mac OS/X, BSD, and Solaris.  A TAP device presents itself as a character device
-providing read and write operations.  Incoming packets from the VPN are written
-to the TAP device and the networking stack in the OS delivers the packet to the
-appropriate socket.  Outgoing packets from local sockets are read from the TAP
-device.
+devices, TAP~\cite{tap} stands out from the rest due to its open source and
+pervasive nature.  TAP allows the creation of one or more Virtual Ethernet and
+/ or IP devices and is available for almost all modern operating systems
+including Windows, Linux, Mac OS/X, BSD, and Solaris.  A TAP device presents
+itself as a character device providing read and write operations.  Incoming
+packets from the VPN are written to the TAP device and the networking stack in
+the OS delivers the packet to the appropriate socket.  Outgoing packets from
+local sockets are read from the TAP device.
 
 VN devices can be configured manually though command-line tools or OS' APIs or
 dynamically by the universally supported dynamic host configuration process
@@ -197,7 +197,7 @@ system until the administrator creates additional links or the site becomes
 active again.  Clients in these systems do not typically form direct links with
 each other, rather they route packets through the overlay.  This approach has
 been used to create scalable VPNs, like ViNe~\cite{vine}, VNET~\cite{vnet},
-Violin~\cite{violin}, and Layer 2 Tunneling Protcol based VPNs~\cite{l2tp}.
+Violin~\cite{violin}, and Layer 2 Tunneling Protocol based VPNs~\cite{l2tp}.
 \item \textbf{Decentralized with Automatic Organization} - The last model falls
 under systems that self-organize.  In this environment, there is no distinction
 amongst peers as they act as both client and servers, i.e., a P2P system or
@@ -206,7 +206,7 @@ attempting to connect with the P2P overlay, a peer randomly selects peers on
 this list until it is able to connect with one.  This connection is then used
 to form connections with other peers currently in the overlay.  The overlay
 can be organized in two different forms: randomly or deterministically
-creating unstructured or structured overlays, respectively.  In an unstructed
+creating unstructured or structured overlays, respectively.  In an unstructured
 overlay, links are formed arbitrarily, thus a peer searches for another peer
 by broadcasting the message or using stochastic techniques.  Structured
 overlays are organized into deterministic shapes, each peer is expected to
@@ -250,12 +250,12 @@ NATs are traversable through existing approaches, not all are and firewalls
 complicate the matter.  While these peers can communicate through the overlay,
 as the overlay grows, this latency can grow taking seconds for peers to send
 a message to each other.  To improve this situation, I propose the creation of
-autonomic tw-hop relays between the peers.
+autonomic Te-hop relays between the peers.
 \item \textbf{Private Virtual Overlays}:  At any given time, peers may or may
 not be connected to the overlay.  Private overlays can consist of varying sizes
 of users, in environment where there are very few users, it is possible that
-ot a single user can provide a dedicated, publicly addressable  resource.  In
-this case, the overlay can experience downtimes, even though there may be users
+not a single user can provide a dedicated, publicly addressable  resource.  In
+this case, the overlay can experience downtime, even though there may be users
 behind NATs and firewalls wanting to use the overlay.  To address this issue,
 I propose the use of a public free-to-join overlay to bootstrap into a private
 overlay.  Peers use the public overlay to find each other and exchange connection
@@ -309,7 +309,7 @@ system that allows users who have limited knowledge of operating systems,
 networks, and computers to create their own grids in a matter minutes.
 
 The rest of this proposal is organized as follows.  In
-Chapter~\ref{structured_p2p}, I present an indepth analysis of structured
+Chapter~\ref{structured_p2p}, I present an in depth analysis of structured
 overlays including a review of NAT constraints and traversal and then explore
 the use of decentralized relays.  This leads into Chapter~\ref{vpo}, which
 discusses security issues in structured overlays and a solution enabling users

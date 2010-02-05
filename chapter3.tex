@@ -142,7 +142,7 @@ aware that node ID X maps to user Y, therefore if a secure message coming from
 node ID Z says that it is user Y, an application should drop the packet.
 
 \subsection{Datagram Constraints}
-UDP is a connectionless protocol, enablign applications that use it to easily
+UDP is a connectionless protocol, enabling applications that use it to easily
 become victims of denial of service attacks.  This is because packets sent to
 the receiver can have a spoofed source address, unless the outgoing gateway
 prevents this from occurring, egress filtering.  For each spoofed attempt, the
@@ -234,8 +234,8 @@ Since symmetric keys work on limited block size, they use modes of operation
 to encrypt or decrypt large sets of blocks.  Because DTLS uses an unreliable
 transfer mechanism, each message should be able to be decrypted without the use
 of previous messages.  As suggested in the DTLS paper, we used cipher-block
-chaning (CBC) with a new initialization vector (IV) for each message.  During
-analysis of the C\# implementation, it was apparen that generating an IV was
+chaining (CBC) with a new initialization vector (IV) for each message.  During
+analysis of the C\# implementation, it was apparent that generating an IV was
 expensive but the initialization of an additional CBC state machine was even
 more.  To reduce these costs, the sender always uses the same CBC state machine
 and prepends the last cipher-block to the beginning of the next message.  Upon
@@ -392,16 +392,17 @@ such as HTTPS, which can be done with no user intervention.
 \subsection{Leaving or Being Removed from a Group}
 In the group environment, administrators also have the ability to remove users
 from the group.  In turn, this will cause a user revocation, which is detailed
-more in Section~\ref{revocation}.  In addition, users that leavethe group
+more in Section~\ref{revocation}.  In addition, users that leave the group
 should also have their certificates revoked, attempting to revoke a user's
 certificates after they have left the group can be a difficult undertaking
 if the group interface no longer has memory of those users.  Once a user has
-been revoked, the account should never be unrevoked as ensuring that a user
-has received a notice to revoke an existing revocation can be difficult to
-verify in a live system.  Instead, revoked or users who have left should be
-forever listed in the group and if the users are welcome back again, they
-should create new accounts.  Alternatively, unique numbers could be assigned
-to a user, thus an account number and not a username could be revoked.
+been revoked, the revocation should not be reversed as ensuring that a user
+has received a notice to ignore an already deployed revocation message can be
+difficult to verify in a live, decentralized  system.  Instead, revoked or
+users who have left should be forever listed in the group and if the users are
+welcome back again, they should create new accounts.  Alternatively, unique
+numbers could be assigned to a user, thus an account number and not a username
+could be revoked.
 
 \section{User Revocation}
 \label{revocation}
@@ -450,7 +451,7 @@ or hijacked.
 
 \section{Applications}
 \label{applications}
-This sectoin presents some applications annd potential ways to configure them
+This section presents some applications and potential ways to configure them
 to use a private overlay.  The applications investigated include chat rooms,
 social networks, VPNs, and multicast.  The key to all these applications is that
 users can easily host their own services and be discovered through the use of
@@ -531,7 +532,7 @@ code can then be used on a fully generated overlay to model the number of
 nodes visited and message latencies.  Delays between nodes was generated using
 the MIT King data set~\cite{king_data}.  The MIT King data set consists of
 latency between DNS servers distributed globally on the Internet.  Since the
-MIT King data set only covers 1740 nodes, peers in largers networks are
+MIT King data set only covers 1740 nodes, peers in larger networks are
 randomly distributed in the address space placing multiple nodes at the same
 ``physical'' location when necessary. The overhead due to security was modeled
 by adding 3 round-trip latencies to prior to all connection processes. This
@@ -679,7 +680,7 @@ average size of a revocation to 300 bytes , which includes information such as
 the user's name, the group, time of revocation, and a signature from the CA's
 private key.  To evaluate the cost in simulations, the bandwidth was measured
 for 30 seconds that included the revocation and 30 seconds where there was no
-activity.  Ths time sample was chosen because it represented the smallest
+activity.  The time sample was chosen because it represented the smallest
 amount of time that would contain a representative steady state bandwidth but
 also make the cost of revocation obvious.  The modeler only contains total
 bytes required for the operation because no connection based steady state
@@ -761,10 +762,10 @@ has seen little activity and lacks implementation details.  Unlike the previous
 two, \cite{can_multicast} limits the sub-overlay for the purpose of establishing
 multicast groups, though their approach lacks discussion on how nodes discover
 and form a new overlay as such their approach is limited to simulations.
-Simiarly \cite{community_overlays} is limited to simulations, the focus is
+Similarly \cite{community_overlays} is limited to simulations, the focus is
 on peers being able to form their own overlays for performance purposes and
 does not discuss implementing in an actual overlay.  My approach allows for an
-entire overlay to exist amongst peers behind NATs, uniquely distinguising my
+entire overlay to exist amongst peers behind NATs, uniquely distinguishing my
 work from these approaches, in addition, I have implemented my approach and
 tested in real systems.
 
@@ -883,7 +884,7 @@ negligible amount of bandwidth for DSL and Cable Internet.}
 \includegraphics[width=4in]{revocation_sim.eps}
 \caption[Simulated broadcast revocation evaluation.]{The time delay and
 bandwidth used during the time between revoking a node and notifying nodes of
-the revocation using simulations.  (Broadcast has been abreviated to
+the revocation using simulations.  (Broadcast has been abbreviated to
 ``Bcast'').}
 \label{fig:revocation_sim}
 \end{figure}
@@ -893,7 +894,7 @@ the revocation using simulations.  (Broadcast has been abreviated to
 \includegraphics[width=4in]{revocation_mod.eps}
 \caption[Modeled broadcast revocation evaluation.]{The time delay and bytes
 transferred during the time between revoking a node and notifying nodes of the
-revocation using the modeler.  (Broadcast has been abreviated to ``Bcast'').}
+revocation using the modeler.  (Broadcast has been abbreviated to ``Bcast'').}
 \label{fig:revocation_mod}
 \end{figure}
 

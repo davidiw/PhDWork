@@ -121,16 +121,16 @@ handshake,  though there is reasonable amount of work describing TCP NAT
 traversal such as~\cite{tcp_nat}.  TCP NAT traversal is complicated by stateful
 firewalls, or those that watch connections and connection attempts preventing
 messages from closed TCP channels from passing through the NAT.  For NAT
-situations that cannont be traversed, a third party can act as a relay between
+situations that cannot be traversed, a third party can act as a relay between
 the two, this is known as triangulation or traversal using relay NAT (TURN),
 described in~\cite{turn}.
 
 \subsection{NAT Traversal in Structured Overlays}
 Structured overlays rely on the principle that any peer can become directly
 connected with any other peer in the system.  Thus in order to use structured
-overlays on the Internet, they must either be run on publicly accessable
+overlays on the Internet, they must either be run on publicly accessible
 addresses or support NAT traversal.  Even in the case where there is NAT
-traversal, occassionally there are Internet routing table breaks and two
+traversal, occasionally there are Internet routing table breaks and two
 peers who should be able to directly communicate cannot.
 
 To date, there exists only one solution, Brunet~\cite{brunet}, supporting
@@ -142,7 +142,7 @@ symmetric NATs require iterative rounds of traversal attempts and cannot be
 traversed.  If two peers cannot connect, they exchange list of peers, if an
 overlap exists, which is highly likely for peers adjacent on the overlay, they
 will forward packets through it to each other other~\cite{hpdc08_1}.  This
-approaches emphasis was on having a complete ring not for forming abitrary
+approaches emphasis was on having a complete ring not for forming arbitrary
 two-hop connections for high performance purposes.  This can be addressed by
 having peers connect to each other's neighbor set proactively creating overlap,
 as represented in Figure~\ref{fig:relay}.
@@ -156,14 +156,14 @@ use as a proxy leaving the remaining peers as reserves.
 
 \subsection{Usefulness of Relays}
 This experiment verifies the usefulness of two-hop over overlay routing using
-an event-driven simulator that reuses the code base of our structured P2P VPN to
-faithfully implement its functionality using event-driven simulated times to
-emulate WAN latencies.  Pair-wise latency in this experiment is set using
-the MIT King Data Set~\cite{king_data}, which consists of all-to-all latencies
-among 1,740 distributed Internet hosts.  After starting the overlay and after
-it has reached steady state, the simulator sends packets amongst all peers to
-derive the average all-to-all latency and hop count for messaging in the
-overlay.  In the low-latency relay model, each destination node forms a
+an event-driven simulator that reuses the code base of the prototype structured
+P2P VPN to faithfully implement its functionality using event-driven simulated
+times to emulate WAN latencies.  Pair-wise latency in this experiment is set
+using the MIT King Data Set~\cite{king_data}, which consists of all-to-all
+latencies among 1,740 distributed Internet hosts.  After starting the overlay
+and after it has reached steady state, the simulator sends packets amongst all
+peers to derive the average all-to-all latency and hop count for messaging in
+the overlay.  In the low-latency relay model, each destination node forms a
 connection to the source node's physically closest peer as determined via
 latency (in a live system by application level ping).  Then this pathway is
 used as a two-hop relay between source and node.  Only peers with two hops or
@@ -181,13 +181,13 @@ advantage of two-hop autonomous relays.
 
 In addition, the autonomous relays functionality were verified in a reference
 implementation of a structured P2P VPN using a real system.  The environment
-consists of PlanetLab as the public overlay and our Archer environment as the
+consists of PlanetLab as the public overlay and the Archer environment as the
 VPN environment.  PlanetLab~\cite{planetlab} provides a set of over 500
 distributed computing nodes all with public IP addresses.  Archer provides grid
 computing to computer architecture researchers and consists of over 500 nodes
 located at various academic sites.  To ensure that peers under study formed
-two-hop connections, we instituted a firewall preventing direct communication
-between the two.  In tests, we found that the overlay was always able to
+two-hop connections, a firewall was instantiated preventing direct communication
+between the two.  In tests, it was revealed that the overlay was always able to
 self-configure a relay; the bandwidth and latency averages and deviations were
 2245 Kbit/s $\pm$ 1080 and 58.1 ms $\pm$ 35.5, respectively.
 
@@ -195,7 +195,7 @@ self-configure a relay; the bandwidth and latency averages and deviations were
 \label{direct_communication}
 Applications like VPNs, games, media, and communication can benefit from using
 an overlay for discovery and limited communication, though as communication
-increases in frequency direct communication may be perferred.  In previous
+increases in frequency direct communication may be preferred.  In previous
 work~\cite{wow}, the authors describe a method for transparently detecting this
 behavior and creating direct links as a result.  In comparing a VPN built on
 top of an overlay with a point-to-point direct approach, the VPN using the
@@ -204,14 +204,14 @@ state machine prior to being sent to the VPN, established by
 Table~\ref{tab:vpn_eval_comp}.  Thus for high bandwidth applications, this
 approach does not scale and costs significant CPU utilization.
 
-To address this issue, I propose two models in addition to the existing
-approach to using an overlay for high bandwidth purposes.  These two
-approaches are:  1) use the structured overlay to create and maintain
-links but placing the application between the connection and the overlay
-stack so that the application has first access to the data and 2) use
-the structured overlay to discover peers but the application creates and
-manages its own links using the structured overlay to coordinate these
-efforts.  The proposed approaches are presented in
+Two models in addition to the existing method of communication will be tested
+to evaluate methods for obtaining high bandwidth using direct communication
+links in overlay networks.  The two new approaches are:  1) use the structured
+overlay to create and maintain links but placing the application between the
+connection and the overlay stack so that the application has first access to
+the data and 2) use the structured overlay to discover peers but the
+application creates and manages its own links using the structured overlay to
+coordinate these efforts.  The proposed approaches are presented in
 Figure~\ref{fig:direct_communication}.
 
 The first approach benefits from using existing components of the structured
@@ -219,7 +219,7 @@ overlay including link creation and maintenance though may still have overheads
 due to packets needing to traverse both the application and overlays stack.
 This can be addressed by creating a unique thread for processing packets in the
 application as well as the overlay stacks.  Since the connections are shared,
-this approach will require additional thread sychronization.
+this approach will require additional thread synchronization.
 
 The second approach is more complex than the first, the components, the
 application and structured overlay, reside in completely different memory
@@ -231,19 +231,41 @@ and communication stacks, there is no need to handle synchronization between
 the overlay and application.  Essentially, the application will have unfettered
 access to the connections it has established.
 
+Evaluation of these approaches will be performed using a VPN application as
+described in Chapter~\ref{vpns}.
+
 \section{Overlay-Aware TCP}
-When sending a message via an overlay, if a packet is lost in transit, there
-are no built-in methods for recovering the transmission, the overlay acts like
-large, lossy datagram system.  Even when links are connected by TCP, a
-disconnectivity or failure in the overlay will not trigger successful TCP
-transmissions to transmit the packet to another host.  When using UDP, there
-are no built-in methods.  Current approaches either fail or attempt a simple
-retry mechanism.  Even in the case of retrying, UDP does not handle
-fragmentation well and to support retrying either requires complicated state to
-handle large packets or a simple state that cannot support large packets.  I
-plan on implementing an overlay TCP system, evaluate different approaches to
-improving reliability when communicating through an overlay, and apply the
-techniques to real systems.
+\label{tcp}
+Communicating large amounts of data reliably and with good performance presents
+an interesting challenge when performed through an overlay.  In an overlay,
+peers are constantly joining and leaving a network, also known as churn, as
+occurs packets may be lost or misdirected, never arriving at their expected
+destination.  Regardless of whether or not the communication between two peers
+uses UDP or TCP most likely will have no effect on the communication that passes
+many overlay hops because TCP between two peers does not receive any state
+feedback nor hold itself responsible to ensure it arrives at the proper overlay
+destination, it is completely aware of overlay topologies.  UDP complicates the
+matter by not ensuring that communication between two peers is reliable, thus
+naive use of UDP does not provide any information regarding the success of
+transferring a packet between two peers.
+
+To better understand the effects of overlays on reliable, high throughput
+communication, a tool will be implemented to simulate such communication in
+overlay environments with various amounts of churn to properly reflect both
+dedicated and personal use of the environments.  In dedicated environments, the
+behavior will most likely reflect that of the underlying Internet, though this
+approach will benefit from proxies that the overlay can create when such outages
+occur.  Personal use typically experiences many connections and disconnections,
+though those peers that stay connected, tend to stay connected longer than
+arriving peers.  The focus of this work will be to investigate existing TCP
+solutions used in other networks and determine if there are other potential
+solutions and evaluate them.
+
+These results will then be used to implement an overlay-aware system for use in
+a real P2P system that will be tested using the PlanetLab overlay.  Likewise with
+the simulations, this work will confirm or help correct the modeling results and
+provide insights on other potential solutions that may improve performance when
+in a real system.
 
 \section{Figures and Tables}
 

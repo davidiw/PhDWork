@@ -16,7 +16,7 @@ The organization of a VPN has a direct effect on the amount of user effort
 required to connect multiple sites.  In this regard there are two components of
 a VPN, the local organization and the remote or network organization.  The setup
 of the virtual network in order to have be a destination and recognized source
-for remote packets consitute the local organization.  Whereas the routing of
+for remote packets constitute the local organization.  Whereas the routing of
 the packets amongst peers is handled by the network organization.  Prior
 research works primarily focused on the latter issue, while ignoring the former.
 This meant that users were left to setup their own address allocations either
@@ -126,7 +126,7 @@ the DHT.  Each VPN has a unique name or namespace, when a peer requests an
 IP address, a mapping of $hash(namespace, IP)$ to the peers overlay address
 is atomically written to the DHT.  A success implies that the writer was the
 first writer to that value and other peers reading that value will be able to
-indentify that peer as owner of that IP address in that namespace.  Likewise
+identify that peer as owner of that IP address in that namespace.  Likewise
 when a peer wants to route a packet to a remote VPN peer, they query the DHT
 using the mapping, which returns the overlay address.  The IP packet is then
 sent to the overlay destination.
@@ -271,7 +271,7 @@ collisions is small for typical LAN environments (less than 50\% if the average
 number of VN hybrid nodes on the same L2 network is 65,000). 
 
 The key difference from the Hybrid and Router is that the Hybrid routes for only
-a single node, say ``A'', and thus msut ignore messages that do not originate
+a single node, say ``A'', and thus must ignore messages that do not originate
 from ``A''.  The Hybrid model does not necessarily know about the existence of
 all machines in a LAN, because it does not own them.  So when an ARP request
 of some remote machine, say ``B'', is sent by ``A'', the Hybrid must send out
@@ -285,7 +285,7 @@ pseudo-entity being the target.
 \subsection{Address Allocation}
 IP addresses are traditionally allocated in one of three ways: 1) statically, 2)
 dynamically through DHCP, or 3) through pseudo-random link-local addressing.
-This model foucses on static and dynamic addressing.
+This model focuses on static and dynamic addressing.
 
 The network components configurable by DHCP as defined by~\cite{dhcp0,dhcp1}
 that are interesting to a VPN are addresses, routing, and other networking
@@ -302,7 +302,7 @@ Figure~\ref{fig:dhcp}, the steps in DHCP are:
 the address and other network configuration.
 \item Client receives and acknowledges the Offer by sending a Request message
 to accept the Offer.
-\item Server receives Request message and returns an Ack message containing
+\item Server receives Request message and returns an ACK message containing
 the same details as the Offer.
 }
 \end{enumerate}
@@ -316,7 +316,7 @@ address conflicts.  In this model, this is done by the server ignoring the
 duplicate requests, and it is up to the user to configure for a new address.
 Thus DHCP provides a more reliable method in these systems.
 
-To support scalably handle address allocation in decentralized systems, the
+To support scalable address allocation in decentralized systems, the
 DHCP server is a virtual entity, parsing DHCP packets and interacting with
 an overlay based DHT.  This approach does not need to be limited to structured
 overlay based VPNs but can be introduced as an added value component.
@@ -324,7 +324,7 @@ overlay based VPNs but can be introduced as an added value component.
 An important aspect of DHCP is that after a machine has received an IP address
 from the DHCP server, it always checks to ensure that the address has not been
 allocated, as such the VPN should never respond to address resolutions for
-local IP addressses.
+local IP addresses.
 
 If an overlay allocates an address to the VN, then the VN owns it.  The other
 address that the VN owns is the null address, 0.0.0.0, which is sent during
@@ -349,6 +349,29 @@ deterministically maps IP addresses to names, such as 10.250.5.5 maps to
 C250005005.  2) can be solved by using the DHT and placing key:value pairs of
 the form hash(namespace:hostname) to IP address and hash(namespace:IP address)
 to hostname.
+
+\section{Socket and HTTP Proxy VPNs}
+\label{userspace_vpn}
+In certain circumstances, users are unable to run their own VPN software
+limiting their ability to connect with other resources through specialized tools
+like Smart Sockets~\cite{smartsockets} or manually created links.  Neither of
+these approaches allow direct communication to resources already connected to
+a VPN without additionally adding support for more features.  To address this
+issue, I propose the implementation of an entire networking stack in software
+from the transport layer, including TCP, UDP, and ICMP, down to the data
+link layer, as to include IP and Ethernet.  To connect with this userspace VPN,
+applications would either need to support HTTP proxy methods or be recompiled
+against a BSD compatible library.  Much of the ground work has already been
+set, IPOP naively supports the physical layer, has an understanding of
+Ethernet and IP communication, and supports parsing and creating Ethernet, ARP,
+IP, TCP, ICMP, UDP, DHCP, and DNS packets.  The remaining components are the
+TCP stack, which will be completed by the work done in Chapter~\ref{tcp},
+a userspace Ethernet and IP system, ICMP and UDP handlers, and the HTTP proxy
+and socket bindings.  The usefulness of this work will be verified in
+experiments involving high performance computing lab resources, where users do
+not have the ability to run privileged applications with the goal of allowing
+Condor to add additional, NAT and firewall constrained resources to a remote 
+pool.
 
 \section{Supporting Migration}
 There has been a rapid increase in the deployment of Virtual Machines (VMs) for
@@ -421,7 +444,7 @@ the VN router at the source may keep forwarding rules for the migrated IP
 address for a certain period of time, akin to mobile IP but not on a permanent
 basis.  A more direct approach, as implemented in the prototype, involves the VN
 router notifying the connected host of a change in ownership, resulting in the
-host querying the DHT for the updated P2P end point.  An evaluation of tradeoffs
+host querying the DHT for the updated P2P end point.  An evaluation of trade offs
 in the migration design, while interesting, is outside the scope of this paper. 
 
 A static address allocation is similar to a migration without there being an
@@ -432,7 +455,7 @@ following migration, in fact, depending on the lease time that is highly
 unlikely.  Using an insecure DHT that supports deletes is sketchy as it would
 be relatively easy for machines to perform man in the middle attacks by
 deleting keys which they do not own.  Even the use of passwords mentioned in
-DHT literatures is not sufficient as it is not immune to collusion, or Sybil,
+DHT literature is not sufficient as it is not immune to collusion, or Sybil,
 attacks.
 
 VN router migration was analyzed through the use of two Xen-based VMware VMs
@@ -442,7 +465,7 @@ attempts to understand overlay overheads of the approach.  The experiment, as
 shown in Figure~\ref{fig:migration_ring}, involved migrating a Xen guest VM
 between two Xen host VMMs running in VMware.  Although they are hosted in the
 same infrastructure, the two domains are connected to two separate VLANs, and
-thus isolated.  The reosurce information is stored in a DHT running on top of
+thus isolated.  The resource information is stored in a DHT running on top of
 PlanetLab.  Thus the migration overheads in the experiment capture the cost of
 wide-area messaging in a realistic environment.  During the course of the
 experiment, over 50 different IP addresses were migrated 10 times each in an
@@ -478,7 +501,7 @@ is self-contained and requires that the user provide it to the VPN, by either
 placing it in a specific directory, a GUI, or a command-line utility whose only
 input parameter is the path to a configuration file.  In the prototype, the
 only the file system and command-line approaches have been implemented.  The
-configuration data contains the IP address space, VPN namespace, group website's
+configuration data contains the IP address space, VPN namespace, group web site's
 address, and a shared secret.  The shared secret uniquely identifies the user,
 so that the website can determine how to handle certificate requests.  When
 making a certificate request, the user sends over HTTPS a public key and their
@@ -570,7 +593,7 @@ explored to provide intelligent selection and load balancing of gateways.
 
 \subsection{The Client}
 VPN Clients wishing to use full tunnel must redirect their default traffic to
-their VN device.  In the protoype VPN model, a virtual IP address is allocated
+their VN device.  In the prototype VPN model, a virtual IP address is allocated
 for the purpose of providing distributed VN services DHCP and DNS.  This same
 address is used as the the default gateway's IP.  Because this IP address never
 appears in a Internet bound packet, only its Ethernet address does, as shown in
@@ -706,12 +729,12 @@ The evaluation results are presented in Figure~\ref{fig:gridevalnet} and
 \ref{fig:gridevalcpu}.  The maximum bandwidth of 600 Mbps is achieved when
 neither virtual network nor traffic shaping are enabled (``no spec.phys'' at
 1000 Mbps limit in Figure~\ref{fig:gridevalnet}\subref{fig:stream.netperf}),
-which is only 60\% of the theoretical maximum.  This limit is most likley the
+which is only 60\% of the theoretical maximum.  This limit is most likely the
 cost of VMMs, specifically the time required for a packet to traverse both VMMs
 networking stack as well as the hosts networking stack.  Another observation
 was that transactions per second (Figure~\ref{fig:gridevalcpu}
 \subref{fig:rr.spec}) do not improve significantly for \textbf{tc} bandwidth
-limit above 25 Mbps in all cases; thus focus is on only the relevent data up to
+limit above 25 Mbps in all cases; thus focus is on only the relevant data up to
 this limit.
 
 Distinguishing features of the different VN models include the following.
@@ -757,7 +780,7 @@ does allow setting a network interface into promiscuous mode.
 \subsection{In the Clouds}
 The goal of this experiment is to demonstrate the feasibility of connecting
 multiple cloud providers as well as local resources together through virtual
-networking.  The sites chosen for evaluation were local resources at Universty
+networking.  The sites chosen for evaluation were local resources at University
 of Florida and cloud resources provided by Amazon EC2 and GoGrid.  A
 qualitative observation here was that the differences in the networking
 infrastructure exposed by different cloud providers reinforce the importance
@@ -791,7 +814,7 @@ overhead in the Netperf-RR experiment. Between UF and GoGrid as well as between
 UF and Amazon EC2, the overhead for the Stream experiment was about 15\%.  This
 may be attributed to the additional per-packet overhead of the VN and the small
 MTU set for the VN interface (1200).  The MTU, or maximum transmission unit, is
-the larget packet that is sent from an interface.  IPOP conservatively limits
+the largest packet that is sent from an interface.  IPOP conservatively limits
 the VN MTU to 1200 down from the default 1500 to allow for overlay headers and
 to work properly with poorly configured routers, which has encountered in
 practical deployments.  A more dynamic MTU, which will improve performance, is
@@ -894,7 +917,7 @@ Each subnet is allocated a single router.  Each host must be configured for
 regular and ViNe networks, but no VN software needed on host.
 &
 % Misc.
-Supports encrypted tunnels between ViNE routers, migration not discussed.
+Supports encrypted tunnels between ViNe routers, migration not discussed.
 \\ \hline
 \end{tabular}
 }
@@ -1043,7 +1066,7 @@ P2PVPN
 Centralized Discovery, P2P links
 &
 %Routing
-Peers discover each other through a bittorrent tracker and attempt to form
+Peers discover each other through a BitTorrent tracker and attempt to form
 direct links with each other, attempts to form all-to-all connectivity, if
 direct links are unavailable, indirect links can be used to forward packets
 &
@@ -1117,7 +1140,7 @@ IPOP, tap
 &
 End node: none. Router: IPOP, tap, bridge 
 &
-IPOP, tap, veth, bridge \\ \hline
+IPOP, tap, VETH, bridge \\ \hline
 Host overhead
 &
 CPU, memory
@@ -1211,7 +1234,7 @@ IP address space subnets and have layer 2 traffic as well.}
 \epsfig{file=figs/Migration.png.eps, width=5in}
 \caption[VN Router Migration]{The VN operations that occur after a guest (VM)
 has been migrated.  (1) The destination retrieves the P2P information of the
-source from the DHT and optimistically places its information into the Dht.
+source from the DHT and optimistically places its information into the DHT.
 (2) The destination requests that the source delete its information from the
 DHT.  (3)  The source confirms that the VM is no longer present and performs
 the delete.  (4)  The source notifies the destination that its request has

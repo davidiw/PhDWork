@@ -22,9 +22,9 @@
 Netperf~\cite{netperf} is used to estimate the latency and bandwidth of the
 different VN models. The latency is measured by deploying Netperf in the
 TCP\_RR mode, which measures the number of 1-byte request-receive transactions
-that can be completed in a second. The bandwidh is estimated by running Netperf
+that can be completed in a second. The bandwidth is estimated by running Netperf
 in the TCP\_STREAM mode, which is a bulk transfer mode. It should be noted that
-in situations where the link bandwidths were asymetric, Netperf is deployed in
+in situations where the link bandwidths were asymmetric, Netperf is deployed in
 both directions.  Since both latency and bandwidth are dependent on the CPU
 comparison, evaluations that include CPU utilization tasks require creating
 a baseline first where only Netperf is the only active workload.

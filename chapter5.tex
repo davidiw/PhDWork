@@ -227,7 +227,7 @@ The most important components in securing an environment are limiting internal
 and external access from inside the system.  Specifically, internal resources
 have no password enabled accounts to avoid cases where users submit tasks that
 attempt to provide more privileged access to the user.  In the event that a
-passworded account is necessary, such as on a client machine, the system is
+password proetected account is necessary, such as on a client machine, the system is
 configured to prevent permission switching by the task scheduler user, in
 Linux, for example, this is done by limiting \textit{su} access.  By default,
 Condor runs jobs as either nobody or the user named ``Condor''.  This limits
@@ -303,7 +303,7 @@ Northeastern University (NEU), and cloud resources provided by EC2, pools of 50
 resources from each site were booted independently and then together, resulting
 in 4 different test runs.  The resources connect to an existing pool consisting
 of a negotiator and client node.  Once all the resources have connected, the
-client submits a job to each resource.  Three timespans are measured: ``start''
+client submits a job to each resource.  Three time spans are measured: ``start''
 - begins with starting the experiment including the copying of files and
 creation of instances until all resources have been powered on, ``connect'' -
 begins with ``start'' though ends when all resources appear in
