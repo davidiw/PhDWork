@@ -3,45 +3,47 @@
 A Virtual Private Network (VPN) provides the illusion of a local area network
 (LAN) spanning a wide area network (WAN) infrastructure by creating encrypted
 and authenticated, secure\footnote{For the remainder of this proposal, unless
-explicitly stated otherwise, security implies encryption and authentication.}
-communication links amongst participants.  Common uses of VPNs include secure
-access to enterprise network resources from remote/insecure locations,
-connecting distributed resources from multiple sites, and establishing virtual
-LANs for multiplayer video games over the Internet.  VPNs, in the context of
-this proposal, differ from others that provide ```emulation of a private Wide
-Area Network (WAN) facility using IP facilities' (including the public Internet
-or private IP backbones).  ''~\cite{ip_vpns}.  These style of VPNs connect large
-sets of machines through virtual routers to a virtual WAN environment.
+explicitly stated otherwise, security implies encryption and mutual
+authentication between peers.} communication links amongst participants.
+Common uses of VPNs include secure access to enterprise network resources from
+remote/insecure locations, connecting distributed resources from multiple
+sites, and establishing virtual LANs for multiplayer video games over the
+Internet.  VPNs, in the context of this proposal, differ from others that
+provide ```emulation of a private Wide Area Network (WAN) facility using IP
+facilities' (including the public Internet or private IP backbones).
+''~\cite{ip_vpns}.  These style of VPNs connect large sets of machines through
+virtual routers to a virtual WAN environment.
 
 As a tool enabling collaborative environments, VPNs can be useful for many
 different types of users.  If friends and family require computer assistance
-and their computer guru no longer lives nearby, a VPN enables access to the
-remote machine despite networking constraints so long as the user has an
-Internet connection.  When traveling abroad, a user may wish that their
-Internet traffic be kept private from the local network, a VPN can be
-used to route all Internet packets through the users home network, ensuring
-the user's privacy.  Many computer and video games have multiplayer networking
-components that require direct connectivity and even modern games with
-centralized gaming components eventually are no longer supported, players of
-these games can continue playing with their remote friends through VPNs.  Small
-and medium businesses may find VPNs useful for connecting desktops and servers
-across distributed sites securing traffic to enterprise networked resources.
-independent organizations that each have their few of their own or no resources
-can combine together their resources through a VPN to create a powerful
-computing grid.
+and their computer guru no longer lives nearby, the guru can remotely log into
+the machine using a VPN despite networking constraints between the two parties
+so long as they both have Internet connections.  When traveling abroad, a user
+may wish that their Internet traffic be kept private from the local network, a
+VPN can be used to route all Internet packets through the users home network,
+ensuring the user's privacy.  Many computer and video games have multiplayer
+networking components that require direct connectivity and games with
+centralized servers bootstrapping multiplayer connectivity eventually lose
+support, players of these games can continue playing with their remote friends
+through VPNs.  Small and medium businesses may find VPNs useful for connecting
+desktops and servers across distributed sites securing traffic to enterprise
+networked resources.  Independent organizations that each have limited
+resources can combine together their resources through a VPN to create a
+powerful computing grid.
 
 There are various VPN architectures that attempt to deal with the challenges
 presented in these use cases.  In some cases one VPN approach may work,
 where another is not applicable, and in some no current VPN approach is
-applicable.  In general VPNs face the following challenges:  
+applicable.  In general successful deployment and use of VPNs face the
+following challenges:  
 \begin{itemize}
 \item \textbf{Configuration}:  Initial setup of the VPN.  Where will VPN
 resources be located, what type of security credentials will be used, what are
 the network parameters, how will users connect to the VPN.
-\item \textbf{Management}:  As peers and external resources desire to join the
-system, security credentials need to be provided to both.  External resources
-need to be linked to the rest of the system.  Occasionally peers misbehave, in
-these situations, peers must have their membership revoked.
+\item \textbf{Peer Management}:  As peers and external resources desire to join
+the system, security credentials need to be provided to both.  External
+resources need to be linked to the rest of the system.  Occasionally peers
+misbehave, in these situations, peers must have their membership revoked.
 \item \textbf{Connectivity}:  Peers may want to connect to a remote environment
 or to each other.  Communicating through a central resource may create
 bottlenecks, but doing so directly may be impossible due to restrictive network
@@ -53,28 +55,29 @@ systems can be significantly more complicated.
 \item \textbf{Permissions}:  Users must be administrators or given the ability
 to run a VPN by an administrator.  Strict environments such as computing labs
 or in environments with existing VPNs may prevent the user from being able
-to use their own VPN.
+to use their own VPN, such as colliding address spaces.
 \end{itemize}
 
 The key to using a VPN in collaborative environments is making it user-friendly
-and scalable.  Applying these requisites to the challenges:  a collaborative
-VPN should be easy to configure, users need not be experts in operating systems
-(OSs) or networks; a VPN should not rely on any one site or institution to
-provide connectivity for the entire VPN; adding new users and resources should
-be straight-forward using approaches familiar to common users; peers should be
-able to connect to each other directly if and when possible; not only should
-the communication in the system be secure but the system providing the VPN
-should be secure; and users should be able to connect to the VPN so long as
-there is Internet connectivity.  While existing VPN are able to meet some of
-these requirements, they are unable to meet them all.  Centralized approaches
-(e.g.  OpenVPN~\cite{openvpn}) by their very nature require dedicated
-infrastructures and do not allow direct communication between peers though are
-the only VPN approach to full tunnel operation and guarantee all-to-all
+and scalable.  Applying these requisites to the challenges leads to the
+following requirements:  a collaborative VPN should be easy to configure, such
+that users should be able to deploy and use a them without being experts in
+operating systems (OSs) or networks to use; a VPN should not rely on any one
+site or institution to provide connectivity for the entire VPN; adding new
+users and resources should be straight-forward using approaches familiar to
+common users; peers should be able to connect to each other directly if and
+when possible; not only should the communication in the system be secure but so
+should the organization of the resources in the VPN; and users should be able
+to connect to the VPN so long as there is Internet connectivity.  While
+existing VPN are able to meet some of these requirements, they are unable to
+meet them all.  Centralized approaches (e.g.  OpenVPN~\cite{openvpn}) by their
+very nature require dedicated infrastructures and do not allow direct
+communication between peers though they are able to guarantee all-to-all
 communication regardless NAT and firewall conditions.  P2P-based approaches
 (e.g. Hamachi~\cite{hamachi}, Wippien~\cite{wippien}, Gbridge~\cite{gbridge},
 PVC~\cite{pvc}) are vulnerable to man-in-the-middle attacks if session
 management is handled by an external provider, rely on a central resource for
-the creation of VPN links, and require centralized relays if direct peer
+the creation of VPN links, and require managed relays if direct peer
 communication across NATs and firewalls fails.  Decentralized approaches
 require manual configuration of links between members of the virtual network
 (e.g., ViNe~\cite{vine}, Violin~\cite{violin}, VNET~\cite{vnet},
@@ -82,19 +85,19 @@ tinc~\cite{tinc}).  Existing P2P approaches lack scalability (N2N~\cite{n2n}
 and P2PVPN~\cite{p2pvpn}) or are difficult to configure and lack privacy
 (I3~\cite{i3}).
 
-The focus of this proposal is in VPNs useful for collaborative environments
-through a novel peer-to-peer (P2P) VPN systems.  In this proposal, I will
-review the key components of a VPN and either show how existing P2P systems can
-be used to support the components or design and implement new features and
-systems as necessary.  P2P systems align well with collaborative environments
-in large part due to their decentralized and distributed nature, the challenge
-in using P2P is ensuring security and scalability.  P2P systems can be used
+This proposal focuses on VPNs useful for collaborative environments through
+novel peer-to-peer (P2P) VPN systems.  In this proposal, I review the key
+components of a VPN and either show how existing P2P systems can be used to
+support the components or design and implement new features and systems as
+necessary.  P2P systems align well with collaborative environments in large
+part due to their decentralized and distributed nature; however, P2P presents
+challenges in ensuring security and scalability.  P2P systems can be used
 to implement scalable autonomic and decentralized systems, though when used
 in public environments they do not provide very secure environments as they
 are easily compromised by malicious users, but the cost of hosting a private
 overlay can out weigh the advantages in collaborative environments.  I extend
 my work from approaches that use P2P to implement scalable virtual networks,
-IPOP~\cite{ipop} and I3~\cite{i3}, finishing the work of my predecessors by
+IPOP~\cite{ipop} and I3~\cite{i3}, improving the work of my predecessors by
 designing and implementing a system that provides privacy or user-friendly
 configurability.  At the heart of my contribution are methods enabling secure,
 user-friendly VPNs through the use of P2P systems.
@@ -102,14 +105,14 @@ user-friendly VPNs through the use of P2P systems.
 \section{Virtual Private Network Basics}
 VPNs consist of two components: clients that communicate with each other and
 servers or overlays that provide the infrastructure for clients to find and
-establish communication with each other.  From a users perspective the
+establish communication with each other.  From a user's perspective the
 environment provided by a VPN client is the same regardless of how the server
 or overlay is implemented.  The clients interface with the server can also
 be abstracted such that clients are quite generic.
 
 Figure~\ref{fig:vpn} abstracts the common features of all VPNs clients, a
 service that communicates with the VPN system and a virtual network (VN) device
-for host integration.  During initialization, the VPN services authenticates
+for host integration.  During initialization, the VPN service authenticates
 with the system~\footnote{A system in this context refers any portion of the
 VPN system including a central server, another VPN client, or a relay.},
 optionally, querying for information about the network, such as network address
@@ -157,35 +160,36 @@ while VPN configuration determines how the Ethernet header is handled.
 
 \section{Computer Network Architectures}
 All models for computer communication in distributed systems fall under two
-categories:  centralized and decentralized, though they can be further
-divided to allow for self-configuring dynamic systems through the use of P2P
-communication.  The architectures commonly used for implementing VPN systems
-are:
+categories:  centralized and decentralized.  They can be further divided into
+hybrid systems with centralized session management and decentralized
+communication and self-configuring, dynamics P2P systems.  The architectures
+commonly used for implementing VPN systems are:
 
 \begin{itemize}
 \item \textbf{Centralized Organization and Communication} - These are client
 server systems, where all distributed peers both locally and remote are clients
-connecting into a dedicated server resources.  Clients never communicate with
-each other directly only, but rather every message between two clients must
-traverse the server.  Most online social networks (OSNs) are representative of
-these type of systems, users of OSNs like Facebook~\cite{facebook} and
-MySpace~\cite{myspace} communicate through centralized environments never
-directly to each other's computer.  The issue with these systems is the reliance
-on dedicated resources requiring that the server be online for clients to
-organize and communicate with each other, thus if a server goes offline or
-becomes overwhelmed by clients the system is rendered useless.
+discovering and connecting, or organizing, through a dedicated centralized
+resource. Clients never communicate with each other directly only, but rather
+every message between two clients must traverse the server.  For instance, most
+online social networks (OSNs) are representative of these type of systems,
+users of OSNs like Facebook~\cite{facebook} and MySpace~\cite{myspace}
+communicate through centralized environments never directly to each other's
+computer.  OpenVPN~\cite{openvpn} represents this domain in VPNs.  The issue
+with these systems is the reliance on dedicated resources requiring that the If
+a server goes offline or becomes overwhelmed by clients the system is rendered
+useless.
 \item \textbf{Centralized Organization and Decentralized Communication} - The
-first set of P2P popular P2P systems like the original Napster
-and Kazaa used this sort of system.  Like the client-server model,
-clients connect to a server to find other clients, though instead of
-communicating through the server, the clients form direct connections with each
-other.  These approaches are limited by network address translation (NAT) and
-firewalls that may prevent peers from communicating with each other.  In these
-cases though, the central server may act as a relay allowing the two clients to
-communicate through it.  Unlike systems using centralized communication, these
-systems are less susceptible to being overwhelmed by client traffic and even if
-the server goes offline existing client links remain active though new
-connections cannot be formed.
+first set of popular P2P systems like the original Napster and Kazaa as well
+as VPNs like Hamachi~\cite{hamachi} fall into this category.  Like the
+client-server model, clients connect to a server to find other clients, though
+instead of communicating through the server, the clients form direct
+connections with each other.  These approaches are limited by network address
+translation (NAT) and firewalls that may prevent peers from communicating with
+each other.  In these cases, the central server may act as a relay allowing the
+two clients to communicate through it.  Unlike systems using centralized
+communication, these systems are less susceptible to being overwhelmed by
+client traffic and even if the server goes offline existing client links remain
+active, though new connections cannot be formed.
 \item \textbf{Decentralized with Manual Organization} - To address the issues
 of a central system going offline, many distributed servers may be used and
 clients can be configured to connect to any number of them creating an overlay.
@@ -201,56 +205,58 @@ Violin~\cite{violin}, and Layer 2 Tunneling Protocol based VPNs~\cite{l2tp}.
 \item \textbf{Decentralized with Automatic Organization} - The last model falls
 under systems that self-organize.  In this environment, there is no distinction
 amongst peers as they act as both client and servers, i.e., a P2P system or
-overlay.  P2P systems are usually distributed with list of common peers.  When
+overlay.  P2P systems are usually distributed with a list of common peers.  When
 attempting to connect with the P2P overlay, a peer randomly selects peers on
 this list until it is able to connect with one.  This connection is then used
 to form connections with other peers currently in the overlay.  The overlay
 can be organized in two different forms: randomly or deterministically
 creating unstructured or structured overlays, respectively.  In an unstructured
 overlay, links are formed arbitrarily, thus a peer searches for another peer
-by broadcasting the message or using stochastic techniques.  Structured
-overlays are organized into deterministic shapes, each peer is expected to
-have connections to certain other peers forming shapes such as rings and
-hypercubes.  Peers can be found deterministically using greedy routing
+by broadcasting the message or using stochastic techniques.  In structured
+overlays, peers organize into topologies by deterministically forming
+connections with peers nearby in the overlay address space creating ring and
+hybercubes.  Peers can be found deterministically using greedy routing
 approaches in usually $O(\log(N))$ time.  Gnutella~\cite{gnutella} file sharing
 system and Skype~\cite{skype} are popular examples of unstructured systems,
 while P2PSIP~\cite{p2psip} and distributed hash tables (DHTs)~\cite{chord} are
-popular in structures systems.  The challenges to unstructured systems is
+popular in structured systems.  The challenges to unstructured systems is
 finding data objects in reasonable amount of time, while structured systems
-suffer when large amount of peers join or leave the system, churn.  In general,
-both approaches are difficult to secure due to their typical application.
-When used in closed environments though, they have been shown to be very
-useful, exemplified by Dynamo~\cite{dynamo} or BigTable~\cite{bigtable}.
+suffer when large amount of peers join or leave the system, known as
+churn~\cite{opendht}.  In general, both approaches are difficult to secure due
+to their typical application.  When used in private environments though, they
+have been shown to be very useful, exemplified by Dynamo~\cite{dynamo} or
+BigTable~\cite{bigtable}.
 \end{itemize}
-As this proposal will use structured overlays as the foundation in building
-scalable, decentralized VPNs, Chapter~\ref{structured_p2p} provides more
-detailed review of structured overlays and challenges in decentralized
-communication with emphasis on security, establishing connections, and
-reliability.  I also provide solution to these challenges in the form of
-private virtual overlays bootstrapping secure overlays using public
-free-to-join overlays, a decentralized relay system when direct NAT or firewall
-traversal fails, and an overlay-aware TCP enabling reliable and efficient
-communication over unreliable links.
+
+This proposal uses structured overlays as the foundation in building scalable,
+decentralized VPNs, Chapter~\ref{structured_p2p} provides a more detailed
+review of structured overlays and challenges in decentralized communication
+with emphasis on security, establishing connections, and reliability.  I also
+provide solution to these challenges in the form of private virtual overlays
+bootstrapping secure overlays using public free-to-join overlays, a
+decentralized relay system when direct NAT or firewall traversal fails, and an
+overlay-aware TCP enabling reliable and efficient communication over unreliable
+links.
 
 \section{Contributions}
-In the introduction, I presented a list of challenges a VPNs face.  When
-applied to collaborative environments, the resulting requirements are 
-self-configuring environments enabling even non-experts to setup, deploy,
-and manage their own VPNs; peers should communicate with each other
-directly when possible though still have reasonably efficient alternatives;
-the system should be reliable and ensure the privacy of its users; and
-users should be able to access the VPN regardless of their access rights.
-To address these requirements, I propose a novel GroupVPN using structured
-overlays consisting of the following novel contributions:
+Applying the challenges listed in the introduction to collaborative
+environments the resulting requirements are self-configuring environments
+enabling even non-experts to setup, deploy, and manage their own VPNs; peers
+should communicate with each other directly when possible or through efficient
+indirect paths when constrained; the system should be reliable and ensure the
+privacy of its users; and users should be able to access the VPN regardless of
+their user privileges so long as they can run network applications.  To address
+these requirements, I propose a novel GroupVPN using structured overlays
+consisting of the following novel contributions:
 
 \begin{itemize}
 \item \textbf{Decentralized Relays}:  In collaborative environments, most peers
-will be behind NATs and potentially firewalls as well.  While in general 90\% of
+are behind NATs and potentially firewalls as well.  While in general 90\% of
 NATs are traversable through existing approaches, not all are and firewalls
 complicate the matter.  While these peers can communicate through the overlay,
-as the overlay grows, this latency can grow taking seconds for peers to send
-a message to each other.  To improve this situation, I propose the creation of
-autonomic Te-hop relays between the peers.
+as the overlay grows, this latency can become a hindrace to usability and
+interactivity To improve this situation, I propose the creation of autonomic
+2-hop relays between the peers.
 \item \textbf{Private Virtual Overlays}:  At any given time, peers may or may
 not be connected to the overlay.  Private overlays can consist of varying sizes
 of users, in environment where there are very few users, it is possible that
@@ -267,10 +273,10 @@ overlay's state machine.  I will work towards addressing this issue by
 investigating different models for using overlays to establish direct
 communication:  communicating through the overlays state machine, bypassing the
 overlays state machine but reusing its connection management, and creating
-links unused by the overlay.
+links separate from the overlay.
 \item \textbf{Overlay-Aware TCP}: Overlays consist of peers connecting and
-disconnecting at random and in order to provide light-weight approaches that
-provide reasonable NAT and firewall traversal are connected using UDP.  As such
+disconnecting at random typically connectiong through UDP to reduce resource
+load and provide efficient NAT and firewall traversal capabilities.  Therefore,
 large streams of data cannot be sent reliably through the overlay.  This is not
 an issue when a VPN has administrator permission enabling the reuse of the OS'
 network stack including TCP.  For situations that lack this ability, I will
@@ -279,14 +285,14 @@ overlays.
 \item \textbf{Self-Configuring VPN Architectures}: Many existing VPN approaches
 require the users to setup their environment and do not provide a plug and play
 system.  In addition, different environments call for different types of VPNs,
-explicitly, users need their own VPN instances and clusters may benefit from
-a single VPN instance for the cluster or may desire fault tolerance of having
+explicitly, individual users connect via their own VPN connections, while
+clusters may benefit from a shared VPN or may desire fault tolerance of having
 many but do not want the communication overhead when talking to VPN peers on
 the LAN.  I address this issue with a self-configuring VPN approach that can be
-applied to various environments scaling from a single computer to many.
+applied to various local environments scaling from a single computer to many.
 \item \textbf{Userspace Virtual Networking Stack}: To address the case where
 users do not have permissions to run VPNs, I plan on designing and implementing
-a VPN requires no user permissions and can connect to other VPNs that do.
+a VPN that requires no user permissions and can connect to other VPNs that do.
 \item \textbf{P2P Enabled Full Tunnel VPN Mode}: When in insecure environments
 such as browsing private information in a coffee shop, users may desire to
 prevent local users and administrators from sniffing their traffic.  Traditional
@@ -294,7 +300,8 @@ VPNs support this behavior, but the approach is difficult to implement in P2P
 systems due to their dynamic nature.  All existing decentralized VPN approaches
 lack the ability to perform this behavior.  I propose a method that not only
 works for decentralized and P2P systems and ensures a greater level of security
-than that provided by existing approaches in centralized systems.
+than existing approaches by securing other non-VPN communication between the
+peer and gateway resources.
 \end{itemize}
 
 To supplement this work, I plan on the investigating the application of these
@@ -306,7 +313,7 @@ primary motivation for my work has been the use of self-configuring VPNs and
 systems for grid computing.  In this proposal, my culminating work, I will
 describe how this system can be used to create a novel self-configuring grid
 system that allows users who have limited knowledge of operating systems,
-networks, and computers to create their own grids in a matter minutes.
+networks, and computers to create their own grids in a matter of minutes.
 
 The rest of this proposal is organized as follows.  In
 Chapter~\ref{structured_p2p}, I present an in depth analysis of structured
@@ -319,7 +326,7 @@ focusing on both local and network configuration.  Chapter~\ref{gridappliance}
 details the construction of grid systems using self-configuring approaches
 enabled by virtualization.  In Chapter~\ref{spo}, I describe a method for
 creating online social profiles using virtual private overlays.  Finally, I
-conclude the paper discussing real systems and future work in
+conclude the proposal by  discussing real systems and future work in
 Chapter~\ref{conclusion}.
 
 \section{Figures and Tables}

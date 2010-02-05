@@ -113,7 +113,7 @@ exchange this information.  Peers behind symmetric NATs cannot easily
 communicate with each other, since there is no relation between remote hosts
 and ports and local ports.  Further complicating the matter is that there are
 various types of symmetric NATs, having behaviors similar to full, restricted,
-and port restricted cone NATs.  \cite{nat_stun} describes methods to traverse
+and port restricted cone NATs.  \cite{ice} describes methods to traverse
 these NATs so long as there is a predictable pattern to port selection.  In
 general, these approaches use UDP because of the lack of additional protocol
 states, that require replay and ignoring reject methods that occur with the TCP
@@ -266,6 +266,16 @@ a real P2P system that will be tested using the PlanetLab overlay.  Likewise wit
 the simulations, this work will confirm or help correct the modeling results and
 provide insights on other potential solutions that may improve performance when
 in a real system.
+
+It is not apparent whether or not there are any real uses cases for 
+overlay-aware TCP, when applications need reliable communication they can form
+direct links.  Though not in all cases will those direct links, though not
+all links can be traversed using TCP and to a lesser extent UDP.  When that
+occurs, communication betweens peers is limited to the 2-hop relay approach.
+The use of UDP and the 2-hop relays provide a use case for a userspace TCP
+implementation fine tuned for these purposes.  As such, the primary focus for
+this work will be these environments and to a lesser degree wide area overlay
+communication.
 
 \section{Figures and Tables}
 

@@ -945,7 +945,6 @@ in Wide Area Overlays of Virtual Workstations},
 }
 
 @techreport{cloud_computing,
-  abstract = {Cloud Computing, the long-held dream of computing as a utility, has the potential to transform a large part of the IT industry, making software even more attractive as a service and shaping the way IT hardware is designed and purchased. Developers with innovative ideas for new Internet services no longer require the large capital outlays in hardware to deploy their service or the human expense to operate it. They need not be concerned about over-provisioning for a service whose popularity does not meet their predictions, thus wasting costly resources, or under-provisioning for one that becomes wildly popular, thus missing potential customers and revenue. Moreover, companies with large batch-oriented tasks can get results as quickly as their programs can scale, since using 1000 servers for one hour costs no more than using one server for 1000 hours. This elasticity of resources, without paying a premium for large scale, is unprecedented in the history of IT.},
   author = {Armbrust, Michael   and Fox, Armando   and Grifﬁth, Rean   and Joseph, Anthony  D.  and Katz, Randy   and Konwinski, Andy   and Lee, Gunho   and Patterson, David   and Rabkin, Ariel   and Stoica, Ion   and Zaharia, Matei  },
   citeulike-article-id = {4119352},
   institution = {University of California at Berkeley},
@@ -1496,7 +1495,15 @@ in Wide Area Overlays of Virtual Workstations},
   year = "2001"
 }
 
-@manual{p2psip,
+@inproceedings{p2psip,
+  title={SOSIMPLE: A Serverless, Standards-based, P2P SIP Communication System},
+  author={Bryan, D.A. and Lowekamp, B.B. and Jennings, C.},
+  booktitle={Advanced Architectures and Algorithms for Internet Delivery and Applications},
+  year={2005},
+  month={June},
+  pages={42-49},
+  doi={10.1109/AAA-IDEA.2005.15},
+  ISSN={},
 }
 
 @manual{symmetric_nats,
@@ -1519,7 +1526,13 @@ in Wide Area Overlays of Virtual Workstations},
   address = {New York, NY, USA},
 }
 
-@manual{nat_stun,
+@misc{ice,
+  title = {Interactive Connectivity Establishment ({ICE}): A Protocol for Network
+    Address Translator ({NAT}) Traversal for Offer/Answer Protocols},
+  author = {J. Rosenberg},
+  year = {2008},
+  month = {October},
+  howpublished = {\url{http://tools.ietf.org/html/draft-ietf-mmusic-ice-19}},
 }
 
 @misc{p2pns,
@@ -1583,3 +1596,15 @@ in Wide Area Overlays of Virtual Workstations},
   address = {New York, NY, USA},
 }
 
+@inproceedings{opendht,
+  author = {Rhea, Sean and Godfrey, Brighten and Karp, Brad and Kubiatowicz, John and Ratnasamy, Sylvia and Shenker, Scott and Stoica, Ion and Yu, Harlan},
+  title = {OpenDHT: a public DHT service and its uses},
+  booktitle = {SIGCOMM '05: Proceedings of the 2005 conference on Applications, technologies, architectures, and protocols for computer communications},
+  year = {2005},
+  isbn = {1-59593-009-4},
+  pages = {73--84},
+  location = {Philadelphia, Pennsylvania, USA},
+  doi = {http://doi.acm.org/10.1145/1080091.1080102},
+  publisher = {ACM},
+  address = {New York, NY, USA},
+}
