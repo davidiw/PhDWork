@@ -211,8 +211,8 @@ overlay to create and maintain links but placing the application between the
 connection and the overlay stack so that the application has first access to
 the data and 2) use the structured overlay to discover peers but the
 application creates and manages its own links using the structured overlay to
-coordinate these efforts.  The proposed approaches are presented in
-Figure~\ref{fig:direct_communication}.
+coordinate these efforts.  %The proposed approaches are presented in
+%Figure~\ref{fig:direct_communication}.
 
 The first approach benefits from using existing components of the structured
 overlay including link creation and maintenance though may still have overheads
@@ -318,16 +318,22 @@ environment, Brunet, using the King data set.}
 \label{fig:simulated_relays}
 \end{figure}
 
-\begin{figure}[ht]
-\centering
-\caption{Direct communication models}
-\label{fig:direct_communication}
-\end{figure}
+%\begin{figure}[ht]
+%\centering
+%\caption{Direct communication models}
+%\label{fig:direct_communication}
+%\end{figure}
 
 \begin{table}[ht]
-%\begin{tabular}
-%\end{tabular}
 \caption{VN Stack Comparison}
 \label{tab:vpn_eval_comp}
+\begin{tabular}{c||c|c|c}
+& Latency (ms) & Bwidth (Mb/s) & Mem (KB) \\\hline
+Host & 0.27 & 941 & n/a \\\hline
+C & 0.34 & 738 & 998 \\\hline
+C\# & 0.37 & 716 & 21500 \\\hline
+IPOP & 0.52 & 284 & 38312 \\\hline
+IPOP sec & 0.75 & 55 & 50976 \\\hline
+\end{tabular}
 \centering
 \end{table}

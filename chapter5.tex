@@ -87,7 +87,8 @@ task workers pull from a centralized manager as employed by Boinc~\cite{boinc},
 workers receive jobs from any member of the HTC infrastructure.  Both 2 and 3
 can be implemented using a myriad of different job schedulers with verifying
 levels of difficulty.  Task schedulers supporting this behavior include
-Condor~\cite{condor0}, Sun Grid Engine, and PBS and its relative Torque.
+Condor~\cite{condor0}, Sun Grid Engine (SGE)~\cite{grid_engine}, and
+PBS~\cite{pbs, pbs0} and its relative Torque~\cite{torque}.
 
 Unlike other task schedulers, Condor supports decentralized users supported
 by having separate components that keep track of resources and negotiates
@@ -341,6 +342,59 @@ went live with minimal communication with us.
 \centering
 \caption{Task scheduler comparison}
 \label{tab:task_schedulers}
+\begin{tabular}{|p{1in}||p{1.675in}|p{1.675in}|p{1.675in}|} \hline
+& Condor & SGE & Torque \\\hline
+Adding Resources
+&
+Host must be in allowable range and optionally have a properly signed certificate
+&
+Host must be added to the head node and have access to list of users
+&
+Host must be added to the head node and have access to list of users
+\\\hline
+Submitting jobs
+&
+Host must be in allowable range and optionally have a properly signed certificate.
+&
+Through a head node, via a dedicated submission machine or having access to a user
+list and queue process on the head node
+&
+Through a head node, via a dedicated submission machine or having access to a user
+list and queue process on the head node
+\\\hline
+Jobs Run As
+&
+nobody
+&
+submitting user
+&
+submitting user
+\\\hline
+Connecting remote sites
+&
+Flocking and Globus
+&
+Globus
+&
+Globus
+\\\hline
+Check pointing
+&
+yes
+&
+yes
+&
+no
+\\\hline
+Scalability
+&
+10,000s
+&
+10,000s
+&
+100s to 1,000s
+\\\hline
+\end{tabular}
 \end{table}
 
 \begin{table}[ht]
