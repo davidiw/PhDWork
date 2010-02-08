@@ -206,9 +206,9 @@ libraries was not consistent across platforms and, additionally, Windows lacked
 a formal installation method.
 
 In using the OpenSSL library with DTLS, in version 0.9.8k, renegotiation of
-security parameters  was broken and would result in a deadlocked DTLS session,
-whereas in 1.0.0-beta3 (the latest released beta) DTLS renegotiation worked;
-however, it would often segmentation fault.  These issues were the motivation
+security parameters was broken resulting in deadlocked DTLS sessions.  Whereas
+in 1.0.0-beta3 (the latest released beta) DTLS renegotiation worked, though often
+crashing due to segmentation faults.  These issues were the motivation
 for the creation of a platform independent security architecture similar to
 DTLS written in C\#.  To provide for flexibility between the two approaches,
 I created a security overlord that treats each approach like a filter.

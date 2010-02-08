@@ -263,7 +263,7 @@ Prior to the introduction of the VN hybrid, the VNs used the Ethernet address
 FE:FD:00:00:00:00 to refer to remote entities.  If each VN hybrid used this
 address, there would be layer 2 collision causing a single hybrid to have all
 traffic sent to it.  In hybrid mode, each VN must generate a unique ``remote''
-Ethernet address at run time.  Our experience and research has led us to the
+Ethernet address at run time.  Experience and research has led to the
 following solution: (1) use FE:FD for the first two bytes as they tend to be
 unallocated and (2) assign random values to the 4 remaining bytes.   Applying
 the birthday problem in this context, the expected probability of address
@@ -630,7 +630,7 @@ the next Internet packet arrives.
 The real challenge in applying full tunnel VPN mode to P2P VPNs is the nature
 of the P2P system, namely dynamic connections.  Peers do not know ahead of time
 what remote peer connections will be thus a simple rule switch does not work.
-Our original thought was to watch incoming connection requests and adding
+The original approach was to watch incoming connection requests and adding
 additional routing rules on demand, though this is only reasonably feasible
 with UDP as a TCP handshake message would need to be intercepted and potentially
 replayed by the local host in order to enable the rule and allow proper routing.
@@ -650,7 +650,7 @@ Ethernet's IP address, 2) encapsulating the IP packet in an Ethernet packet
 with a randomly source address~\cite{sc09} and the destination the LAN's
 gateway, and 3) sending the packet via the physical Ethernet device.  Sending
 an Ethernet packet is not trivial as Windows lacks support for this operation
-and most Unix systems require administrator privilege.  Our platform
+and most Unix systems require administrator privilege.  An alternative, platform
 independent solution uses a second TAP device bridged to the physical Ethernet
 device, allowing Ethernet packets to be sent indirectly through the Ethernet
 device via the TAP device.  Because the solution results in incoming packets to
