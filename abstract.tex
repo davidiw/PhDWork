@@ -9,12 +9,12 @@ the central server.  In recent years, there has been a paradigm shift towards
 the use of peer-to-peer (P2P) communication in VPNs enabling direct
 communication amongst participants, alleviating pressure placed upon the
 central server relegating it to handling session management and supporting
-indirect communication by relaying traffic when NAT or firewall traversal fails.
-Unstructured P2P, though less studied, removes all centralization from the VPN
-with the cost of users having to manually create links amongst peers.  An issue
-with existing VPN approaches is the lack of methods for certificate and
-certificate revocation handling and distribution requiring the user to employ
-their own solutions.
+indirect communication by relaying traffic when NAT(Network Address Translation)
+or firewall traversal fails.  Unstructured P2P, though less studied, removes all
+centralization from the VPN with the cost of users having to manually create
+links amongst peers.  An issue with existing VPN approaches is the lack of
+methods for certificate and certificate revocation handling and distribution
+requiring the user to employ their own solutions.
 
 I propose a novel VPN using structured P2P overlays emphasizing their scalable
 and resilient nature and supporting a security framework that self-configures
@@ -22,19 +22,19 @@ through a group-based public key infrastructure for user-friendly operation.
 Structured overlays enable users to deploy and maintain decentralized,
 distributed applications with limited need for centralization by ensuring fast
 seek time (typically $O(\log(N))$) when searching for a node near a location
-in the overlay.  The novel contributions of my work include a configurable
-virtual network architecture to support different aspects of reliability,
-performance, portability, and usability; a P2P security architecture
-integrating PKI with systems constrained by NATs and firewalls; user-assisted
-automated PKI enabled by group-oriented Web 2.0 interfaces; and the creation of
-virtual private overlays from existing public overlays to provide isolation and
-overlay security for the VPN.  Furthermore, I plan on investigating how to
-support VPNs in environments where users lack administrative permissions
-through a sockets proxy using overlay-aware TCP, connecting those hosts to
-other VPN clients.
+in the overlay.  The novel contributions of my work include a virtual network
+endpoint architecture supporting different aspects of reliability, performance,
+portability, and usability; a P2P security architecture integrating PKI (Public
+Key Infrastructure) with systems constrained by NATs and firewalls;
+user-assisted automated PKI enabled by group-oriented Web 2.0 interfaces; and
+the creation of virtual private overlays from existing public overlays to
+provide isolation and overlay security for the VPN.  Furthermore, I plan on
+investigating how to support VPNs in environments where users lack
+administrative permissions through a sockets proxy using overlay-aware TCP,
+connecting those hosts to other VPN clients.
 
 The premise for this work is to enhance the usability of VPN systems for
-non-expert users to use in home, small/medium business, and education
+non-expert users in home, small/medium business, and education
 environments as demonstrated by prototypes found in the SocialVPN, GroupVPN,
 Grid Appliance, and Archer projects.  The SocialVPN creates user-centric VPNs
 so that peers only have VPN links with their social network friends, whereas
