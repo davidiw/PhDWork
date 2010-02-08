@@ -359,19 +359,31 @@ these approaches allow direct communication to resources already connected to
 a VPN without additionally adding support for more features.  To address this
 issue, I propose the implementation of an entire networking stack in software
 from the transport layer, including TCP, UDP, and ICMP, down to the data
-link layer, as to include IP and Ethernet.  To connect with this userspace VPN,
-applications would either need to support HTTP proxy methods or be recompiled
-against a BSD compatible library.  Much of the ground work has already been
-set, IPOP naively supports the physical layer, has an understanding of
-Ethernet and IP communication, and supports parsing and creating Ethernet, ARP,
-IP, TCP, ICMP, UDP, DHCP, and DNS packets.  The remaining components are the
-TCP stack, which will be completed by the work done in Chapter~\ref{tcp},
-a userspace Ethernet and IP system, ICMP and UDP handlers, and the HTTP proxy
-and socket bindings.  The usefulness of this work will be verified in
-experiments involving high performance computing lab resources, where users do
-not have the ability to run privileged applications with the goal of allowing
-Condor to add additional, NAT and firewall constrained resources to a remote 
-pool.
+link layer, as to include IP and Ethernet.
+
+Methods that enable connecting to a user space VPN include HTTP/Socks proxy,
+sockets API, or port redirection.  The proxy methods requires that the client
+application support redirecting traffic to the HTTP/Socks proxy.  The sockets
+API will require that the application be recompiled using a different sockets
+API than the one shipped with the host, providing a challenge for programming
+language transparency.  Port redirection works by telling the local application
+that the program is running on a local IP address and port, but the VPN
+application runs at that location, encapsulates the packet through the user
+space VPN stack, and forwards the packet via the overlay to the remote peer.
+Much of the ground work for a user space VPN has been set, as IPOP naively
+supports the physical layer, has an understanding of Ethernet and IP
+communication, and supports parsing and creating Ethernet, ARP, IP, TCP, ICMP,
+UDP, DHCP, and DNS packets.  The remaining components are the TCP stack, which
+will be completed by the work done in Chapter~\ref{tcp}, a userspace Ethernet
+and IP system, ICMP and UDP handlers, and the HTTP proxy and socket bindings.
+
+The usefulness of this work will be verified in high performance environments
+and supporting web servers.  The experiment involving high performance
+computing lab resources, where users do not have the ability to run
+privileged applications, will explore how quickly resources can be added to a
+a Condor pool.  A challenge in supporting the group systems in private overlays
+is lack of ability to host a website.  Using this method a website can be hosted
+non-obtrusively over a VPN.
 
 \section{Supporting Migration}
 There has been a rapid increase in the deployment of Virtual Machines (VMs) for

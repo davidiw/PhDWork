@@ -267,6 +267,16 @@ the simulations, this work will confirm or help correct the modeling results and
 provide insights on other potential solutions that may improve performance when
 in a real system.
 
+Most common TCP stacks implement a variety of components defined across
+several works,\cite{tcp, tcp_congestion, tcp_hp, tcp_mss,
+tcp_congestion_notification, tcp_sack}.  Implementing a system accurately
+supporting these features could take a significant amount of time with little
+research contributions.  There exist a few user space implementations already
+support most of these features, such as lwIP~\cite{lwip} and and Userspace
+network stack~\cite{unetstack}.  Initially, I will focus on creating a C\#
+interface that allows deployment in the Brunet overlay.  If time allows, I will
+create a native stack.
+
 It is not apparent whether or not there are any real uses cases for 
 overlay-aware TCP, when applications need reliable communication they can form
 direct links.  Though not in all cases will those direct links, though not
