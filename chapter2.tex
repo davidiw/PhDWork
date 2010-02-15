@@ -213,13 +213,13 @@ approach does not scale and costs significant CPU utilization.
 
 Two models in addition to the existing method of communication will be tested
 to evaluate methods for obtaining high bandwidth using direct communication
-links in overlay networks.  The two new approaches are:  1) use the structured
-overlay to create and maintain links but placing the application between the
-connection and the overlay stack so that the application has first access to
-the data and 2) use the structured overlay to discover peers but the
-application creates and manages its own links using the structured overlay to
-coordinate these efforts.  %The proposed approaches are presented in
-%Figure~\ref{fig:direct_communication}.
+links in overlay networks.  The two new approaches are:  1) Bypass, use the
+structured overlay to create and maintain links but placing the application
+between the connection and the overlay stack so that the application has first
+access to the data, and 2) Separation, use the structured overlay to discover
+peers but the application creates and manages its own links using the structured
+overlay to coordinate these efforts, presented in Figures \ref{fig:direct_comm_1}
+and \ref{fig:direct_comm_2}, respectively.
 
 The first approach benefits from using existing components of the structured
 overlay including link creation and maintenance though may still have overheads
@@ -313,11 +313,24 @@ environment, Brunet, using the King data set.}
 \label{fig:simulated_relays}
 \end{figure}
 
-%\begin{figure}[ht]
-%\centering
-%\caption{Direct communication models}
-%\label{fig:direct_communication}
-%\end{figure}
+\begin{figure}[ht]
+\centering
+\epsfig{file=figs/direct_comm_1.eps, width=4in}
+\caption[Direct communication: Bypass model]{Direct communication, Bypass model.
+The application reuses the P2P connections but obtains the data first and in a
+separate thread.}
+\label{fig:direct_communication_1}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\epsfig{file=figs/direct_comm_2.eps, width=4in}
+\caption[Direct communication: Separation model]{Direct communication: Separation
+model.  The application uses the P2P system to discover remote peers and exchange
+connection information but forms and maintains connections separate from the P2P
+software.}
+\label{fig:direct_communication_2}
+\end{figure}
 
 \begin{table}[ht]
 \caption{VN Stack Comparison}
