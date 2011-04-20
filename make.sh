@@ -3,4 +3,4 @@ bibtex ufsampleETD
 latex ufsampleETD -interaction=nonstopmode
 latex ufsampleETD -interaction=nonstopmode
 dvipdfm ufsampleETD.dvi
-xpdf ufsampleETD.pdf
+epdfview ufsampleETD.pdf

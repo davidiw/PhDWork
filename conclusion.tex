@@ -1,0 +1,43 @@
+\chapter{CONCLUSIONS}
+\label{chap:conclusion}
+This work brings significant advances to the usability of VPNs by describing,
+implementing, and evaluating methods that provide simplified configuration of
+both the local and network components of a VPN.  The use of common network
+protocols enables OS independent VPN system supporting many different local VPN
+configurations.  Structured overlays enable scalabe design of VPNs but have
+inherent security issue; virtual private overlays enables users in network
+constrained environments to use a public overlay to create a secure overlay.
+Web interfaces make the user configuration of these systems reasonable for even
+non-experts.  Decentralized relays address concerns when network constraints
+limit direct communication between peers.  The future work addresses
+performance issues inherent to the use of direct IP communication over P2P and
+enabling the use of VPNs in unprivileged locations.
+
+Completed components of this work include:
+\begin{itemize}
+\item \textbf{Virtual Private Overlays} - secure, self-configuring overlay as
+the basis for a structured overlay VPN.
+\item \textbf{Group environments} - User-friendly environments to generate
+files to ease configuration of complex systems.
+\item \textbf{Local VPN configuration} - VPN architect supporting Interface,
+Router, and a novel Hybrid mode for various environments.
+\item \textbf{Relays} - to enable two-hop connections between peers that cannot
+form direct connections.
+\end{itemize}
+
+The VPN approach described herein has been used to construct real systems,
+such as the GroupVPN~\cite{gridappliance} and a SocialVPN~\cite{cops08}.  The
+GroupVPN has been used to construct a Grid Appliance~\cite{grid_appliance} that
+enables the creation of distributed, decentralized, dynamic computing grids.
+Over the past 2 years, I have been the student lead in an active grid deployed
+for computer architecture research, Archer~\cite{archer}.  Archer currently
+spans four universities with 500 resources.  We have had 100s of users connect
+seamlessly to these resources from many locations including home, school, and
+hotels.  A PlanetLab backend distributed across over 600 resources provides
+near constant overlay uptime for Archer and external users.  External users
+include classes and groups at other universities.  Most recently, a grid at La
+Jolla Institute for Allergy and Immunology went live with minimal communication
+with our group.  Researchers at the Clemson University and Purdue have opted
+for this approach over centralized VPNs as the basis of their future
+distributed compute clusters and have actively tested networks of over 1000
+nodes.

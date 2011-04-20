@@ -1,52 +1,106 @@
 % Write in only the text of your abstract, all the extra heading jargon is automatically taken care of
 \begin{abstract}
+
 Virtual private networks (VPNs) enable existing network applications to run
 unmodified in insecure and constrained environments by creating an isolated and
 secure virtual environment providing all-to-all connectivity for VPN members.
-VPNs are traditionally centralized, limiting applicability due to resource
-requirements and the incurred overhead of having all communication traversing
-the central server.  In recent years, there has been a paradigm shift towards
-the use of peer-to-peer (P2P) communication in VPNs enabling direct
-communication amongst participants, alleviating pressure placed upon the
-central server relegating it to handling session management and supporting
-indirect communication by relaying traffic when NAT(Network Address Translation)
-or firewall traversal fails.  Unstructured P2P, though less studied, removes all
-centralization from the VPN with the cost of users having to manually create
-links amongst peers.  An issue with existing VPN approaches is the lack of
-methods for certificate and certificate revocation handling and distribution
-requiring the user to employ their own solutions.
+While there exist both centralized and distributed VPN implementations, current
+approaches lack self-configuration and organization capabilities that would
+reduce management overheads and minimize effort by non-experts.  Recent use of
+peer-to-peer (P2P) techniques have focused on alleviating pressure placed upon
+infrastructure nodes by allowing peers to form direct connections for
+communication purposes, while infrastructure nodes are used for handling
+session management and supporting indirect communication by relaying traffic
+when NAT (Network Address Translation) or firewall traversal fails.  In terms
+of decentraalized, P2P-based VPN solutions, the mechanisms explored thus far in
+related works employ unstructured P2P systems, which can have significant
+scalability limitations.  This thesis constructs a novel decentralized P2P VPN
+that addresses the following core aspects that are integral to
+user-friendliness: bootstrapping, discovery, security, and endpoint
+configuration.
 
-I propose a novel VPN using structured P2P overlays emphasizing their scalable
-and resilient nature and supporting a security framework that self-configures
-through a group-based public key infrastructure for user-friendly operation.
-Structured overlays enable users to deploy and maintain decentralized,
-distributed applications with limited need for centralization by ensuring fast
-seek time (typically $O(\log(N))$) when searching for a node near a location
-in the overlay.  The novel contributions of my work include a virtual network
-endpoint architecture supporting different aspects of reliability, performance,
-portability, and usability; a P2P security architecture integrating PKI (Public
-Key Infrastructure) with systems constrained by NATs and firewalls;
-user-assisted automated PKI enabled by group-oriented Web 2.0 interfaces; and
-the creation of virtual private overlays from existing public overlays to
-provide isolation and overlay security for the VPN.  Furthermore, I plan on
-investigating how to support VPNs in environments where users lack
-administrative permissions through a sockets proxy using overlay-aware TCP,
-connecting those hosts to other VPN clients.
+A resource joining a distributed system goes through a bootstrapping process.
+The target environment for VPNs include small systems with many if not all
+users behind NATs and firewalls making the bootstrapping process challenging.
+Centralized systems address the bootstrapping problem by using a common
+resource for peer registration, discovery, and connection establishment.
+Centralized systems, however, come with additional costs in deploying and
+managing a dedicated resource with a public Internet address and the capability
+to handle demands placed upon it by clients.  I have investigated, implemented,
+and evaluated decentralized means to bootstrap private P2P overlays for
+connectivity-constrained resources, with an approach that supports a recursive
+overlay organization or the use of third-party free-to-join public overlay
+infrastructures such as XMPP.
 
-The premise for this work is to enhance the usability of VPN systems for
-non-expert users in home, small/medium business, and education
-environments as demonstrated by prototypes found in the SocialVPN, GroupVPN,
-Grid Appliance, and Archer projects.  The SocialVPN creates user-centric VPNs
-so that peers only have VPN links with their social network friends, whereas
-the GroupVPN employs a group infrastructure to manage VPN members and
-distribute VPN configuration.  A free GroupVPN bootstrapping environment
-relying on PlanetLab hosted resources has been available for over a year with
-already over hundreds of users.  GroupVPN has been used by several universities
-to connect decentralized grids.  The Grid Appliance uses the GroupVPN to form
-ad-hoc and decentralized computing pools, facilitating computer architecture
-research in the Archer project.  The Archer project has been accessed by
-student at several universities and has accumulated over 150,000 CPU hours in a
-little more than a year.  In addition, the Grid Appliance has been used as both
-a teaching tool in distributed computing classrooms as well as by external
-users to create their own grids.
+Bootstrapping helps establish connectivity into an overlay; however, many
+systems including P2P VPNs require a means for discovery specific peers.
+Existing VPNs either rely on large tables hosted on infrastructure nodes or
+overlay broadcast techniques to find a resource. As a system grows in capacity,
+these approaches have their limitations, especially in VPNs where all IP
+addresses are independent of their location inside the VPN.  I have employed
+distributed hash tables to efficiently establish decentralized IP address
+allocation and discovery seamlessly providing scalability and resilience.
+
+In a VPN, other peers are typically either trusted directly by the peer, or
+indirectly through a trusted third-party.  While users may trust a third-party
+to assist them in creating network links to other peers, they do not desire to
+have intermediaries that are able to read or modify their IP packets.
+Unfortunately, most VPNs only encrypt messages on a point-to-point (PtP) basis
+allowing these intermediaries privileged access to their identity and their
+messages.  In these cases, end-to-end (ete) security relies on out-of-bound
+exchanges and applications.  To transparently handle security at both PtP and
+EtE layers across a wide spectrum of communication transports, I have developed
+a novel security filter, which has been demonstrated to support existing Public
+Key Infrastructure based security systems (such as DTLS) for both ptp and ete
+traffic inside connectivity-constrained environments.
+
+While security primitives enable private and authenticated communication, the
+configuration and management overheads involved in establishing trust and
+maintaining secure connections in VPNs are a significant hindrance to usability
+and adoption.  In my approach, all security links are established from
+exchanged certificates, so each peer is uniquely identifiable.  My approach
+uniquely handles administrative and user aspects of certificates automatically
+through the use of online social networking features such as peer relationships
+and groups.
+
+The above self-organizing mechanisms to create VPN links need to be
+complemented with approaches that support effective bindings to endpoints from
+which messages are captured/injected from/to the VPN.  In a typical approach,
+called the interface model, each resource in the VPN has a local binding to the
+VPN by locally installed software.  Unfortunately, this introduces significant
+overheads when two or more such systems are running inside the same trusted
+LAN.  Alternatively, if all resources in a LAN connect to a common VPN, such as
+in a grid or for cloud computing environments, the resources can share a common
+entry point to the VPN through a router model.  Unfortunately, existing
+approaches do not transparently configure the router and connected resources.
+Additionally, the router model does not work well on shared networks, where
+there are either untrusted users or some resources should not be available
+through the VPN.  I have shown herein how all of these considerations can be
+handled without the introduction of new protocols by reusing existing aspects
+of most network stacks, primarily DHCP and ARP, which enables a new type of VPN
+model that balances the benefits of the interface and router models.
+
+The premise for this work is to enhance the usability of VPN systems enabling
+wider adoption by non-expert users in home, small/medium business, and
+education environments.  The concepts for this work have been carefully
+designed, implemented, and evaluated and then demonstrated the implementation
+of novel systems (SocialVPN, GroupVPN, and Grid Appliance) with real users.
+The SocialVPN creates user-centric VPNs so that peers only have VPN links with
+their social network friends, whereas the GroupVPN employs a group
+infrastructure to manage VPN members and distribute VPN configuration.  A free
+GroupVPN bootstrapping environment relying on PlanetLab hosted resources has
+been available for over three years and has been accessed by over hundreds of
+users including several universities and commercial entities, whereas the
+SocialVPN has over 80 active members online at any given time.  The Grid
+Appliance uses the GroupVPN to form ad-hoc and distributed computing pools,
+facilitating computer architecture research in the Archer project.  The Archer
+project has been accessed by student at several universities and has
+accumulated over 500,000 CPU hours in a little less than three years.
+Furthermore, the Grid Appliance has been used as both a teaching tool in
+distributed computing classrooms as well as by external users to create their
+own grids.  The challenges faced in these deployments have opened the door for
+other avenues of research into built-in self-simulation, P2P connection
+establishment, efficient IP broadcasting and multicasting, and decentralized
+establishment of Internet gateways.
+
 \end{abstract}

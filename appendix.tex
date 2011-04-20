@@ -21,12 +21,12 @@
 \appendix %
 \clearpage%
 \newcounter{noa} % noa= no. of appendices ... set to 1 for 1 and more otherwise.
-\setcounter{noa}{1} % ........................... CHANGE VALUE ONLY HERE
+\setcounter{noa}{2} % ........................... CHANGE VALUE ONLY HERE
 \ifthenelse{\value{noa} = 1}
 %...................then
 {}
 %...................else
-{\addtocontents{toc}{\protect\addvspace{10pt}\protect\noindent \protect APPENDIX}}
+\addtocontents{toc}{\protect\addvspace{10pt}\noindent{APPENDIX}\protect\hfill\par}{}
 %...................
 \input{appendixA}
 \input{appendixB}

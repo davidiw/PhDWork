@@ -6,14 +6,14 @@
 %If you make these changes correctly Latex will complain bitterly about the additions to the TOC
 %but will make them correctly in a manner acceptable to the Editorial Office.
 
-%\ifthenelse{\value{noa} = 1}
+\ifthenelse{\value{noa} = 1}
 %...................then
-%{\chapter*{APPENDIX: EVALUATION TOOLS}
-%\label{evaluation_tools}
-%\addcontentsline{toc}{chapter}{APPENDIX: EVALUATION TOOLS}
-%\chaptermark{Appendix}
-%\markboth{Appendix}{Appendix}
-%\setcounter{chapter}{1}}
+{\chapter*{APPENDIX: EVALUATION TOOLS}
+\label{evaluation_tools}
+\addcontentsline{toc}{chapter}{APPENDIX: EVALUATION TOOLS}
+\chaptermark{Appendix}
+\markboth{Appendix}{Appendix}
+\setcounter{chapter}{1}}
 %...................else
 {\chapter{EVALUATION TOOLS}
 \label{evaluation_tools}}

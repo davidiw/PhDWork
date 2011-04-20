@@ -1,0 +1,676 @@
+\chapter{EXTENSIONS TO P2P OVERLAYS AND VIRTUAL NETWORKS}
+\label{chap:extensions}
+
+This chapter contains components that extend the VPN software to provide
+additional important and interesting features.  Many of these components derive
+from experiences and demands placed upon me during the deployment of the VPN
+software in real systems.  Deployment experiences include but are not limited
+to usage on PlanetLab, resources distributed across homes and academia, virtual
+machines, and cloud resources.  Each of these environments produce interesting
+issues that has contributed to this work.
+
+\section{Built-in Self-Simulation}
+
+Software systems are complex and involve many moving parts.  Typically, system
+design begins by considering the goals of the system, choosing algorithms and
+data structures that can achieve those goals, and simulating or modeling the
+system.  Those results than translate into a real system that consists of a
+different code base than the original simulation due to the challenges in
+converting from one to the other.  In doing so, however, limits the
+functionality of the simulation to validate that the concept works.
+Unfortunately, the valdity of the code base when transitioning from simulation
+to a real system needs to be re-evaluated.  Furthermore, optimizations to the
+system need to be implemented twice, once in a simulator to verify and another
+time in the real system.
+
+To address these considerations and others, I implemented the ability for
+Brunet to be ``self-simulating'' using event-driven simulation techniques. In
+other words, even though Brunet is written for real system deployment the same
+code can run in a simulated environment.  This model allows new features to be
+tested, revised, and improved in a rigorous simulation environment prior to
+testing in real systems hastening development cycles.  The simulation is
+constantly evolving as interesting discoveries in the real system can be
+modeled in simulation to make the simulation behavior more accurate.
+
+The concept can be applied to networking / distributed systems in general.
+Distributed system software can usually be divided into many pieces, such as
+network communication, state, time-based events, user actions, and so on.
+Simulation of these systems focuses on three aspects handling of time-based
+events, communication between the various members of the system, and the
+injection and handling of user actions.  In the rest of this section, I will
+discuss these in more depth and discuss how I addressed them in the context of
+Brunet.
+
+\subsection{Time-Based Events}
+
+There are two mechanisms for changes in a system, some occur due to changes in
+external stimuli, such as hardware or software interrupts in a processors,
+others are a result of timers, which may be a subset of hardware interrupts.
+In the interest of simulation, timers and external stimuli can be viewed as two
+different components.  The external stimuli may be delivered based upon a timed
+event or based upon an action of a remote party.  If time is ignored, then a
+node in a distributed system will run in a loop until its steady state has been
+achieved and then constantly verifying that it still is in steady state.
+Timing allows a node to delay this behavior, such as establishing more ideal
+connections or verifying its connectivity, behavior which produces more
+efficient systems.
+
+Now a system could be made entirely without timers and run on external events
+alone.  In this case, timing is still required to model the communication delay
+between peers.  A message sent from one peer should not instantaneously arrive
+at another peer.  As will be described in Section~\ref{ap2p:nc}, peers can use
+timers to simulate latency between peers.
+
+Timing simulation has two aspects a virtual clock and a timer or event
+mechanism that uses the virtual clock.  In order to properly simulate time, all
+calls to determine the current time or time references should be based upon the
+same clock.  In a real system, this would then reveal the actual current time,
+whereas in a simulated environment, this would reveal the current simulated
+time.  How this is implemented depends on the language the software is written
+in.  For example, languages with namespaces can easily replace the clock
+functions with their own.  Languages like C may require a set of pre-processor
+macros to specify real or virtual time.
+
+Time in itself is only part of the solution, the other is the order of events
+in other words the timer.  The timer needs to keep an ordered list of all
+events, be able to determine the time of the next event in the system, and
+enqueue new events for future times.  After the system has initialized, it may
+add one or more events into the timer to cause an action to occur.  The
+simulator will then advance the virtual clock to the time the next event is
+supposed to occur, execute all events that occurred up to that point including
+the next event and then repeat.  The running of events should not stop until
+the next event to execute should be run in the future, because one event may
+cause another event to occur immediately requiring no delay.
+
+\subsection{Network Communication}
+\label{ap2p:nc}
+
+Using communication models or transports that rely on limited resources such as
+the number of open sockets or interactions with the operating system can
+severly hinder the usability and functionality of a simulator.  A system using
+sockets will quickly hit a wall, Linux, for example, limits the amount of open
+file descriptors to 1,024, which means that in a UDP system that means having
+as few as 1,024 peers in the system whereas a TCP system could be unable to
+proceed with more connections before 46 peers enter the system.  Furthermore,
+each interaction with a socket requires at least one if not more transitions
+between a program and the kernel.
+
+So while these existing approaches could be used for simulated communication,
+the overhead in doing so is undesirable and does not allow for large scale
+simulations.  Assuming that the system is modularly written, it should be
+trivial for various forms of transport layers to be used for network
+communication.  Thus for scalability peers could exchange buffers or pointers
+to messages with each other.  This would remove any restrictions on OS
+resources and does not require that each communication pathway pass through a
+system call.
+
+Brunet supports a generic transports framework that provides the method for
+sending a message and the ability to register a callback when a message is
+received.  This concept is built into an ``edge.''  Each edge is associated
+with a remote peer and when sending or receiving a packet, the destination or
+source would be the peer associated with that edge.  Thus edges come in pairs,
+if they are connected.  Thus a simulated edge consists of two components
+knowledge of the remote edge and timing measurement of the latency between the
+two peers.  When a peer sends a message to the remote peer, the simulated edge
+enqueues the message into the timer with a callback into the remote edges
+receive handler.
+
+TCP and UDP have the concept of IP addresses and ports to locally and,
+potentially, globally uniquely distinguish themselves and that, more
+importantly, can be shared with others who can then communicate with that peer
+using the address information.  In other words, the concept of addresses is key
+to transports.  How else would a peer determine how to locate another peer.
+Since the simulated transports are all running in the same address space, there
+does not need to be a multilevel naming scheme as provided by IP addresses and
+ports, instead, they use just a single integer, which can then be used as the
+key into a hashtable whose value is the node matched to the integer.
+
+When a peer wants to connect to a specific node, instead of connecting to a
+peer at a remote IP, port pair, it seeks the remote node in the hash table.  If
+no peer exists, depending on the protocol simulated, the result will be a
+broken link or a connection error.  If it finds an entry, the two peers create
+edges associated with each other.  At which point, the peers can easily
+communicate with each other using the timer and the exchange of buffers.
+
+\subsection{User Actions}
+
+Distributed systems have users, users take advantage of the features of
+distributed systems.  A user in this sense does not necessarily imply a human,
+but rather, an external input from either an application, a user, a sensor, or
+by some other means.  In a simulated environment, these types of behaviors
+should be properly modeled.  That is, if a user requests information from
+another user using the simulation, it should be delivered when available not
+after polling some entry point after some period of time.
+
+To model this behavior for these types of services, the interface of the
+service into the simulation may need to be modified.  The initiation action
+should be triggered at a specific time.  That initiation mechanism should
+register a callback to be notified when the result is ready, much like
+asynchronous communication.  Then the simulator regains control and continues
+executing.  When a result becomes available, the result is pushed into the
+proper queue, which should make a callback into the listener thus completing a
+user action.
+
+In Brunet, this behavior has been modeled in interactions with the DHT and
+sending messages through the overlay.  A common abstract class contains a
+method to start the action.  It notes the starting time when this method is
+executed.  It then listens for the asychronous response from the underlying
+component to inform that the user action has completed.
+
+Unfortunately, this has the side effect, that services provided must have an
+asynchronos interface.  Fortunately, it is very easy to make synchronous
+interfaces from asychronous, so if designed properly, this should be trivial
+for system designers.  However, if they are not, the other solution is to poll
+the handlers queue to determine if a result is available.  However doing this
+incurs more overhead in the simulation.
+
+\subsection{The Rest of the System}
+
+The other components of the system may have an impact on the speed of
+simulation, but in general should not affect the ability of the system to be
+simulated.  Thus the key to making a system self-simulating is modularity and
+support for asynchronous interfaces.  In the following section, I discuss
+optimizations that can be made to these components and others to improve
+simulation.
+
+\subsection{Optimizations}
+
+Simulations can be slow for a number of reasons and that only increases by
+attempting to simulate software that was not intended to be simulated.  Overlay
+software, for example, typically uses very large addresses (16 bytes or larger)
+just to represent another node, whereas in a simulation or model this is
+typically represented as an integer or not at all.  Additionally, due to the
+fact that the lifetime of various buffers in the system can be hard to predict,
+when interacting with incoming messages and even outgoing messages, many data
+structures either stay in scope for a long time or there is heavy churn on
+memory in the heap.  For managed languages, this can result in significant
+overhead due to garbage collection.  Finally, since the entire system depends
+on ordered time, the mechanism ordering timing events plays a key role.
+
+The first approach to optimization comes in the form of caching complex data
+structures that might be stored in several components of the system.  These
+type of data structures include the nodes simulated transport address, P2P
+address, and common strings inside the system.  A cache in this sense consists
+of a hashtable, whose key is the object of interest and the value is a
+singleton or a value that is identical to the key in every way except but
+potentially they refer to different locations in memory.  Thus when a peer
+constructs another peres address, it can check the hashtable for a singleton,
+if one exists, it uses the singleton and no additional memory is required
+besides a pointer to this singleton.  If one does not exist, this new value is
+stored as a singleton into the system.  There are various means to limiting the
+entries in a hashtable, such as only keeping the last $N$ entries, keeping
+track of the last access time, counting the number of references, or using a
+concept known as weak references.  Weak references provide an attractive option
+as it requires no additional state in the cache, a garbage collector will
+remove an object when there are no references to it besides weak references.
+Thus stale entrees in the hashtable will return null objects.  So a cache using
+weak references will need to iterate through the entire cache occassionally to
+remove these stale references.
+
+To keep timed events ordered, min-heaps are very useful.  Min-heaps guarantee
+that the root node points to the minimum value in the data structure, which
+upon removal will move the next smallest value to the root.  Interestingly, not
+all heaps play fair.  While a Fibonnaci heap provides algorithmically better
+performance than a binary heap, my implementation of the former performs
+significantly worse than the latter.  Unfortunately, profiling suggests that
+with the type of behavior being exposed by the simulator, this is unavoidable.
+Certainly, however, a more efficient means for adding and removing entries into
+the timer exist, that while they may not provide algorithmically better time,
+do so in actual implementation.
+
+\section{Efficient Relays}
+
+Sometimes NAT traversal using STUN~\cite{stun} fails due to restrictive
+firewalls and NATs and occassionaly there are other, harder to diagnose,
+connectivity issues, some P2P VPNs~\cite{hamachi, gbridge} support relaying,
+similar to Traversal Using Relay NAT (TURN)~\cite{turn} provided by a managed
+relay infrastructure.  Centralized and decentralized VPNs do not suffer from
+this problem as all traffic passes through the central server or managed links.
+To address the management and overhead concerns in these systems, I propose the
+use of distributed, autonomic relaying system based upon previous
+work~\cite{hpdc08_0,epost}.  This previous work involved the use of triangular
+routing that allowed peers next to each other in the node ID space to
+communicate despite being unable to communicate directly because of firewall,
+NAT, or Internet fragmentation issues.
+
+The process for forming local relays or ''tunnels''~\cite{hpdc08_0} begins with
+two nodes discovering each other via existing peers and determining the need to
+be connected.  If a direct connection attempt fails, the peers exchange
+neighbor sets through the overlay.  Upon receiving this list, the two peers use
+the overlap in the neighbor sets to form a two-hop connection.  In this work, I
+have further extend this model to support cases when nodes do not have an
+overlap set.  This involves having the peers connect to each other's neighbor
+sets proactively creating overlap, as represented in Figure~\ref{fig:relay}.
+
+\begin{figure}[ht]
+\centering
+\epsfig{file=figs/relay.png.eps, width=4in}
+\caption[Motivation for relays]{Creating relays across the node address space,
+when direct connectivity is not possible.  Two members, 0000 and ABCD,  desire
+a direct connection but are unable to directly connect, perhaps due to NATs or
+firewalls.  They exchange neighbor information through the overlay and connect
+to one of each other's neighbors, creating an overlap.  The overlap then
+becomes a relay path (represented by dashed lines), improving performance over
+routing across the entire overlay.}
+\label{fig:relay}
+\end{figure}
+
+Additionally, I have added the feature to exchange arbitrary information along
+with the neighbor list.  Thus far, I have implemented systems that pass
+information about node stability (measured by the age of a connection) and
+proximity (based upon ping latency to neighbors).  Furthermore, when overlap
+changes, another mechanism can determine which subset of the peers to use, thus
+a peer may only route through the fastest or more stable overlap in the set.
+
+To verify the usefulness of two-hop over overlay routing, I performed
+experiments and share the results in Section~\ref{relay_motivation}.  In a live
+system, I have verify the accuracy and usefulness of our latency-based relay
+selection algorithm in Section~\ref{relay_eval}.
+
+\subsection{Motivation for Relays in the Overlay}
+\label{relay_motivation}
+
+The purpose of this experiment is to quantify the performance benefits of
+autonomic relays.  For this experiment I used the MIT King data
+set~\cite{king_data}, which contains all-to-all latencies between 1,740
+well-distributed Internet hosts.  Various sizes of networks up to 1,740 nodes
+were evaluated 100 times each.  The experiments were executed by running the
+P2P software in simulated mode.  Once at steady state, I then calculated the
+average all-to-all latency for all messages that would have taken two overlay
+hops or more, the average of the low latency relay model, and the average of
+single hop communication.  In the low latency relay model, each destination
+node form a connection to the source node's physically closest peer as
+determined via latency (in a live system by application level ping).  Then this
+pathway is used as a two-hop relay between source and node.  I only look at two
+overlay hops and more, as a single hop would not necessarily benefit from the
+work and would be the cause of a triangular inequality.  
+
+\begin{figure}
+\centering
+\epsfig{file=figs/relay_motivation.png.eps, width=3in}
+\caption[Motivation for relays]{A comparison of the average all-to-all overlay
+routing, two-hop relay, and direct connection latency in a Structured P2P
+environment, Brunet, using the King data set.}
+\label{fig:simulated_relays}
+\end{figure}
+
+The results are presented in Figure~\ref{fig:simulated_relays}.  The initial
+starting size for the network was set to 25, because network sizes around 20
+and under tend to be fully connected due to the connectivity requirements of
+the system.  It is not until the network size expands past 100 and towards 200
+nodes that relays become significantly beneficial.  At 100 nodes, there is
+approximately a 54\% performance increase, whereas at 200 there is an 87\%
+increase and it appears to grow proportionately to the size of the pool.  The
+key take away is that latency-bound applications using a reasonably sized
+overlay would significantly benefit from the use of two-hop relays.
+
+\subsection{Comparing Relay Selection}
+\label{relay_eval}
+
+In this experiment, I share my experiences of testing the use of latency-aware
+relays using the public P2P pool running on Planet-Lab as well as Hamachi-Free
+and Hamachi-Pro relays.  Due to Hamachi not supporting relays in Linux, this
+experiment was performed in Windows Vista 64-bit.  Hamachi is discussed in
+greater depth in Chapter~\ref{chap:vpns}.  The testing platform consists of two
+virtual machine located on the same host with a firewall preventing them from
+establishing direct connections.  All experiments were repeated 5 times using a
+clean configuration each time.  In Hamachi, this meant that the server would
+need to re-evaluate NAT traversing capabilities and the optimal relay to use.
+In Brunet, this meant a new node ID and establishing relays with peers in
+different regions of the overlay.  The results are presented in
+Table~\ref{tab:relay_eval}.
+
+\begin{table}
+\caption[Relay comparison]{Results of the evaluation comparing latency and
+bandwidth of Hamachi relays and IPOP latency-aware autonomic relay selection.}
+
+\centering
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}
+l
+S[table-format=2.1,table-number-alignment=right]
+S[table-format=2.2,table-number-alignment=right]
+S[table-format=4.1,table-number-alignment=right]
+S[table-format=4.2,table-number-alignment=right]
+@{}
+}
+
+\hline &
+\multicolumn{2}{c}{Latency} &
+\multicolumn{2}{c}{Bandwidth}
+
+\\ \hline &
+\multicolumn{1}{c}{(ms)} &
+\multicolumn{1}{c}{stdev} &
+\multicolumn{1}{c}{Kbit/s} &
+\multicolumn{1}{c}{stdev} \\ \hline
+Hamachi-Free & 60.8 & 2.54 & 40.2 & 0.87 \\ \hline
+Hamachi-Pro & 60.2 & 1.68 & 1000 & 1.29 \\ \hline
+Latency-aware & 58.1 & 35.5 & 2245 & 1080 \\ \hline
+\end{tabular*}
+\label{tab:relay_eval}
+\end{table}
+
+As Hamachi was started and figured out that NAT traversal was not possible, it
+began using multiple different relays as evident by several different ping
+times.  Eventually Hamachi settled on a relay server and it appeared to be the
+same one every time, for both Hamachi-Free and Hamachi-Pro.  The only
+difference between Hamachi-Pro and Hamachi-Free is that in Pro there is a
+bandwidth cap of approximately 1 Mbit/s whereas Free is limited to 40 Kbit/s.
+
+Brunet has nodes both on Planet-Lab but also dedicated systems for
+Archer~\cite{archer}.  These machines are at Universities and thus have a high
+bandwidth and low latency connection to the testing site.  As witnessed by the
+results, it appears that in most if not all these experiments peers had a low
+latency connection to a University compute resource and it was chosen ahead of
+Planet-Lab.
+
+The two apparent take aways are 1) the benefit of being able to deploy your own
+relay servers and to reuse compute nodes as relay systems and 2) as our network
+grows, we too may need to implement some form of bandwidth limit at relay
+nodes.
+
+\section{Policies for Establishing Direct Connections}
+
+Routing through an overlay algorithmically costs $log(N)$ time and adds
+$log(N)$ overall bandwidth for a single message, sending messages frequently
+between two peers through the overlay is not cost effective.  What is not
+apparent through algorithms is the fact that many paths in an overlay can be
+inefficient due to peers routing through distant parts of the world or having
+limited bandwidth.  Less frequently, packets routed via the overlay can just
+disappear due to nodes disconnecting or packet drops across the Internet.  To
+address this, Ganguly~\ref{wow} made a system for creating adaptive shortcuts.
+
+Adaptive shortcuts enable peers to establish direct links with each other using
+Brunet's builtin NAT traversal capabilities.  The approach taken by Ganguly was
+to monitor incoming packets from remote peers and after a certain threshold was
+passed the system automatically makes a direct connection to the remote peer.
+As a result of this transparency, software using the overlay could simply start
+this service without making any additional changes to the application.  
+
+\subsection{Limitations}
+
+Unfortunately this approach was never really completed as it stands it comes
+with limitations.  There was never any systematic understanding of behaviors
+that should signify the creation of a direct link or when a direct link should
+be taken down.  Thus applying the layer naively could result in excessive
+creation of links and then their eventual disconnection, which would have
+ramification on the routability of the network.  Thus a compromise was made to
+have it enabled only for selected traffic, which in the case as described by
+Ganguly~\ref{wow} was IP or VN traffic.
+
+Two issues made the approach no longer feasible:  the increase in size of the
+overlay network and the securing of IP links.  The Internet drops packets at
+approximately X\% of the time.  This compounded with the fact that an overlay
+message may take $log(N)$ hops significantly increases the likelihood of a
+packet dropping before arriving at its destination.  Adding a security model
+makes this even more complicated, because a trusted link must be established
+before routing any messages between the end points.  Thus in many cases a total
+of up to 6 messages, see Figure~\ref{fig:dtls}, must be transmitted between the
+peers before a single IP packet will traverse the link.  If peers must first
+establish a trusted link and then transmit a certain amount of packets in a
+given time, there is a reasonable chance that they may never naturally trigger
+the creation of an adaptive link.
+
+In practice, it was quite common for this not to succeed and, in fact, security
+links were often times not even formed.  To verify this, I implemented a
+network profiling tool and deployed it on to PlanetLab.  The monitoring tool
+measured the delay and success of sending messages between the node and every
+other node in the overlay.  Certainly running the test on PlanetLab may have
+jaded the results slightly, since PlanetLab is known for its unreliability, but
+it is a very important conclusion since many of the public systems provided by
+my research group rely on PlanetLab.
+
+\subsection{On-Demand Connections}
+
+Before defining a new architecture, I watched the network traffic of active and
+idle applications that were of interest to the focus on P2P VPNs,
+Condor~\cite{condor0} and data transfers.  Data transfers are fairly obvious,
+if they are TCP driven, first a TCP link must be established, then data
+transferred, and finally the link is closed.  Condor is a job schedule
+management tool, which is discussed in more depth in
+Chapter~\ref{chap:gridappliance}.  The important aspect for this section is
+understanding that all nodes in a Condor pool have a relationship with a
+manager node.  Their behavior is to initially send a registration message
+containing the details of the node and thereafter to send a one-way message
+stating their presence every 5 minutes or so.
+
+The next step was determining the cost of creating a connection versus routing
+via the overlay.  Considering that before a single IP packet can be routed, a
+security link must be established.  In Brunet, the creation of a link requires
+1 round trip message across the overlay, whereas the security link, as mention
+earlier, takes 3.  So it is intuitive that sending a single packet secured
+through an end-to-end channel via a direct link is far more efficient than
+doing so via the overlay.  So instead of having a meter determining when to
+create connections, connections should be made as soon as their is interest in
+communication, in other words, ``On-demand.''  In a DHT system, this may be done prior to sending or
+retrieving data from the DHT.  In a VPN, this may be during the mapping of IP
+to P2P as described in Section~\ref{vpns:arp}, which occurs before secure link
+establishment.  Unfortunately, this has the side affect of not being
+transparent at the cost of being more responsive.
+
+Now that links are being created far more frequently, even though for good
+cause, a more intelligent algorithm was needed to close unused connections.
+Using the profiling information retrieved before with regards to Condor's
+one-way ``heartbeat'' messages, it was important that a connection was only
+closed if it was unused in both directions.  Otherwise the manager would be
+constantly closing connections and peers would randomly disappear from Condor
+for periods of time.  An algorithm that seems to have worked so far is based
+upon something I call a time-based cache.  Initially entries are stored in a
+hashtable, after a certain period of time, they are moved to a second
+hashtable, and those in the second hashtable are lost.  If an entry is accessed
+while in the second hashtable or not at all, it is added to the first hashtable
+and if applicable removed from the second hashtable.  When an entry is removed
+from the cache, it causes an eviction notice, which results in the connection
+being removed.  The timer is based upon a 7.5 minute timer, so that an inactive
+connection will be closed within 7.5 to 15 minutes.
+
+In application, this modification made the Archer, which uses both secure links
+and Condor, significantly more stable.  As the system expanded, nodes were
+constantly appearing and disappearing, users jobs were being lost due to
+disconnectivities, and users were complaining about being unable to even submit
+jobs into the system.  Since the change, the issues have been resolved.
+
+\section{Broadcasting IP Broadcast and Multicast Packets Via the Overlay}
+
+The use of a private virtual overlay enables a new method for sending multicast
+and broadcast packets. In the original approach to IPOP, broadcasting a packet
+to the entire overlay  is not suitable because the overlay could consist of
+peers from other VPNs and those not even involved with VPN operations, while
+approaches that generate unicast messages when a broadcast or multicast packet
+arrives at the VPN (e.g. by querying a DHT key where all peers in the VPN would
+place their overlay address so that they could receive the packets) do not
+scale well. The abstraction of a private virtual overlay enables scalable
+broadcasting within a VPN because the only peers in the private overlay are
+peers for a single VPN.  Like the broadcast revocation discussed earlier, IP
+broadcasting and multicasting use the method described in
+Appendix~\ref{broadcast} to efficiently distribute messages.  Though in VPN
+situations, many peers may already have connections to most if not all of their
+VPN peers, thus the broadcast algorithm has been modified to allow a peer to
+select how many peers they would like to forward the message to.  Otherwise in
+many cases, this algorithm will degenerate into one similar to the previous
+approach.  
+
+\begin{figure}
+\centering
+\caption{IP Broadcast using the DHT compared to overlay broadcast}
+\label{fig:ipbroadcast}
+\end{figure}
+
+A validation of the overlay broadcast method for IP broadcast and multicast
+communication comparing it to the original DHT method is presented in
+Figure~\ref{fig:ipbroadcast}.  Metrics measured include bandwidth used by the
+packet originator and time required for all peers to receive the packet.
+System bandwidth remains the same as bounded-broadcast requires exactly $N$
+messages to broadcast the message to the entire overlay.  By using a broadcast
+algorithm to route multicast and broadcast IP packets instead of the unicast
+packets, the sending node has much less used bandwidth.  The time required by
+the DHT approach involves the time to retrieve all entries from the DHT and the
+latency to the peer farthest away.  Whereas the broadcast approach has no DHT
+lookup and is somewhere around the average latency in the system multiplied by
+$O(\log^2(N))$.
+
+\section{Full Tunnel VPN Operations}
+\label{full_tunnel}
+
+The configuration detailed so far describes a split tunnel: a VPN connection
+that handles \emph{internal VPN traffic only, not Internet traffic}.  Prior to
+this work, only centralized VPNs currently support full tunnel: providing the
+features of a split tunnel in addition to securely forwarding \emph{all their
+Internet traffic} through a VPN gateway.  A full tunnel provides network-layer
+privacy when a user is in a remote, insecure location such as an open wireless
+network at a coffee shop by securely relaying all Internet traffic through a
+trusted third party, the VPN gateway.  Both models are illustrated in
+Figure~\ref{fig:tunnel}.
+
+\begin{figure}
+\centering
+\epsfig{file=figs/tunnel.png.eps, width=4in}
+\caption[An example of both full and split tunnel VPN modes]{An example of both
+full and split tunnel VPN modes.  In both, packets for the server are sent
+directly to the server.  In split tunnel mode, Internet packets bypass the VPN
+and are routed directly to the Internet.  In full tunnel mode, Internet packets
+are first routed to the VPN gateway, and then to their Internet destination.}
+\label{fig:tunnel}
+\end{figure}
+
+Central VPN clients use full tunneling through a routing rule swap, setting the
+default gateway to be an endpoint in the VPN subnet and traffic for the VPN
+server is routed explicitly to the LAN gateway.  This rule swap causes all
+Internet packets to be routed to the VN device and the VPN software can then
+send them to the remote VPN gateway.  At the VPN gateway, the packet is
+decrypted and delivered to the Internet.  A P2P system encounters two
+challenges in supporting full tunnels:  1) P2P traffic must not be routed to
+the VPN gateway and 2) there may be more than one VPN gateway.  I address these
+issues and provide a solution to this problem in Section~\ref{full_tunnel}.
+
+The challenges faced in a decentralized P2P VPN are providing decentralized
+discovery of a VPN gateway and supporting full tunnel mode in a P2P environment
+such that all P2P traffic is sent to the intended receiver directly instead of
+through the gateway.  The remainder of this section covers gateway and
+client solutions to address these challenges.
+
+\subsection{The Gateway}
+\label{the_gateway}
+A gateway can be configured through NAT software, like masquerading in IPtables
+or Internet Connection Sharing with Windows.  This automatically handles the
+forwarding of packets received on the NAT interface to another interface
+bringing the packet closer to its destination.  Similarly, incoming packets
+on the outgoing interface must be parsed in order to determine the destination
+NAT client.
+
+Following from the original design of the VPN state machine in
+Figure~\ref{fig:vn}, if a VPN is a gateway, the VPN state machine no longer
+rejects packets, when the destination is not in the VPN subnet, though when the
+VPN gateway mode is disabled these packets are still rejected.  When enabled,
+all Internet and non-VPN based traffic is written to the TAP device setting the
+destination Ethernet address to the TAP device.  The remaining configuration is
+identical to other members of the system as packets from the Internet will
+automatically have the clients IP as the destination as a product of the NAT.
+To provide for dynamic, self-configuring systems, VPN gateways announce their
+availability via an entry in the DHT.  As future work, this approach can be
+explored to provide intelligent selection and load balancing of gateways.
+
+\subsection{The Client}
+VPN Clients wishing to use full tunnel must redirect their default traffic to
+their VN device.  In the prototype VPN model, a virtual IP address is allocated
+for the purpose of providing distributed VN services DHCP and DNS.  This same
+address is used as the the default gateway's IP.  Because this IP address never
+appears in a Internet bound packet, only its Ethernet address does, as shown in
+Figure~\ref{fig:tunnel_packet}, this approach enables the use of any and
+multiple remote gateways.
+
+\begin{figure}
+\centering
+\epsfig{file=figs/tunnel_packet.png.eps, width=4in}
+\caption[The contents of a full tunnel Ethernet packet]{The contents of a full
+tunnel Ethernet packet.  PN and VN are defined as physical and virtual network,
+respectively.}
+\label{fig:tunnel_packet}
+\end{figure}
+
+To support full tunnel mode, the VPN's state machine has to be slightly modified
+to handle outgoing packets destined for IP addresses outside of the VPN, only
+rejecting them when full tunnel client mode is disabled.  When enabled, the VPN
+software sends packets to the remote peer acting as a full tunnel gateway.
+Likewise, incoming packets that have a source address outside the subnet should
+not be rejected but instead the overlay address should be a certified VPN
+gateway prior to forwarding the packet.
+
+To select a remote gateway, peers query the DHT.  As there may be multiple
+gateways in the system, the peer randomly selects one, forwarding packets to
+that node.  To ensure reliability, when the client has not heard from the
+gateway recently, the client sends a liveness query to the gateway.  If the
+gateway is down, the taken pessimistic approach finds a new gateway when
+the next Internet packet arrives.
+
+The real challenge in applying full tunnel VPN mode to P2P VPNs is the nature
+of the P2P system, namely dynamic connections.  Peers do not know ahead of time
+what remote peer connections will be thus a simple rule switch does not work.
+The original approach was to watch incoming connection requests and adding
+additional routing rules on demand, though this is only reasonably feasible
+with UDP as a TCP handshake message would need to be intercepted and potentially
+replayed by the local host in order to enable the rule and allow proper routing.
+The real drawback of the approach though is that UDP messages can easily be
+spoofed by remote peers enabling unsecured Internet packets to be leaked in the
+public environment.  Even if the connections are secured, it could take some
+time for the peers to recognize a false connection attempt and delete the rule.
+
+A solution to the security problem is to have all traffic directly routed to
+the VN device with no additional routing rules.  The VN is then responsible for
+filtering P2P traffic and forwarding it to the LAN's gateway via Ethernet
+packets.  In the VPN application, outgoing IP packets' source ports are
+compared to VPN application's source ports.  Upon a match, the VPN application
+directs the packet to the LAN's gateway.  The three steps involved in this
+process are 1) translating the source IP address to match the physical
+Ethernet's IP address, 2) encapsulating the IP packet in an Ethernet packet
+with a randomly source address~\cite{sc09} and the destination the LAN's
+gateway, and 3) sending the packet via the physical Ethernet device.  Sending
+an Ethernet packet is not trivial as Windows lacks support for this operation
+and most Unix systems require administrator privilege.  An alternative, platform
+independent solution uses a second TAP device bridged to the physical Ethernet
+device, allowing Ethernet packets to be sent indirectly through the Ethernet
+device via the TAP device.  Because the solution results in incoming packets to
+arrive at a different IP address than the actual original source IP address TCP
+does not work in this solution.  This method has been verified to work on both
+Linux and Windows using OS dependent TAP devices and bridge utilities.
+
+\subsection{Full Tunnel Overhead}
+\label{full_tunnel_eval}
+While the full tunnel client method effectively resolves the lingering problem
+of ensuring that all packets in a full tunnel will be secure, it raises an
+issue:  could the effect of having all packets traverse the VPN application be
+prohibitively expensive.  Analysis of this approach compares it with one that
+uses the traditional routing rule switch.  Figure~\ref{tab:full_tunnel_eval}
+present the ping time from a residential location to one of Google's IP
+addresses using a gateway located at the University of Florida when the VPN is
+in split tunnel mode, full tunnel using the routing rule switch, and full
+tunnel using Ethernet forwarding.  The results express that there is negligible
+difference between the full tunnel approaches.  One interesting result is the
+latency to gateways public address in the routing test, which most likely is a
+result of the ping being sent insecurely avoiding the VPN stack completely.
+
+\begin{center}
+\begin{table}
+\caption[Full tunnel evaluation]{Latency results comparing full tunnel
+approaches measured in ms.  Legend: GW Pri - gateway's VPN address, GW Pub -
+gateway's VPN address, Ethernet - full tunnel Ethernet packet method, Routing -
+full tunnel routing rule switch, None - split tunnel or no VPN.}
+\begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}
+l
+S[table-format=2.1,table-number-alignment=right]
+S[table-format=2.1,table-number-alignment=right]
+S[table-format=2.1,table-number-alignment=right]
+@{}
+}
+
+\hline &
+\multicolumn{1}{c}{Google} &
+\multicolumn{1}{c}{GW Pri} &
+\multicolumn{1}{c}{GW Pub} \\ \hline \hline
+Ethernet & 70.6 & 12.9 & 13.9 \\ \hline
+Routing & 71.4 & 13.2 & 11.0 \\ \hline
+None & 66.1 & N/A & 10.9 \\ \hline
+\end{tabular*}
+\label{tab:full_tunnel_eval}
+\end{table}
+\end{center}
