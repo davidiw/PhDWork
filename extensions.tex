@@ -11,26 +11,30 @@ issues that has contributed to this work.
 
 \section{Built-in Self-Simulation}
 
-Software systems are complex and involve many moving parts.  Typically, system
-design begins by considering the goals of the system, choosing algorithms and
-data structures that can achieve those goals, and simulating or modeling the
-system.  Those results than translate into a real system that consists of a
-different code base than the original simulation due to the challenges in
-converting from one to the other.  In doing so, however, limits the
-functionality of the simulation to validate that the concept works.
-Unfortunately, the valdity of the code base when transitioning from simulation
-to a real system needs to be re-evaluated.  Furthermore, optimizations to the
-system need to be implemented twice, once in a simulator to verify and another
-time in the real system.
+Software systems are complex and involve many moving parts.  Traditionally,
+system design begins by considering the goals of the system, choosing
+algorithms and data structures that can achieve those goals, and simulating or
+modeling the system.  Those results then translate into a real system that
+consists of a new code based upon the concept in the simulation.  This process
+limits the functionality of the simulation to validating the concept and not
+the implementation.  Then the entire software base must be independently
+checked for bugs and other issues that may have already appeared in the
+simulation code, doubling developer efforts.  
 
-To address these considerations and others, I implemented the ability for
-Brunet to be ``self-simulating'' using event-driven simulation techniques. In
+To reduce my efforts in development and evaluation, I have investigated and
+implemented mechanisms for distributed systems and in particular Brunet to
+support built-in self-simulation using event-driven simulation techniques.  In
 other words, even though Brunet is written for real system deployment the same
-code can run in a simulated environment.  This model allows new features to be
-tested, revised, and improved in a rigorous simulation environment prior to
-testing in real systems hastening development cycles.  The simulation is
-constantly evolving as interesting discoveries in the real system can be
-modeled in simulation to make the simulation behavior more accurate.
+code can run using simulated communication links and time, allowing many nodes
+to run on the same resource and potentially faster than wall clock time.  This
+approach allows transitioning feature from simulation directly into deployment
+hastening development cycles.  Furthermore, the constantly evolving as
+interesting discoveries in the real system can be modeled in simulation to make
+the simulation behavior more accurate.  Because a simulation can run on a
+single computer, scaling up to a significantly large system, new features can
+be constructed and evaluated locally, removing most bugs and through
+significant test cases already present in the simulation environment
+significantly cutting down on testing overheads.
 
 The concept can be applied to networking / distributed systems in general.
 Distributed system software can usually be divided into many pieces, such as
@@ -43,17 +47,16 @@ Brunet.
 
 \subsection{Time-Based Events}
 
-There are two mechanisms for changes in a system, some occur due to changes in
-external stimuli, such as hardware or software interrupts in a processors,
-others are a result of timers, which may be a subset of hardware interrupts.
-In the interest of simulation, timers and external stimuli can be viewed as two
+Events or actions cause changes in a system, some are due to external stimuli,
+such as hardware or software interrupts in a processors or user input, others
+are a result of timers, which may be a subset of hardware interrupts.  In the
+interest of simulation, timers and external stimuli can be viewed as two
 different components.  The external stimuli may be delivered based upon a timed
-event or based upon an action of a remote party.  If time is ignored, then a
-node in a distributed system will run in a loop until its steady state has been
-achieved and then constantly verifying that it still is in steady state.
-Timing allows a node to delay this behavior, such as establishing more ideal
-connections or verifying its connectivity, behavior which produces more
-efficient systems.
+event or an action initiated by a remote party.  If time is ignored, then a
+node will run in a loop until its steady state has been achieved and then
+constantly verifying that it still is in steady state.  Timing allows a node to
+delay this behavior, such as establishing more ideal connections or verifying
+its connectivity, behavior which produces more efficient systems.
 
 Now a system could be made entirely without timers and run on external events
 alone.  In this case, timing is still required to model the communication delay
@@ -61,48 +64,57 @@ between peers.  A message sent from one peer should not instantaneously arrive
 at another peer.  As will be described in Section~\ref{ap2p:nc}, peers can use
 timers to simulate latency between peers.
 
-Timing simulation has two aspects a virtual clock and a timer or event
-mechanism that uses the virtual clock.  In order to properly simulate time, all
-calls to determine the current time or time references should be based upon the
-same clock.  In a real system, this would then reveal the actual current time,
-whereas in a simulated environment, this would reveal the current simulated
-time.  How this is implemented depends on the language the software is written
-in.  For example, languages with namespaces can easily replace the clock
-functions with their own.  Languages like C may require a set of pre-processor
-macros to specify real or virtual time.
+Events in a simulation are stored in a timer with delays specified in terms of
+a virtual clock.  Methods in order to retrieve the current time should be based
+upon the same clock in both simulation and deployment systems.  In a real
+system, this would then reveal the actual current time, whereas in a simulated
+environment, this would reveal the current simulated time.  By virtualizing
+this method call, it can be directed to the appropriate clock.  How this is
+implemented depends on the language the software is written in.  For example,
+languages with namespaces can easily replace the clock functions with their
+own.  Languages like C may require pre-processor macros to specify real or
+virtual time.
 
-Time in itself is only part of the solution, the other is the order of events
-in other words the timer.  The timer needs to keep an ordered list of all
-events, be able to determine the time of the next event in the system, and
-enqueue new events for future times.  After the system has initialized, it may
-add one or more events into the timer to cause an action to occur.  The
-simulator will then advance the virtual clock to the time the next event is
-supposed to occur, execute all events that occurred up to that point including
-the next event and then repeat.  The running of events should not stop until
-the next event to execute should be run in the future, because one event may
-cause another event to occur immediately requiring no delay.
+In order to keep track of events in time order a timer is necessary.  The
+structure of the timer should be such that the event to execute next is always
+available in minimum time, while optimizing for inserting and removing events
+from the timer.  For this application, a minimum heap works well.  A minimum
+heap provides constant seek time for the smallest value as well as $log(N)$
+insert and deletion time.  In Brunet, this has been implemented as a binary
+heap.
+
+After the system has initialized, it may add one or more events into the timer
+to cause an action to occur.  The simulator will then advance the virtual clock
+to the time the next event is supposed to occur, execute all events that
+occurred up to that point including the next event and then repeat.  The
+running of events should not stop until the next event to execute should be run
+in the future, because one event may cause another event to occur immediately
+requiring no delay.  It should be noted that events may want to execute other
+events, these events should not be executed in-line and instead should be added
+into the queue to be executed at the same virtual clock time.  If this is not
+done, there is a potential for stack overflows due to extremely deep calls into
+the code.
 
 \subsection{Network Communication}
 \label{ap2p:nc}
 
 Using communication models or transports that rely on limited resources such as
 the number of open sockets or interactions with the operating system can
-severly hinder the usability and functionality of a simulator.  A system using
+severely hinder the usability and functionality of a simulator.  A system using
 sockets will quickly hit a wall, Linux, for example, limits the amount of open
 file descriptors to 1,024, which means that in a UDP system that means having
 as few as 1,024 peers in the system whereas a TCP system could be unable to
 proceed with more connections before 46 peers enter the system.  Furthermore,
 each interaction with a socket requires at least one if not more transitions
-between a program and the kernel.
+between user-space and kernel-space.
 
-So while these existing approaches could be used for simulated communication,
-the overhead in doing so is undesirable and does not allow for large scale
-simulations.  Assuming that the system is modularly written, it should be
-trivial for various forms of transport layers to be used for network
-communication.  Thus for scalability peers could exchange buffers or pointers
-to messages with each other.  This would remove any restrictions on OS
-resources and does not require that each communication pathway pass through a
-system call.
+So while existing transports could be used for simulated communication, the
+overhead in doing so is undesirable thereby limiting large-scale simulations.
+Assuming that the system is modularly written, it should be trivial for various
+forms of transport layers to be used for network communication.  Thus for
+scalability peers could exchange buffers or pointers to messages with each
+other.  This would remove any restrictions on OS resources and does not require
+that each communication pathway pass through a system call.
 
 Brunet supports a generic transports framework that provides the method for
 sending a message and the ability to register a callback when a message is
@@ -117,7 +129,7 @@ receive handler.
 
 TCP and UDP have the concept of IP addresses and ports to locally and,
 potentially, globally uniquely distinguish themselves and that, more
-importantly, can be shared with others who can then communicate with that peer
+importantly, can be shared with others, who can then communicate with that peer
 using the address information.  In other words, the concept of addresses is key
 to transports.  How else would a peer determine how to locate another peer.
 Since the simulated transports are all running in the same address space, there
@@ -142,27 +154,23 @@ should be properly modeled.  That is, if a user requests information from
 another user using the simulation, it should be delivered when available not
 after polling some entry point after some period of time.
 
-To model this behavior for these types of services, the interface of the
-service into the simulation may need to be modified.  The initiation action
-should be triggered at a specific time.  That initiation mechanism should
-register a callback to be notified when the result is ready, much like
-asynchronous communication.  Then the simulator regains control and continues
-executing.  When a result becomes available, the result is pushed into the
-proper queue, which should make a callback into the listener thus completing a
-user action.
+To effectively model this behavior requires the use of asynchronous interfaces.
+After the initiation action is triggered, a registered callback will be
+triggered upon completion.  A synchronous call can be inefficiently turned into
+an asynchronous call through the use of a thread or by polling.  Though for
+performance purposes, it is best to use an asynchronous interface that only
+gets invoked upon completion of the task.  Fortunately, it is very easy to make
+synchronous interfaces from asynchronous, so if designed properly, this should
+be trivial for system designers.  However, if they are not, the other solution
+is to poll the handlers queue to determine if a result is available.  However
+doing this incurs more overhead in the simulation.
 
 In Brunet, this behavior has been modeled in interactions with the DHT and
 sending messages through the overlay.  A common abstract class contains a
 method to start the action.  It notes the starting time when this method is
-executed.  It then listens for the asychronous response from the underlying
-component to inform that the user action has completed.
-
-Unfortunately, this has the side effect, that services provided must have an
-asynchronos interface.  Fortunately, it is very easy to make synchronous
-interfaces from asychronous, so if designed properly, this should be trivial
-for system designers.  However, if they are not, the other solution is to poll
-the handlers queue to determine if a result is available.  However doing this
-incurs more overhead in the simulation.
+executed.  It then waits for the asynchronous response from the underlying
+component to inform that the user action has completed.  Optionally, it will
+call another user-specified callback upon completion.
 
 \subsection{The Rest of the System}
 
@@ -187,36 +195,45 @@ memory in the heap.  For managed languages, this can result in significant
 overhead due to garbage collection.  Finally, since the entire system depends
 on ordered time, the mechanism ordering timing events plays a key role.
 
-The first approach to optimization comes in the form of caching complex data
-structures that might be stored in several components of the system.  These
-type of data structures include the nodes simulated transport address, P2P
-address, and common strings inside the system.  A cache in this sense consists
-of a hashtable, whose key is the object of interest and the value is a
-singleton or a value that is identical to the key in every way except but
-potentially they refer to different locations in memory.  Thus when a peer
-constructs another peres address, it can check the hashtable for a singleton,
-if one exists, it uses the singleton and no additional memory is required
-besides a pointer to this singleton.  If one does not exist, this new value is
-stored as a singleton into the system.  There are various means to limiting the
-entries in a hashtable, such as only keeping the last $N$ entries, keeping
-track of the last access time, counting the number of references, or using a
-concept known as weak references.  Weak references provide an attractive option
-as it requires no additional state in the cache, a garbage collector will
-remove an object when there are no references to it besides weak references.
-Thus stale entrees in the hashtable will return null objects.  So a cache using
-weak references will need to iterate through the entire cache occassionally to
-remove these stale references.
+While the typical address in a P2P system may be large in order to allow nodes
+to obtain addresses independently of each other through random number
+generation, in a simulation, this large address space is unnecessary, because
+there is no need to generate the addresses without knowledge of other
+addresses.  One condition that may need large address spaces is extremely large
+simulations, but given that a 32-bit number allows for 4 billion nodes, this
+should not be an issue.
 
-To keep timed events ordered, min-heaps are very useful.  Min-heaps guarantee
-that the root node points to the minimum value in the data structure, which
-upon removal will move the next smallest value to the root.  Interestingly, not
-all heaps play fair.  While a Fibonnaci heap provides algorithmically better
-performance than a binary heap, my implementation of the former performs
-significantly worse than the latter.  Unfortunately, profiling suggests that
-with the type of behavior being exposed by the simulator, this is unavoidable.
-Certainly, however, a more efficient means for adding and removing entries into
-the timer exist, that while they may not provide algorithmically better time,
-do so in actual implementation.
+Many common data structures are generated in a distributed system even inside a
+single node.  This includes transport addresses, P2P addresses, and common
+strings inside the system.  By caching these values, the system can reduce its
+memory consumption and be nicer to the garbage collector.  A cache in this
+sense consists of a hashtable, whose key is the object of interest and the
+value is a singleton or a value that is identical to the key in every way
+except but potentially they refer to different locations in memory.  Thus when
+a peer constructs another peres address, it can check the hashtable for a
+singleton, if one exists, it uses the singleton and no additional memory is
+required besides a pointer to this singleton.  If one does not exist, this new
+value is stored as a singleton into the system.  There are various means to
+limiting the entries in a hashtable, such as only keeping the last $N$ entries,
+keeping track of the last access time, counting the number of references, or
+using a concept known as weak references.  Weak references provide an
+attractive option as it requires no additional state in the cache, a garbage
+collector will remove an object when there are no references to it besides weak
+references.  Thus stale entrees in the hashtable will return null objects.  So
+a cache using weak references will need to iterate through the entire cache
+occasionally to remove these stale references.
+
+Messages are usually assembled from a set of memory blocks.  Prior to
+transferring them, they most be placed into a contiguous buffer.
+Unfortunately, this can lead to significant memory allocations and garbage
+collections.  To address this, I have utilized memory heaps, that can be used
+to create multiple memory blocks.  The concept is to allocate a large memory
+block.  When assembling a message, it is written to an offset into this block.
+The block can then be shared with others by providing a reference to the memory
+block and the offset and length of the message inside this block.  When the
+block is no longer in scope, it is garbage collected.  This approach
+significantly reduces dynamic allocation of data and in turn significantly
+improves the performance of the simulation.
 
 \section{Efficient Relays}
 
@@ -264,7 +281,7 @@ a peer may only route through the fastest or more stable overlap in the set.
 
 To verify the usefulness of two-hop over overlay routing, I performed
 experiments and share the results in Section~\ref{relay_motivation}.  In a live
-system, I have verify the accuracy and usefulness of our latency-based relay
+system, I have verify the accuracy and usefulness of the latency-based relay
 selection algorithm in Section~\ref{relay_eval}.
 
 \subsection{Motivation for Relays in the Overlay}
@@ -275,15 +292,15 @@ autonomic relays.  For this experiment I used the MIT King data
 set~\cite{king_data}, which contains all-to-all latencies between 1,740
 well-distributed Internet hosts.  Various sizes of networks up to 1,740 nodes
 were evaluated 100 times each.  The experiments were executed by running the
-P2P software in simulated mode.  Once at steady state, I then calculated the
-average all-to-all latency for all messages that would have taken two overlay
-hops or more, the average of the low latency relay model, and the average of
-single hop communication.  In the low latency relay model, each destination
-node form a connection to the source node's physically closest peer as
-determined via latency (in a live system by application level ping).  Then this
-pathway is used as a two-hop relay between source and node.  I only look at two
-overlay hops and more, as a single hop would not necessarily benefit from the
-work and would be the cause of a triangular inequality.  
+Brunet in simulated mode.  Once at steady state, I then calculated the average
+all-to-all latency for all messages that would have taken two overlay hops or
+more, the average of the low latency relay model, and the average of single hop
+communication.  In the low latency relay model, each destination node form a
+connection to the source node's physically closest peer as determined via
+latency (in a live system by application level ping).  Then this pathway is
+used as a two-hop relay between source and node.  I only look at two overlay
+hops and more, as a single hop would not necessarily benefit from the work and
+would be the cause of a triangular inequality.  
 
 \begin{figure}
 \centering
@@ -364,10 +381,9 @@ results, it appears that in most if not all these experiments peers had a low
 latency connection to a University compute resource and it was chosen ahead of
 Planet-Lab.
 
-The two apparent take aways are 1) the benefit of being able to deploy your own
-relay servers and to reuse compute nodes as relay systems and 2) as our network
-grows, we too may need to implement some form of bandwidth limit at relay
-nodes.
+The two apparent take aways are the benefit of being able to dynamically deploy
+relay servers and reuse compute nodes as relay systems and as the network grows
+there may be need to implement some form of bandwidth limit at relay nodes.
 
 \section{Policies for Establishing Direct Connections}
 
@@ -507,7 +523,7 @@ packets, the sending node has much less used bandwidth.  The time required by
 the DHT approach involves the time to retrieve all entries from the DHT and the
 latency to the peer farthest away.  Whereas the broadcast approach has no DHT
 lookup and is somewhere around the average latency in the system multiplied by
-$O(\log^2(N))$.
+$\log^2(N)$.
 
 \section{Full Tunnel VPN Operations}
 \label{full_tunnel}
@@ -636,6 +652,7 @@ Linux and Windows using OS dependent TAP devices and bridge utilities.
 
 \subsection{Full Tunnel Overhead}
 \label{full_tunnel_eval}
+
 While the full tunnel client method effectively resolves the lingering problem
 of ensuring that all packets in a full tunnel will be secure, it raises an
 issue:  could the effect of having all packets traverse the VPN application be
