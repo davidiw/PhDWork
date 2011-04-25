@@ -7,7 +7,7 @@ experiences and demands that have arisen as a result of the deployment of the
 VPN software in real systems.  Deployment experiences include but are not
 limited to usage on PlanetLab, resources including personal computers and
 clusters in residential and academics environments, virtual machines, and cloud
-resources.  Each of these enviornments exposes a different set of requirements
+resources.  Each of these environments exposes a different set of requirements
 to the design and implementation of a practical P2P VPN.
 
 \section{Built-in Self-Simulation}
@@ -437,7 +437,7 @@ per hop distance between two peers are presented in
 Figure~\ref{fig:drop_rate_plab} and Figure~\ref{fig:latency_plab},
 respectively.  The data in those figures is compared to data retrieved from
 iPlane, which makes it clear that PlanetLab exacerbates the situation.  While
-this is a wel-known issue, it is a very important conclusion since many of the
+this is a well-known issue, it is a very important conclusion since many of the
 public systems provided by my research group rely on PlanetLab.
 
 \begin{figure}[ht]
@@ -506,6 +506,36 @@ removed from the second hashtable.  When an entry is removed from the cache, it
 causes an eviction notice, which results in the connection being removed.  The
 timer is based upon a 7.5 minute timer, so that an inactive connection will be
 closed within 7.5 to 15 minutes.
+
+The applicability of on-demand connections compared to Chota was evaluated
+using the simulator with 1,024 nodes and a drop rate of 0.00925\% as found on
+PlanetLab.  The On-demand connections were established using the exact semantics
+of the On-demand protocol; however, the behavior of establishing Chota
+connections is a little complicated, since the traffic behavior of successful
+and unsuccessful connection attempts is not identical.  To address this, I
+simulated an ideal Chota situation:  the nodes optionally establish a security
+connection via the overlay, then they exchange a round trip message, and
+finally establish a direct connection between each other.  The On-demand
+approach involved optionally creating a security connection followed by the
+direct connection.  
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=3.5in]{figs/connections.eps}
+\caption[Time to form a direct connection]{CDF of the connection establishment
+time for secure and security-free Chota and On-demand connections in an overlay
+of 1,024 nodes and a drop rate of .00925\%.}
+\label{fig:connections}
+\end{figure}
+
+While this evaluation model creates a highly ideal situation for Chota
+etablishment.  The results in Figure~\ref{fig:connections} make it clear that
+Chota is not ideal for this type of application and that security only makes
+the issues worse.  The On-demand connections show a significant improvement, but
+there still exists an obvious issue with connection establishment that will
+only be made worse as the system expands.  Perhaps using multiple paths on the
+overlay can improve this situation packet drops on the overlay may have high
+correlation rather than being uniformly random.
 
 In application, this modification made the Archer, which uses both secure links
 and Condor, significantly more stable.  As the system expanded, nodes were

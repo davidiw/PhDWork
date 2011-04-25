@@ -505,7 +505,7 @@ can occasionally send updates to the CRL through an out of band medium, such as
 e-mail.  A better long term solution may be the use of a gossip protocols so
 that peers can share their lists with each other during bootstrapping phases.
 
-A key assumption in using these is that a Sybil~\cite{sybil}, or collusion
+A key assumption in using these is that a Sybil~\cite{Sybil}, or collusion
 attack, is difficult in the secured overlay.	 If a Sybil attack is successful,
 both a DHT and broadcast revocation may be unsuccessful, though peers could fix
 this problem by obtaining the CRL out of band.  In addition, previous
@@ -516,7 +516,7 @@ from obtaining too many certificates as well as ensuring uniform distribution
 of that user's P2P addresses, further hampering the likelihood of a Sybil
 attack.  The ability to automate this is left as future work.
 
-One way to mitigate sybil attacks using the broadcast approach is to bundle
+One way to mitigate Sybil attacks using the broadcast approach is to bundle
 colluding offenders into a single revocation message.  That would prevent those
 from colluding together to prevent each other's revocations.  Furthermore,
 while not emphasized above, revocation in my system revokes by user name and
