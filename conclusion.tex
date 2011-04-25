@@ -1,43 +1,91 @@
 \chapter{CONCLUSIONS}
 \label{chap:conclusion}
-This work brings significant advances to the usability of VPNs by describing,
-implementing, and evaluating methods that provide simplified configuration of
-both the local and network components of a VPN.  The use of common network
-protocols enables OS independent VPN system supporting many different local VPN
-configurations.  Structured overlays enable scalabe design of VPNs but have
-inherent security issue; virtual private overlays enables users in network
-constrained environments to use a public overlay to create a secure overlay.
-Web interfaces make the user configuration of these systems reasonable for even
-non-experts.  Decentralized relays address concerns when network constraints
-limit direct communication between peers.  The future work addresses
-performance issues inherent to the use of direct IP communication over P2P and
-enabling the use of VPNs in unprivileged locations.
 
-Completed components of this work include:
-\begin{itemize}
-\item \textbf{Virtual Private Overlays} - secure, self-configuring overlay as
-the basis for a structured overlay VPN.
-\item \textbf{Group environments} - User-friendly environments to generate
-files to ease configuration of complex systems.
-\item \textbf{Local VPN configuration} - VPN architect supporting Interface,
-Router, and a novel Hybrid mode for various environments.
-\item \textbf{Relays} - to enable two-hop connections between peers that cannot
-form direct connections.
-\end{itemize}
+This work brings significant advances to the usability of VPNs through
+significant background study, understanding important practical applications,
+and verification in both simulation and real deployments.  The architecture
+explored herein provides a general framework for creating VPNs that has
+contributed to various end-point and overlay configurations useful for both
+large and small scale deployments for group or personal use.
 
-The VPN approach described herein has been used to construct real systems,
-such as the GroupVPN~\cite{gridappliance} and a SocialVPN~\cite{cops08}.  The
-GroupVPN has been used to construct a Grid Appliance~\cite{grid_appliance} that
-enables the creation of distributed, decentralized, dynamic computing grids.
-Over the past 2 years, I have been the student lead in an active grid deployed
-for computer architecture research, Archer~\cite{archer}.  Archer currently
-spans four universities with 500 resources.  We have had 100s of users connect
-seamlessly to these resources from many locations including home, school, and
-hotels.  A PlanetLab backend distributed across over 600 resources provides
-near constant overlay uptime for Archer and external users.  External users
-include classes and groups at other universities.  Most recently, a grid at La
-Jolla Institute for Allergy and Immunology went live with minimal communication
-with our group.  Researchers at the Clemson University and Purdue have opted
-for this approach over centralized VPNs as the basis of their future
-distributed compute clusters and have actively tested networks of over 1000
-nodes.
+In order to support a completely ad-hoc, decentralized VPN, users begin by
+connecting to a public overlay, such as XMPP or Kademlia, in order to discover
+other users.  After exchanging their information via these mediums, peers can
+establish direct communication links with each other and with other peers
+already in the VPN.  Peers can exchange or obtain trusted identities using
+established peer or group relationships in existing social networks.
+
+Because most peers are behind NATs and firewalls, this dissertation covers
+methods, which allow peers to use existing overlays to bootstrap through NATs
+and firewalls.  This can mean using a third-party system until a peer on a
+public IP address comes online, or more likely, using a service to obtain a
+public IP and port mapping for the peers private address.  When peers cannot
+directly establish direct links, the overlay still provides the ability to
+route messages between peers.  Routing messages across the overlay can incur
+significant overhead and is not optimized for any specific purpose.  To remedy
+this, I have established a mechanism to create two-hop links between peers
+emphasized on the latency between the peers.
+
+This work describes two novel mechanisms for handling address assignments
+inside a VPN:  using a DHT with atomic capabilities as well as independent
+networks with explicit links based upon social connections.  The DHT approach
+allows for highly scalable systems in comparison to other approaches that
+require state to be manually spread across the system or through the use of
+broadcast mechanisms.  By making the network addresses dependent on social
+links and independent of the actual overlay, peers need not worry about address
+collisions.  Furthermore, this work explores means to transparently migrate
+resources using DHT style addressing even when those resources are connected
+via the VPN router.
+
+Existing approaches to VPN placement use either interface or router models.
+Interface models can easily be constructed to be transparent, whereas existing
+router models have no such features.  Through the use of network protocols
+support in network stacks found in common operating systems, mechanisms for
+support transparent configuration of both interface and routing models have
+been detailed.  Where routers are desirable due to performance, and interface
+is attractive for security purposes, hybrid provides a middle ground that
+combines these two aspects to support high-performance, though secure virtual
+networking.
+
+Because attempting to verify the system in every possible environment after
+making both minor and major modifications, I have employed a built-in
+self-simulating environment into Brunet.  The application has reduced the time
+necessary to develop, evaluate, and debug new contributions as well as
+reproduce bugs and protect from having them reoccur.  In the context of this
+dissertation, it has been used to verify and motivate the necessity for on
+demand as opposed to passive connections, as well as the relay, bootstrapping,
+and security work.
+
+This work has been the corner stone in a real system used to provide ad-hoc
+grid computing named the Grid Appliance~\cite{gridappliance}, which has been
+realized in a voluntary computing grid for computer architecture research
+called Archer~\cite{archer}.  Archer currently spans six universities with over
+600 resources.  Over 100s of users have connected seamlessly to these resources
+from many locations including home, school, and hotels.  A PlanetLab back end
+distributed across over 600 resources provides near constant overlay uptime for
+Archer and external users.  External users include classes and groups at other
+universities.  Most recently, a grid at La Jolla Institute for Allergy and
+Immunology went live with minimal communication with our group.  Researchers at
+the Clemson University and Purdue have opted for this approach over centralized
+VPNs as the basis of their future distributed compute clusters and have
+actively tested networks of over 1000 nodes.
+
+The majority of this dissertation focused on services to enable user-friendly
+VPNs, during the design and evaluation, it became apparent that there still
+exist significant deficiencies in the design described herein.  The following
+are important research topics that are left as future research topics.  During
+the evaluation of packet drop rates across the Internet and in particularly
+PlanetLab, it is apparent that recursive packet routing will not scale well
+especially when dealing with non-negligible traffic.  Another aspect of limited
+scalability is presented when using a single UDP socket multiplexed across
+potentially many VPN connections.  Each UDP socket has a small buffer
+associated with it, when that buffer is exhausted sends either either become
+blocking or are thrown away, depending on usage.  In terms of VPNs, there still
+exists a wide gap between IPv6 and IPv4, my work could be used to assist in
+deploying IPv6 to IPv4 tunnels, which unlike existing approaches, have natural
+fail over support and efficient paths between source and destination.  Finally,
+the last major draw back to the Grid Appliance is the necessity for a
+centralized scheduler / management component.  Ideally, this could be handled
+in decentralized means with trust, a user rank system for priority, ability to
+handle simultaneous scheduling of tasks, and limiting the reliance of a node
+being online to receive results for tasks.

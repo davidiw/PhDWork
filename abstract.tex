@@ -30,7 +30,7 @@ to handle demands placed upon it by clients.  I have investigated, implemented,
 and evaluated decentralized means to bootstrap private P2P overlays for
 connectivity-constrained resources, with an approach that supports a recursive
 overlay organization or the use of third-party free-to-join public overlay
-infrastructures such as XMPP.
+infrastructures using technologies such as XMPP.
 
 Bootstrapping helps establish connectivity into an overlay; however, many
 systems including P2P VPNs require a means for discovery specific peers.
@@ -47,11 +47,11 @@ to assist them in creating network links to other peers, they do not desire to
 have intermediaries that are able to read or modify their IP packets.
 Unfortunately, most VPNs only encrypt messages on a point-to-point (PtP) basis
 allowing these intermediaries privileged access to their identity and their
-messages.  In these cases, end-to-end (ete) security relies on out-of-bound
+messages.  In these cases, end-to-end (EtE) security relies on out-of-bound
 exchanges and applications.  To transparently handle security at both PtP and
 EtE layers across a wide spectrum of communication transports, I have developed
 a novel security filter, which has been demonstrated to support existing Public
-Key Infrastructure based security systems (such as DTLS) for both ptp and ete
+Key Infrastructure based security systems (such as DTLS) for both PtP and EtE
 traffic inside connectivity-constrained environments.
 
 While security primitives enable private and authenticated communication, the
@@ -74,33 +74,34 @@ in a grid or for cloud computing environments, the resources can share a common
 entry point to the VPN through a router model.  Unfortunately, existing
 approaches do not transparently configure the router and connected resources.
 Additionally, the router model does not work well on shared networks, where
-there are either untrusted users or some resources should not be available
+there are either untrusted users or some resources should not be accessible
 through the VPN.  I have shown herein how all of these considerations can be
-handled without the introduction of new protocols by reusing existing aspects
-of most network stacks, primarily DHCP and ARP, which enables a new type of VPN
-model that balances the benefits of the interface and router models.
+handled without the introduction of new protocols by utilizing existing
+services commonly provided by network stacks, primarily DHCP and ARP, which
+enables a new type of VPN model that balances the benefits of the interface and
+router models.
 
 The premise for this work is to enhance the usability of VPN systems enabling
 wider adoption by non-expert users in home, small/medium business, and
 education environments.  The concepts for this work have been carefully
-designed, implemented, and evaluated and then demonstrated the implementation
-of novel systems (SocialVPN, GroupVPN, and Grid Appliance) with real users.
-The SocialVPN creates user-centric VPNs so that peers only have VPN links with
-their social network friends, whereas the GroupVPN employs a group
-infrastructure to manage VPN members and distribute VPN configuration.  A free
-GroupVPN bootstrapping environment relying on PlanetLab hosted resources has
-been available for over three years and has been accessed by over hundreds of
-users including several universities and commercial entities, whereas the
-SocialVPN has over 80 active members online at any given time.  The Grid
-Appliance uses the GroupVPN to form ad-hoc and distributed computing pools,
-facilitating computer architecture research in the Archer project.  The Archer
-project has been accessed by student at several universities and has
-accumulated over 500,000 CPU hours in a little less than three years.
-Furthermore, the Grid Appliance has been used as both a teaching tool in
-distributed computing classrooms as well as by external users to create their
-own grids.  The challenges faced in these deployments have opened the door for
-other avenues of research into built-in self-simulation, P2P connection
-establishment, efficient IP broadcasting and multicasting, and decentralized
-establishment of Internet gateways.
+designed, implemented, and evaluated and then demonstrated through the
+implementation of novel systems (SocialVPN, GroupVPN, and Grid Appliance)
+accessed by real users.  The SocialVPN creates user-centric VPNs so that peers
+only have VPN links with their social network friends, whereas the GroupVPN
+employs a group infrastructure to manage VPN members and distribute VPN
+configuration.  A free GroupVPN bootstrapping environment relying on PlanetLab
+hosted resources has been available for over three years and has been accessed
+by over hundreds of users including several universities and commercial
+entities, whereas the SocialVPN has over 80 active members online at any given
+time.  The Grid Appliance uses the GroupVPN to form ad-hoc and distributed
+computing pools, facilitating computer architecture research in the Archer
+project.  The Archer project has been accessed by student at several
+universities and has accumulated over 500,000 CPU hours in a little less than
+three years.  Furthermore, the Grid Appliance has been used as both a teaching
+tool in distributed computing classrooms as well as by external users to create
+their own grids.  The challenges faced in these deployments have opened the
+door for other avenues of research into built-in self-simulation, P2P
+connection establishment, efficient IP broadcasting and multicasting, and
+decentralized establishment of Internet gateways.
 
 \end{abstract}

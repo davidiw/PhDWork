@@ -1,38 +1,39 @@
 \chapter{VIRTUAL NETWORK CONFIGURATION AND ORGANIZATION}
 \label{chap:vpns}
 
-In distributed computing, there are many applications for VPNs, two such tasks
-are the connecting large sets of remote resources and accessing a central
-server or a personal resource.  Similar use cases can be extrapolated onto
-other collaborative environments such as multiplayer games, merging home
-networks over a VPN, or accessing a work computer remotely.  Each application
-has different requirements and in review of related research~\cite{ipop, vine,
+VPNs enable seamless communication in distributed computing particularly when
+combinging large sets of remote resources or connecting to centralized or
+personel resources.  Similar use cases can be extrapolated onto other
+collaborative environments such as multiplayer games, merging home networks
+over a VPN, or accessing a work computer remotely.  Each application has
+different requirements and in review of related research~\cite{ipop, vine,
 violin, vnet, ocala, softudc, openvpn, hamachi, wippien, gbridge, pvc, tinc,
 n2n, p2pvpn, l2tp} not a single approach efficiently supports these dynamic
-environments.  Certainly ISP large scale VPNs such as MPLS~\cite{mpls} do not
-as well.  An overview of these and the one described herein are presented in
-Table~\ref{tab:virtual_networks}
+environments.  Certainly, ISP large scale VPNs such as Multiprotocol Label
+Switching~\cite{mpls} (MPLS) do not as well due to the manual configuration and
+expertise required.  An overview of these and the one described herein are
+presented in Table~\ref{tab:virtual_networks}
 
 The organization of a VPN has a direct effect on the amount of user effort
 required to connect multiple sites.  In this regard there are two components of
-a VPN, the local organization and the remote or network organization.  The setup
-of the virtual network in order to have be a destination and recognized source
-for remote packets constitute the local organization.  Whereas the routing of
-the packets amongst peers is handled by the network organization.  Prior
-research works primarily focused on the latter issue, while ignoring the former.
-This meant that users were left to setup their own address allocations either
-through manually configuring each environment or dealing with the head aches of
-caused by DHCP servers in cross domain network construction as well as their
-own security distribution systems.  In addition, organizing a network can be an
-even more complicated task than locally configuring the network.  This chapter
-presents a novel approach to VPNs that achieves both local and network
+a VPN, the local organization and the remote or network organization.  The
+setup of the virtual network in order to have be a destination and recognized
+source for remote packets constitute the local organization, whereas the
+routing of the packets amongst peers is handled by the network organization.
+Prior research works primarily focused on the latter issue, while ignoring the
+former.  This left users to setup their own address allocations either through
+manually configuring each environment or dealing with the problems caused by
+DHCP servers in cross domain network construction, as well as their own
+security distribution systems.  In addition, organizing a network can be an
+even more complicated task than locally configuring the network, because it may
+require the cooperation of many administrators at the various sites.  This
+chapter presents a novel approach to VPNs that achieves both local and network
 self-configuration.
 
-\section{Network Configuration}
-The key to communicating in a VPN is creating links to the VPN and finding
-the peer in the VPN.  The different architectures for VPN link creation are
-based on distributed computing communication methods and are described in
-Table~\ref{tab:vpn_types}.  The approaches are described in more detail
+\section{Network Configuration} The key to communicating in a VPN is creating
+links to the VPN and finding the peer in the VPN.  The different architectures
+for VPN link creation are based on the methods described in
+Table~\ref{tab:vpn_types}.  These approaches are described in more detail
 below.
 
 \begin{center}
@@ -62,12 +63,12 @@ distributed data store for discovery \\ \hline
 \subsection{Centralized VPN Systems}
 
 OpenVPN is an open and well-documented platform for deploying centralized VPNs.
-In this paper, it is used as the basis for understanding centralized VPNs as it
-represents features common to most centralized VPNs.
+In this dissertation, it is used as the basis for understanding centralized
+VPNs as it represents features common to most centralized VPNs.
 
 In centralized VPN systems, clients forward all VPN related packets to the
 server.  Client responsibilities are limited to configuring the VN device and
-authenticating with the VPN server; whereas the servers are responsible for
+authenticating with the VPN server, whereas the servers are responsible for
 authentication and routing between clients and providing access to the servers'
 local resources and the Internet (full tunnel).  Likewise, broadcast and
 multicast packets also must pass through the central server.
@@ -75,7 +76,7 @@ multicast packets also must pass through the central server.
 Centralized VPNs can support multiple servers: upon starting, the client can
 randomly select from a list of known servers, implementing a simple load
 balance.  Once connected, the servers provide the client an IP address in the
-VPN address space. Depending on configuration this will allow a client to
+VPN address space. Depending on configuration, this allows a client to
 communicate with other clients, resources on the server's network, or Internet
 hosts via the VPN.  Servers require additional configuration to communicate
 with each other.
@@ -96,12 +97,12 @@ ambiguous moniker ``P2P VPN''.  In reality, these systems are better classified
 as centralized VPN servers with P2P links.  Similar VPNs include
 Wippien~\cite{wippien}, Gbridge~\cite{gbridge}, PVC~\cite{pvc}, and
 P2PVPN\footnote{Due to the similarities between the name P2PVPN and focus of
-this paper, ``P2PVPN'' refers to ~\cite{p2pvpn} and ``P2P VPN'' to to the use
-of P2P in VPNs.}~\cite{p2pvpn}.  The P2P in these systems is limited to direct
-connectivity between clients orchestrated through a central server: in Wippien
-it is a chat server, while P2PVPN uses a BitTorrent tracker.  If NAT traversal
-or firewalls prevent direct connectivity, the central server can act as a
-relay.  Each approach uses their own security protocols with most using a
+this dissertation, ``P2PVPN'' refers to ~\cite{p2pvpn} and ``P2P VPN'' to to
+the use of P2P in VPNs.}~\cite{p2pvpn}.  The P2P in these systems is limited to
+direct connectivity between clients orchestrated through a central server: in
+Wippien it is a chat server, while P2PVPN uses a BitTorrent tracker.  If NAT
+traversal or firewalls prevent direct connectivity, the central server can act
+as a relay.  Each approach uses their own security protocols with most using a
 server to verify the authenticity and setup secure connections between clients.
 In regards to the P2PVPN, long term goals involve the creation of an
 unstructured, which would provide a method of decentralized organization.
@@ -117,14 +118,14 @@ do not require all-to-all direct connectivity for all-to-all communication.
 Users can either setup out-of-band NAT traversal or route through relays.  Links
 are manually configured.
 
-\subsection{Unstructured P2P VPN Systems}
-Unlike centralized and decentralized systems, P2P environments require the
-user to connect to the overlay, which then automatically configures links.
-The simplest form of overlays are unstructured, where peers form random
-connections with each other and use broadcast and stochastic techniques to find
-information and other peers, though due to its unstructured nature, the system
-cannot guarantee distance and routability between peers.  The only example of
-an unstructured VPN is N2N~\cite{n2n}.  In N2N, peers first connect to a super
+\subsection{Unstructured P2P VPN Systems} Unlike centralized and decentralized
+systems, P2P environments require the user to connect to the overlay, which
+then automatically configures links.  The simplest form of overlays are
+unstructured, where peers form random connections with each other and use
+broadcast and stochastic (e.g. random walks) techniques to find information and
+other peers; however, due to its unstructured nature, the system cannot
+guarantee distance and routability between peers.  The only example of an
+unstructured VPN is N2N~\cite{n2n}.  In N2N, peers first connect to a super
 node and then, to find another peer, they broadcast discovery messages to the
 entire overlay.  In the case that peers cannot form direct connection, peers
 can route to each other over the N2N overlay.  In the realm of VPNs, all client
@@ -136,10 +137,9 @@ with decentralized address allocation.
 To address the scalability concerns in unstructured systems, this work uses
 structured P2P overlays.  As described in the first chapter, structured P2P
 overlays provide distributed look up services with guaranteed search time with
-a lower bound of $O(\log N)$, in contrast to unstructured systems, which rely
-on global knowledge/broadcasts, or stochastic techniques such as random walks.
-In general, structured systems are able to make these guarantees by
-self-organizing a structured topology, such as a 2D ring or a hypercube,
+in $O(\log(N))$ time in contrast to unstructed systems with $O(N)$ time.  In
+general, structured systems are able to make these guarantees by
+self-organizing a structured topology, such as a 1-D ring or a hypercube,
 deterministically by randomly generated node identifiers.
 
 The primary feature used by structured overlays is a distributed data store
@@ -175,9 +175,8 @@ to all addresses associated with that key.  It is up to the VN at each site to
 filter the packet.  This is sufficient to support deployments where multicast
 or broadcast is not relied upon extensively.  
 
-\section{Local Configuration}
-From a superficial point of view there are two approaches to local VPN
-configuration a single VN endpoint per a host (Interface) and a VN router
+\section{Local Configuration} At first order, there are two approaches to local
+VPN configuration: a single VN endpoint per a host (Interface) and a VN router
 endpoint for many hosts on the same LAN (Router).  The components differing
 between the two approaches are:
 
@@ -263,13 +262,14 @@ Nodes are independent \\ \hline
 \begin{figure}
 \centering
 \epsfig{file=figs/three_models.png.eps}
+
 \caption[Three VN Approaches]{Illustration of the three different deployment
-models considered in this paper. In VN interface mode (1), each node has an
-overlay ID and communicates to all other nodes through VN tunneling. In VN
+models considered in this dissertation. In VN interface mode (1), each node has
+an overlay ID and communicates to all other nodes through VN tunneling. In VN
 router mode (2), only the router has an overlay ID and routes for a set of
-resources; LAN communication does not require VN tunneling. In hybrid mode
-(3), each host has an overlay ID; LAN communication does not require VN
-tunneling.}
+resources; LAN communication does not require VN tunneling. In hybrid mode (3),
+each host has an overlay ID; LAN communication does not require VN tunneling.}
+
 \label{fig:three_models}
 \end{figure}
 
@@ -580,7 +580,8 @@ certain period of time, akin to mobile IP but not on a permanent basis.  A more
 direct approach, as implemented in the prototype, involves the VN router
 notifying the connected host of a change in ownership, resulting in the host
 querying the DHT for the updated P2P end point.  An evaluation of trade offs in
-the migration design, while interesting, is outside the scope of this paper. 
+the migration design, while interesting, is outside the scope of this
+dissertatoin. 
 
 A static address allocation is similar to a migration without there being an
 IP:P2P value in the DHT, though without querying the DHT, the situation is
@@ -627,7 +628,7 @@ finished successfully.}
 
 \begin{figure}
 \centering
-\epsfig{file=figs/migration_results.png.eps, width=2.5in}
+\epsfig{file=figs/migration_results.png.eps, width=3.5in}
 \caption[VN Router migration evaluation]{VN Router migration evaluation.  Over
 50 different IPs migrated about 10 times each.  The average was 20.11 seconds
 with a standard deviation of 10.89.  In this experiment, the majority of this
@@ -701,8 +702,25 @@ involved. The evaluation focuses on CPU as experience suggest that this is the
 most significant limiting factor.  As will be presented, the CPU load offered
 by these models depends on the bandwidth of the underlying network link, since
 a larger bandwidth requires more processing of packets.  The tools for
-evaluating these VN models are, Netperf and SPECjbb, described in
-Appendix~\ref{evaluation_tools}.
+evaluating these VN models are Netperf and SPECjbb.
+
+Netperf~\cite{netperf} is used to estimate the latency and bandwidth of the
+different VN models. The latency is measured by deploying Netperf in the
+TCP\_RR mode, which measures the number of 1-byte request-receive transactions
+that can be completed in a second. The bandwidth is estimated by running Netperf
+in the TCP\_STREAM mode, which is a bulk transfer mode. It should be noted that
+in situations where the link bandwidths were asymmetric, Netperf is deployed in
+both directions.  Since both latency and bandwidth are dependent on the CPU
+comparison, evaluations that include CPU utilization tasks require creating
+a baseline first where only Netperf is the only active workload.
+
+SPECjbb~\cite{specjbb} simulates a three-tier web application with all the
+clients, the middle tier, and the database running on a single system in a
+single address space (inside a JVM). On completion, the benchmark provides the
+metric in terms of business of operations per second (bops). The bops score of
+the system under test depends on both the CPU and the memory in the system, as
+the entire database for the benchmark is held in memory. This benchmark
+generates negligible disk activity and no network activity. 
 
 \subsection{On the Grid}
 
@@ -939,7 +957,7 @@ RR & 1863 & 2277 & 2253 & 3121 \\ \hline
 \begin{center}
 \singlespacing{
 \footnotesize{
-\begin{longtable}{p{.8in}p{1.25in}p{1.2in}p{1.25in}p{1.25in}}
+\begin{longtable}{p{.8in}p{1.15in}p{1.3in}p{1.25in}p{1.25in}}
 \caption[Virtual Network Comparison]{Virtual Network Comparison} \\
 
 \hline & Overlay & Routing & Configuration & Miscellaneous \\ \hline \hline

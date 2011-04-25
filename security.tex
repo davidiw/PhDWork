@@ -5,15 +5,14 @@ In this chapter, I take the results from Chapter~\ref{chap:bootstrapping} and
 apply them to IPOP~\cite{ipop} in order to construct a fully decentralized P2P
 VPN.  While sharing overlays in IPOP makes for simplified use of the system, in
 reality, it introduces significant security challenges.  For example, a
-misconfigured or malicious peers could potentially disable the entire overlay,
-rendering all VNs useless.  Though if security and hence isolation is
-important, prior to VN deployment, all nodes would need to be configured with a
-security stack than the P2P infrastructure prior to deploying the VN system in
-order to create a VPN, given the complexity many users would probably
-reconsider the P2P approache and use a simple centralized VPN.
+misconfigured or malicious peer could potentially disable the entire overlay,
+rendering all VNs useless.  If security and hence isolation is important, prior
+to VN deployment, a user would need to deploy a secure overlay and configure
+their VPN to bootstrap from it, given the complexity many users may reconsider
+the P2P approach and use a simple centralized VPn.
 
-To address this challenge, or to make a fully decentralized P2P VPN, I have
-extend the IPOP concept to support bootstrapping from public infrastructures
+To address this challenge and to make a fully decentralized P2P VPN, I have
+extended the IPOP concept to support bootstrapping from public infrastructures
 and overlays into private and secure P2P overlays whose membership is limited
 to an individual VPN user base.  Chapter~\ref{chap:bootstrapping} focused on a
 small scale feasibility of bootstrapping decentralized overlays.  This chapter
@@ -30,18 +29,18 @@ GroupVPN}, a novel decentralized P2P VPN.
 
 The rest of this chapter is organized as follows.  Throughout the chapter,
 there are two techniques used to evaluate my approaches, simulation and real
-system deployments, these are described in Section~\ref{vpn:experimental}.
+system deployments; these are described in Section~\ref{vpn:experimental}.
 Section~\ref{vpn:private_overlays} describes techniques that allow users to
-create their own private overlays from a shared public overlay in spit of NATs.
-Use of security protocols has been assumed in many P2P works though without
-consideration of implementation and overheads, I investigate implementation
-issues and overheads of security in P2P with emphasis on P2P VPNs in
-Section~\ref{vpn:security}.  Without revocation, use of security is limited, in
-decentralized systems, use of centralized revocation methods do not work, I
-present novel mechanisms for decentralized revocation in
-Section~\ref{vpn:revocation}.  The complete system, GroupVPN, is presented in
-Section~\ref{vpn:groupvpn}.  Section~\ref{vpn:related_work} compares and
-contrasts this work with related work.  
+create their own private overlays from a shared public overlay in spite of
+NATs.  Use of security protocols has been assumed in many P2P works, though
+without consideration of implementation and overheads. I investigate
+implementation issues and overheads of security in P2P with emphasis on P2P
+VPNs in Section~\ref{vpn:security}.  Without revocation, use of security is
+limited, and in decentralized systems, the use of centralized revocation
+methods is are not sufficient, I present novel mechanisms for decentralized
+revocation in Section~\ref{vpn:revocation}.  The complete system, GroupVPN, is
+presented in Section~\ref{vpn:groupvpn}.  Section~\ref{vpn:related_work}
+compares and contrasts this work with related work.  
 
 \section{Experimental Environment}
 \label{vpn:experimental}
@@ -49,8 +48,9 @@ contrasts this work with related work.
 Throughout this paper, my quantitative evaluation environment uses both real
 deployments on PlanetLab and simulation.  The evaluation requirements dictate
 the environment used.  When the perspective of a single node is useful,
-PlanetLab provides good results, though when attempting to measure detailed
-behavior of the entire system using PlanetLab can result in significant noise.
+PlanetLab's overloaded nature makes complex system analysis challenging,
+especially when attempting to simulate an instanteous behavior on a system,
+which has random outage and delays in access.
 
 IPOP uses Brunet as the underlying P2P infrastructure for connectivity.  Brunet
 has been in active development for the past 5 years and is routinely run on
@@ -71,7 +71,7 @@ limited resources and can hamper the ability to simulate large systems.   The
 specialized transport uses datagrams to pass messages between nodes, thus from
 the node's perspective, it is very similar to a UDP transport and can simulate
 both latency and packet dropping.  Latency between all node pairs is set to 100
-ms.
+ms by default.
 
 Both simulation and real system evaluation provide unique advantages.
 Simulations allow faster than real time execution of reasonable sized networks
@@ -332,16 +332,15 @@ the sending mechanism need not understand the security filter.
 The last consideration comes in the case of EtE communication that provides an
 abstraction layer.  For example, in the case of VPNs, where a P2P packet
 contains an IP packet and thus a P2P address maps to a VPN IP address, a
-malicious peer may establish a trusted link, but then hijack another users IP
+malicious peer may establish a trusted link, but then hijack another user's IP
 session.  As such, the application must verify that the IP address in the IP
 packet matches the P2P address of the sender of the P2P packet.  In general, an
-application address should be matched against a P2P address, consider chat
-programs, for example.
+application address should be matched against a P2P address.
 
 \subsection{Overheads of Overlay Security}
 
 When applying an additional layer to a P2P system, there are overheads in terms
-of time to connect with the overlay.  Other less obvious effects will be
+of time to connect with the overlay.  Other less obvious effects are
 throughput, latency, and processing overheads, assuming that the P2P system
 will be used over a wide area network, where the latency and throughput
 limitations between two points will make the overhead of security negligible.
@@ -521,7 +520,7 @@ One way to mitigate sybil attacks using the broadcast approach is to bundle
 colluding offenders into a single revocation message.  That would prevent those
 from colluding together to prevent each other's revocations.  Furthermore,
 while not emphasized above, revocation in my system revokes by user name and
-not individual certificates.  Combined these two components limit sybil attacks
+not individual certificates.  Combined these two components limit Sybil attacks
 against broadcast.
 
 \section{Managing and Configuring the VPN}
@@ -603,7 +602,7 @@ establishment as well as endpoint configuration of the VPN.
 
 Besides the content described in the following subsections, namely establishing
 identity and trust as well as address allocation and discovery, SocialVPN
-reuses existing components already provided in IPOP.  Such as secure link
+reuses existing components already provided in IPOP, such as secure link
 establishment, endpoint configuration, and packet handling.  Even the
 functionality used by SocialVPN for address allocation and discovery builds
 upon existing abstractions already provided by IPOP.

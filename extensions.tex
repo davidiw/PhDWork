@@ -2,12 +2,13 @@
 \label{chap:extensions}
 
 This chapter contains components that extend the VPN software to provide
-additional important and interesting features.  Many of these components derive
-from experiences and demands placed upon me during the deployment of the VPN
-software in real systems.  Deployment experiences include but are not limited
-to usage on PlanetLab, resources distributed across homes and academia, virtual
-machines, and cloud resources.  Each of these environments produce interesting
-issues that has contributed to this work.
+additional important features.  Many of these components derive from
+experiences and demands that have arisen as a result of the deployment of the
+VPN software in real systems.  Deployment experiences include but are not
+limited to usage on PlanetLab, resources including personal computers and
+clusters in residential and academics environments, virtual machines, and cloud
+resources.  Each of these enviornments exposes a different set of requirements
+to the design and implementation of a practical P2P VPN.
 
 \section{Built-in Self-Simulation}
 
@@ -15,26 +16,26 @@ Software systems are complex and involve many moving parts.  Traditionally,
 system design begins by considering the goals of the system, choosing
 algorithms and data structures that can achieve those goals, and simulating or
 modeling the system.  Those results then translate into a real system that
-consists of a new code based upon the concept in the simulation.  This process
-limits the functionality of the simulation to validating the concept and not
-the implementation.  Then the entire software base must be independently
+consists of a new code based upon the concept in the simulation.  In this
+process, simulation is applied primarily to validate a design concept but not
+its implementation.  Then the entire software base must be independently
 checked for bugs and other issues that may have already appeared in the
 simulation code, doubling developer efforts.  
 
-To reduce my efforts in development and evaluation, I have investigated and
+To reduce efforts in development and evaluation, I have investigated and
 implemented mechanisms for distributed systems and in particular Brunet to
 support built-in self-simulation using event-driven simulation techniques.  In
-other words, even though Brunet is written for real system deployment the same
-code can run using simulated communication links and time, allowing many nodes
-to run on the same resource and potentially faster than wall clock time.  This
-approach allows transitioning feature from simulation directly into deployment
-hastening development cycles.  Furthermore, the constantly evolving as
-interesting discoveries in the real system can be modeled in simulation to make
-the simulation behavior more accurate.  Because a simulation can run on a
-single computer, scaling up to a significantly large system, new features can
-be constructed and evaluated locally, removing most bugs and through
-significant test cases already present in the simulation environment
-significantly cutting down on testing overheads.
+other words, even though Brunet is written for real system deployment, the same
+code can run using simulated communication links and simulated time, allowing
+many nodes to run on the same resource and potentially faster than wall clock
+time.  This approach allows transitioning features from simulation directly
+into deployment, hastening development cycles.  Furthermore, interesting
+discoveries in the real system can be modeled in simulation to make the
+simulation behavior more accurate.  Because a simulation can run on a single
+computer, scaling up to a significantly large system, new features can be
+constructed and evaluated locally, removing many bugs and reusing and applying
+test cases already present in the simulation environment significantly reducing
+testing overheads.
 
 The concept can be applied to networking / distributed systems in general.
 Distributed system software can usually be divided into many pieces, such as
@@ -47,18 +48,18 @@ Brunet.
 
 \subsection{Time-Based Events}
 
-Events or actions cause changes in a system, some are due to external stimuli,
+Events or actions cause changes in a system.  Some are due to external stimuli,
 such as hardware or software interrupts in a processors or user input, others
 are a result of timers, which may be a subset of hardware interrupts.  In the
-interest of simulation, timers and external stimuli can be viewed as two
+context of simulation, timers and external stimuli can be viewed as two
 different components.  The external stimuli may be delivered based upon a timed
 event or an action initiated by a remote party.  If time is ignored, then a
 node will run in a loop until its steady state has been achieved and then
 constantly verifying that it still is in steady state.  Timing allows a node to
-delay this behavior, such as establishing more ideal connections or verifying
-its connectivity, behavior which produces more efficient systems.
+delay this behavior, such as establishing more connections or verifying its
+connectivity, behavior which produces more efficient systems.
 
-Now a system could be made entirely without timers and run on external events
+A system could be made entirely without timers and run on external events
 alone.  In this case, timing is still required to model the communication delay
 between peers.  A message sent from one peer should not instantaneously arrive
 at another peer.  As will be described in Section~\ref{ap2p:nc}, peers can use
@@ -69,19 +70,19 @@ a virtual clock.  Methods in order to retrieve the current time should be based
 upon the same clock in both simulation and deployment systems.  In a real
 system, this would then reveal the actual current time, whereas in a simulated
 environment, this would reveal the current simulated time.  By virtualizing
-this method call, it can be directed to the appropriate clock.  How this is
-implemented depends on the language the software is written in.  For example,
-languages with namespaces can easily replace the clock functions with their
-own.  Languages like C may require pre-processor macros to specify real or
-virtual time.
+time retrieval calls, the caller can be directed to the appropriate clock
+depending on whether the system is running in simulation mode or not.  How this
+is implemented depends on the language the software is written in.  For
+example, languages with namespaces can easily replace the clock functions with
+their own.  Languages like C may require pre-processor macros to specify real
+or virtual time.
 
-In order to keep track of events in time order a timer is necessary.  The
-structure of the timer should be such that the event to execute next is always
-available in minimum time, while optimizing for inserting and removing events
-from the timer.  For this application, a minimum heap works well.  A minimum
-heap provides constant seek time for the smallest value as well as $log(N)$
-insert and deletion time.  In Brunet, this has been implemented as a binary
-heap.
+As events are queued into the system, they must be stored in ordered.  The
+structure should be such that the event to execute next is always available in
+minimum time, while optimizing for inserting and removing events from the
+timer.  For this application, a minimum heap works well.  A minimum heap
+provides constant seek time for the smallest value as well as $log(N)$ insert
+and deletion time.  In Brunet, this has been implemented as a binary heap.
 
 After the system has initialized, it may add one or more events into the timer
 to cause an action to occur.  The simulator will then advance the virtual clock
@@ -90,10 +91,10 @@ occurred up to that point including the next event and then repeat.  The
 running of events should not stop until the next event to execute should be run
 in the future, because one event may cause another event to occur immediately
 requiring no delay.  It should be noted that events may want to execute other
-events, these events should not be executed in-line and instead should be added
-into the queue to be executed at the same virtual clock time.  If this is not
-done, there is a potential for stack overflows due to extremely deep calls into
-the code.
+events.  These events should not be executed in-line and instead should be
+added into the queue to be executed at the same virtual clock time.  If this is
+not done, there is a potential for stack overflows due to extremely deep calls
+into the code.
 
 \subsection{Network Communication}
 \label{ap2p:nc}
@@ -102,40 +103,39 @@ Using communication models or transports that rely on limited resources such as
 the number of open sockets or interactions with the operating system can
 severely hinder the usability and functionality of a simulator.  A system using
 sockets will quickly hit a wall, Linux, for example, limits the amount of open
-file descriptors to 1,024, which means that in a UDP system that means having
-as few as 1,024 peers in the system whereas a TCP system could be unable to
-proceed with more connections before 46 peers enter the system.  Furthermore,
+file descriptors to 1,024, which means that in a UDP system a simulation would
+be limited to having as few as 1,024 peers in the system whereas a TCP system
+could be unable to proceed with more connections than 32 (32 peers with
+all-to-all connections would result in 1,024 active TCP sockets).  Furthermore,
 each interaction with a socket requires at least one if not more transitions
 between user-space and kernel-space.
 
 So while existing transports could be used for simulated communication, the
-overhead in doing so is undesirable thereby limiting large-scale simulations.
-Assuming that the system is modularly written, it should be trivial for various
-forms of transport layers to be used for network communication.  Thus for
-scalability peers could exchange buffers or pointers to messages with each
-other.  This would remove any restrictions on OS resources and does not require
-that each communication pathway pass through a system call.
+overhead in doing so is undesirable as it would limit large-scale simulations.
+Assuming that the system is modularly written, it is possible for various forms
+of transport layers to be used for network communication.  Thus for scalability
+peers could exchange buffers or pointers to messages with each other.  This
+would remove any restrictions on OS resources and would not require that each
+communication pathway pass through a system call.
 
 Brunet supports a generic transports framework that provides the method for
 sending a message and the ability to register a callback when a message is
 received.  This concept is built into an ``edge.''  Each edge is associated
-with a remote peer and when sending or receiving a packet, the destination or
-source would be the peer associated with that edge.  Thus edges come in pairs,
-if they are connected.  Thus a simulated edge consists of two components
-knowledge of the remote edge and timing measurement of the latency between the
-two peers.  When a peer sends a message to the remote peer, the simulated edge
-enqueues the message into the timer with a callback into the remote edges
-receive handler.
+with a remote peer, and when sending or receiving a packet, the destination or
+source would be the peer associated with that edge.  Edges come in pairs, if
+they are connected, thus a simulated edge consists of two components: knowledge
+of the remote edge and timing measurement of the latency between the two peers.
+When a peer sends a message to the remote peer, the simulated edge enqueues the
+message into the timer with a callback into the remote edge's receive handler.
 
-TCP and UDP have the concept of IP addresses and ports to locally and,
-potentially, globally uniquely distinguish themselves and that, more
-importantly, can be shared with others, who can then communicate with that peer
-using the address information.  In other words, the concept of addresses is key
-to transports.  How else would a peer determine how to locate another peer.
-Since the simulated transports are all running in the same address space, there
-does not need to be a multilevel naming scheme as provided by IP addresses and
-ports, instead, they use just a single integer, which can then be used as the
-key into a hashtable whose value is the node matched to the integer.
+TCP and UDP use IP addresses and ports to locally and, potentially, globally
+uniquely distinguish themselves and that, more importantly, can be shared with
+others.  In other words, the concept of addresses is key to transports.  Since
+the simulated transports are all running in the same address space, there does
+not need to be a multilevel naming scheme as provided by IP addresses and
+ports.  Instead, simulated transports use a single integer, which can then be
+used as the key into a hashtable, whose value is the node matched to the
+integer.
 
 When a peer wants to connect to a specific node, instead of connecting to a
 peer at a remote IP, port pair, it seeks the remote node in the hash table.  If
@@ -146,13 +146,12 @@ communicate with each other using the timer and the exchange of buffers.
 
 \subsection{User Actions}
 
-Distributed systems have users, users take advantage of the features of
-distributed systems.  A user in this sense does not necessarily imply a human,
-but rather, an external input from either an application, a user, a sensor, or
-by some other means.  In a simulated environment, these types of behaviors
-should be properly modeled.  That is, if a user requests information from
-another user using the simulation, it should be delivered when available not
-after polling some entry point after some period of time.
+A user in a distributed system does not necessarily imply a human, but rather,
+an external input from either an application, a user, a sensor, or by some
+other means.  In a simulated environment, these types of behaviors should be
+properly modeled.  That is, if a user requests information from another user
+using the simulator, it should be delivered when available, not after polling
+some entry point after some period of time.
 
 To effectively model this behavior requires the use of asynchronous interfaces.
 After the initiation action is triggered, a registered callback will be
@@ -160,10 +159,10 @@ triggered upon completion.  A synchronous call can be inefficiently turned into
 an asynchronous call through the use of a thread or by polling.  Though for
 performance purposes, it is best to use an asynchronous interface that only
 gets invoked upon completion of the task.  Fortunately, it is very easy to make
-synchronous interfaces from asynchronous, so if designed properly, this should
-be trivial for system designers.  However, if they are not, the other solution
-is to poll the handlers queue to determine if a result is available.  However
-doing this incurs more overhead in the simulation.
+synchronous interfaces from asynchronous, so if designed properly, this is not
+difficult to implement for system designers.  If asynchronous handlers are not
+available, the interface can be made asynchronous through polling at the cost
+of overhead.
 
 In Brunet, this behavior has been modeled in interactions with the DHT and
 sending messages through the overlay.  A common abstract class contains a
@@ -210,8 +209,8 @@ memory consumption and be nicer to the garbage collector.  A cache in this
 sense consists of a hashtable, whose key is the object of interest and the
 value is a singleton or a value that is identical to the key in every way
 except but potentially they refer to different locations in memory.  Thus when
-a peer constructs another peres address, it can check the hashtable for a
-singleton, if one exists, it uses the singleton and no additional memory is
+a peer constructs another peer's address, it can check the hashtable for a
+singleton.  If one exists, it uses the singleton and no additional memory is
 required besides a pointer to this singleton.  If one does not exist, this new
 value is stored as a singleton into the system.  There are various means to
 limiting the entries in a hashtable, such as only keeping the last $N$ entries,
@@ -219,14 +218,14 @@ keeping track of the last access time, counting the number of references, or
 using a concept known as weak references.  Weak references provide an
 attractive option as it requires no additional state in the cache, a garbage
 collector will remove an object when there are no references to it besides weak
-references.  Thus stale entrees in the hashtable will return null objects.  So
+references.  Thus stale entries in the hashtable will return null objects.  So
 a cache using weak references will need to iterate through the entire cache
 occasionally to remove these stale references.
 
 Messages are usually assembled from a set of memory blocks.  Prior to
-transferring them, they most be placed into a contiguous buffer.
+transferring them, they must be placed into a contiguous buffer.
 Unfortunately, this can lead to significant memory allocations and garbage
-collections.  To address this, I have utilized memory heaps, that can be used
+collections.  To address this, I have utilized memory heaps, which can be used
 to create multiple memory blocks.  The concept is to allocate a large memory
 block.  When assembling a message, it is written to an offset into this block.
 The block can then be shared with others by providing a reference to the memory
@@ -238,8 +237,8 @@ improves the performance of the simulation.
 \section{Efficient Relays}
 
 Sometimes NAT traversal using STUN~\cite{stun} fails due to restrictive
-firewalls and NATs and occassionaly there are other, harder to diagnose,
-connectivity issues, some P2P VPNs~\cite{hamachi, gbridge} support relaying,
+firewalls and NATs.  Occasionally there are other, harder to diagnose,
+connectivity issues.  Some P2P VPNs~\cite{hamachi, gbridge} support relaying,
 similar to Traversal Using Relay NAT (TURN)~\cite{turn} provided by a managed
 relay infrastructure.  Centralized and decentralized VPNs do not suffer from
 this problem as all traffic passes through the central server or managed links.
@@ -255,7 +254,7 @@ two nodes discovering each other via existing peers and determining the need to
 be connected.  If a direct connection attempt fails, the peers exchange
 neighbor sets through the overlay.  Upon receiving this list, the two peers use
 the overlap in the neighbor sets to form a two-hop connection.  In this work, I
-have further extend this model to support cases when nodes do not have an
+have further extended this model to support cases when nodes do not have an
 overlap set.  This involves having the peers connect to each other's neighbor
 sets proactively creating overlap, as represented in Figure~\ref{fig:relay}.
 
@@ -276,12 +275,13 @@ Additionally, I have added the feature to exchange arbitrary information along
 with the neighbor list.  Thus far, I have implemented systems that pass
 information about node stability (measured by the age of a connection) and
 proximity (based upon ping latency to neighbors).  Furthermore, when overlap
-changes, another mechanism can determine which subset of the peers to use, thus
-a peer may only route through the fastest or more stable overlap in the set.
+changes, another mechanism can determine which subset of the peers to use; for
+example, a peer may only route through the fastest or more stable overlap in
+the set.
 
 To verify the usefulness of two-hop over overlay routing, I performed
 experiments and share the results in Section~\ref{relay_motivation}.  In a live
-system, I have verify the accuracy and usefulness of the latency-based relay
+system, I have verified the accuracy and usefulness of the latency-based relay
 selection algorithm in Section~\ref{relay_eval}.
 
 \subsection{Motivation for Relays in the Overlay}
@@ -304,7 +304,7 @@ would be the cause of a triangular inequality.
 
 \begin{figure}
 \centering
-\epsfig{file=figs/relay_motivation.png.eps, width=3in}
+\epsfig{file=figs/relay_motivation.png.eps, width=4in}
 \caption[Motivation for relays]{A comparison of the average all-to-all overlay
 routing, two-hop relay, and direct connection latency in a Structured P2P
 environment, Brunet, using the King data set.}
@@ -381,67 +381,91 @@ results, it appears that in most if not all these experiments peers had a low
 latency connection to a University compute resource and it was chosen ahead of
 Planet-Lab.
 
-The two apparent take aways are the benefit of being able to dynamically deploy
-relay servers and reuse compute nodes as relay systems and as the network grows
-there may be need to implement some form of bandwidth limit at relay nodes.
+The two take aways are the benefit of being able to dynamically deploy relay
+servers and reuse compute nodes as relay systems.  As the network grows, there
+may be need to implement some form of bandwidth limit at relay nodes.
 
 \section{Policies for Establishing Direct Connections}
 
-Routing through an overlay algorithmically costs $log(N)$ time and adds
-$log(N)$ overall bandwidth for a single message, sending messages frequently
-between two peers through the overlay is not cost effective.  What is not
-apparent through algorithms is the fact that many paths in an overlay can be
-inefficient due to peers routing through distant parts of the world or having
-limited bandwidth.  Less frequently, packets routed via the overlay can just
-disappear due to nodes disconnecting or packet drops across the Internet.  To
-address this, Ganguly~\ref{wow} made a system for creating adaptive shortcuts.
+Routing through a ring-structured overlay using a greedy routing algorithm
+takes $log(N)$ time and adds $log(N)$ overall bandwidth for a single message.
+Therefore, sending messages frequently between two peers through the overlay is
+not cost effective.  What is not apparent through the algorithmic complexity
+analysis is the fact that many paths in an overlay can be inefficient due to
+peers routing through distant parts of the world or having limited bandwidth.
+Less frequently, packets routed via the overlay can just disappear due to nodes
+disconnecting or packet drops across the Internet.  To address this, Ganguly et
+al.~\cite{wow} made a system for creating adaptive shortcuts.
 
 Adaptive shortcuts enable peers to establish direct links with each other using
-Brunet's builtin NAT traversal capabilities.  The approach taken by Ganguly was
-to monitor incoming packets from remote peers and after a certain threshold was
-passed the system automatically makes a direct connection to the remote peer.
-As a result of this transparency, software using the overlay could simply start
-this service without making any additional changes to the application.  
+Brunet's builtin NAT traversal capabilities.  The approach taken by Ganguly et
+al. was to monitor incoming packets from remote peers and after a certain
+threshold was passed the system automatically makes a direct connection to the
+remote peer.  As a result of this transparency, software using the overlay
+could simply start this service without making any additional changes to the
+application.  
 
 \subsection{Limitations}
 
-Unfortunately this approach was never really completed as it stands it comes
-with limitations.  There was never any systematic understanding of behaviors
-that should signify the creation of a direct link or when a direct link should
-be taken down.  Thus applying the layer naively could result in excessive
-creation of links and then their eventual disconnection, which would have
-ramification on the routability of the network.  Thus a compromise was made to
-have it enabled only for selected traffic, which in the case as described by
-Ganguly~\ref{wow} was IP or VN traffic.
+Unfortunately this approach comes with limitations.  There was never any
+systematic understanding of behaviors that should signify the creation of a
+direct link or when a direct link should be closed.  Thus applying the layer
+naively could result in connection churn, which would have ramification on the
+routability of the network.  Thus a compromise was made to have it enabled only
+for selected traffic, which in the case as described by Ganguly et
+al.~\cite{wow} was IP or VN traffic.
 
 Two issues made the approach no longer feasible:  the increase in size of the
 overlay network and the securing of IP links.  The Internet drops packets at
-approximately X\% of the time.  This compounded with the fact that an overlay
-message may take $log(N)$ hops significantly increases the likelihood of a
-packet dropping before arriving at its destination.  Adding a security model
-makes this even more complicated, because a trusted link must be established
-before routing any messages between the end points.  Thus in many cases a total
-of up to 6 messages, see Figure~\ref{fig:dtls}, must be transmitted between the
-peers before a single IP packet will traverse the link.  If peers must first
-establish a trusted link and then transmit a certain amount of packets in a
-given time, there is a reasonable chance that they may never naturally trigger
-the creation of an adaptive link.
+approximately .00835\% of the time according to the data provided by
+iPlane~\cite{iplane}.  This compounded with the fact that an overlay message
+may take $log(N)$ hops significantly increases the likelihood of a packet
+dropping before arriving at its destination.  Adding a security model makes
+this even more complicated, because a trusted link must be established before
+routing any messages between the end points.  In the case of DTLS, this can
+result in 6 messages traversing the overlay~\ref{fig:dtls}, prior to the first
+IP packet.  If peers must first establish a trusted link and then transmit a
+certain amount of packets in a given time, there is a reasonable chance that
+they may never naturally trigger the creation of an adaptive link.
 
 In practice, it was quite common for this not to succeed and, in fact, security
 links were often times not even formed.  To verify this, I implemented a
 network profiling tool and deployed it on to PlanetLab.  The monitoring tool
 measured the delay and success of sending messages between the node and every
-other node in the overlay.  Certainly running the test on PlanetLab may have
-jaded the results slightly, since PlanetLab is known for its unreliability, but
-it is a very important conclusion since many of the public systems provided by
-my research group rely on PlanetLab.
+other node in the overlay.  The drop rate and latency for a round trip message
+per hop distance between two peers are presented in
+Figure~\ref{fig:drop_rate_plab} and Figure~\ref{fig:latency_plab},
+respectively.  The data in those figures is compared to data retrieved from
+iPlane, which makes it clear that PlanetLab exacerbates the situation.  While
+this is a wel-known issue, it is a very important conclusion since many of the
+public systems provided by my research group rely on PlanetLab.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=3.5in]{figs/latency_plab.eps}
+\caption[Latency in PlanetLab deployment]{Average latency in a round trip
+message between two nodes specified by the amount of hops between them.  The
+PlanetLab average is compared against data available from iPlane.  The CDF for
+node distance is also plotted for reference.}
+\label{fig:latency_plab}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=3.5in]{figs/drop_rate.eps}
+\caption[Drop rate in PlanetLab deployment]{Average drop rate in a round trip
+message between two nodes specified by the amount of hops between them.  The
+PlanetLab average is compared against data available from iPlane.  The CDF for
+node distance is also plotted for reference.}
+\label{fig:drop_rate_plab}
+\end{figure}
 
 \subsection{On-Demand Connections}
 
-Before defining a new architecture, I watched the network traffic of active and
-idle applications that were of interest to the focus on P2P VPNs,
-Condor~\cite{condor0} and data transfers.  Data transfers are fairly obvious,
-if they are TCP driven, first a TCP link must be established, then data
+Before defining a new architecture, I measured the network traffic of active
+and idle applications that were of interest to typical P2P VPNs,
+Condor~\cite{condor0} and data transfers.  Data transfers tend to be simple, if
+they are TCP driven, first a TCP link must be established, then data
 transferred, and finally the link is closed.  Condor is a job schedule
 management tool, which is discussed in more depth in
 Chapter~\ref{chap:gridappliance}.  The important aspect for this section is
@@ -451,34 +475,37 @@ containing the details of the node and thereafter to send a one-way message
 stating their presence every 5 minutes or so.
 
 The next step was determining the cost of creating a connection versus routing
-via the overlay.  Considering that before a single IP packet can be routed, a
-security link must be established.  In Brunet, the creation of a link requires
-1 round trip message across the overlay, whereas the security link, as mention
-earlier, takes 3.  So it is intuitive that sending a single packet secured
-through an end-to-end channel via a direct link is far more efficient than
-doing so via the overlay.  So instead of having a meter determining when to
-create connections, connections should be made as soon as their is interest in
-communication, in other words, ``On-demand.''  In a DHT system, this may be done prior to sending or
-retrieving data from the DHT.  In a VPN, this may be during the mapping of IP
-to P2P as described in Section~\ref{vpns:arp}, which occurs before secure link
-establishment.  Unfortunately, this has the side affect of not being
-transparent at the cost of being more responsive.
+via the overlay.  This cost needs to consider that before a single IP packet
+can be routed, a security link must be established.  In Brunet, the creation of
+a link requires 1 round trip message across the overlay, whereas the security
+link, as mention earlier, takes 3.  So it is intuitive that sending a single
+packet secured through an end-to-end channel via a direct link is far more
+efficient than doing so via the overlay.  So instead of having a meter
+determining when to create connections, connections should be made as soon as
+there is interest in communication, in other words, ``on-demand.''  In a DHT
+system, this may be done prior to sending or retrieving data from the DHT.  In
+a VPN, this may be during the mapping of IP to P2P as described in
+Section~\ref{vpns:arp}, which occurs before secure link establishment.
+Unfortunately, this has the side affect of not being transparent to
+applications using the P2P software's interface at the cost of being more
+responsive.
 
-Now that links are being created far more frequently, even though for good
-cause, a more intelligent algorithm was needed to close unused connections.
-Using the profiling information retrieved before with regards to Condor's
-one-way ``heartbeat'' messages, it was important that a connection was only
-closed if it was unused in both directions.  Otherwise the manager would be
-constantly closing connections and peers would randomly disappear from Condor
-for periods of time.  An algorithm that seems to have worked so far is based
-upon something I call a time-based cache.  Initially entries are stored in a
-hashtable, after a certain period of time, they are moved to a second
-hashtable, and those in the second hashtable are lost.  If an entry is accessed
-while in the second hashtable or not at all, it is added to the first hashtable
-and if applicable removed from the second hashtable.  When an entry is removed
-from the cache, it causes an eviction notice, which results in the connection
-being removed.  The timer is based upon a 7.5 minute timer, so that an inactive
-connection will be closed within 7.5 to 15 minutes.
+The creation of on-demand connections results in a higher frequency of
+connection establishment.  As a result, better heuristics are necessary in
+order to determine when to close unused connections.  Using the profiling
+information retrieved before with regards to Condor's one-way ``heartbeat''
+messages, it was important that a connection was only closed if it was unused
+in both directions.  Otherwise the manager would be constantly closing
+connections and peers would randomly disappear from Condor for periods of time.
+An algorithm that seems to have worked so far is based upon something I call a
+time-based cache.  Initially, entries are stored in a hashtable; after a
+certain period of time, they are moved to a second hashtable, and those in the
+second hashtable are lost.  If an entry is accessed while in the second
+hashtable or not at all, it is added to the first hashtable and if applicable
+removed from the second hashtable.  When an entry is removed from the cache, it
+causes an eviction notice, which results in the connection being removed.  The
+timer is based upon a 7.5 minute timer, so that an inactive connection will be
+closed within 7.5 to 15 minutes.
 
 In application, this modification made the Archer, which uses both secure links
 and Condor, significantly more stable.  As the system expanded, nodes were
