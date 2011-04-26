@@ -5,11 +5,12 @@ VPNs enable seamless communication in distributed computing particularly when
 combinging large sets of remote resources or connecting to centralized or
 personel resources.  Similar use cases can be extrapolated onto other
 collaborative environments such as multiplayer games, merging home networks
-over a VPN, or accessing a work computer remotely.  Each application has
-different requirements and in review of related research~\cite{ipop, vine,
-violin, vnet, ocala, softudc, openvpn, hamachi, wippien, gbridge, pvc, tinc,
-n2n, p2pvpn, l2tp} not a single approach efficiently supports these dynamic
-environments.  Certainly, ISP large scale VPNs such as Multiprotocol Label
+over a VPN (virtual private network), or accessing a work computer remotely.
+Each application has different requirements and in review of related
+research~\cite{ipop, vine, violin, vnet, ocala, softudc, openvpn, hamachi,
+wippien, gbridge, pvc, tinc, n2n, p2pvpn, l2tp} not a single approach
+efficiently supports these dynamic environments.  Certainly, ISP (Internet
+service providers) large scale VPNs such as Multiprotocol Label
 Switching~\cite{mpls} (MPLS) do not as well due to the manual configuration and
 expertise required.  An overview of these and the one described herein are
 presented in Table~\ref{tab:virtual_networks}
@@ -23,12 +24,12 @@ routing of the packets amongst peers is handled by the network organization.
 Prior research works primarily focused on the latter issue, while ignoring the
 former.  This left users to setup their own address allocations either through
 manually configuring each environment or dealing with the problems caused by
-DHCP servers in cross domain network construction, as well as their own
-security distribution systems.  In addition, organizing a network can be an
-even more complicated task than locally configuring the network, because it may
-require the cooperation of many administrators at the various sites.  This
-chapter presents a novel approach to VPNs that achieves both local and network
-self-configuration.
+DHCP (dynamic host control protocol) servers in cross domain network
+construction, as well as their own security distribution systems.  In addition,
+organizing a network can be an even more complicated task than locally
+configuring the network, because it may require the cooperation of many
+administrators at the various sites.  This chapter presents a novel approach to
+VPNs that achieves both local and network self-configuration.
 
 \section{Network Configuration} The key to communicating in a VPN is creating
 links to the VPN and finding the peer in the VPN.  The different architectures
@@ -67,19 +68,19 @@ In this dissertation, it is used as the basis for understanding centralized
 VPNs as it represents features common to most centralized VPNs.
 
 In centralized VPN systems, clients forward all VPN related packets to the
-server.  Client responsibilities are limited to configuring the VN device and
-authenticating with the VPN server, whereas the servers are responsible for
-authentication and routing between clients and providing access to the servers'
-local resources and the Internet (full tunnel).  Likewise, broadcast and
-multicast packets also must pass through the central server.
+server.  Client responsibilities are limited to configuring the VN (virtual
+network) device and authenticating with the VPN server, whereas the servers are
+responsible for authentication and routing between clients and providing access
+to the servers' local resources and the Internet (full tunnel).  Likewise,
+broadcast and multicast packets also must pass through the central server.
 
 Centralized VPNs can support multiple servers: upon starting, the client can
 randomly select from a list of known servers, implementing a simple load
-balance.  Once connected, the servers provide the client an IP address in the
-VPN address space. Depending on configuration, this allows a client to
-communicate with other clients, resources on the server's network, or Internet
-hosts via the VPN.  Servers require additional configuration to communicate
-with each other.
+balance.  Once connected, the servers provide the client an IP (Internet
+Protocol) address in the VPN address space. Depending on configuration, this
+allows a client to communicate with other clients, resources on the server's
+network, or Internet hosts via the VPN.  Servers require additional
+configuration to communicate with each other.
 
 All inter-client communication flows through a central server.  By default, a
 client encrypts a packet and sends it to the server.  Upon receiving the
@@ -94,18 +95,19 @@ the computing overhead on communication.
 
 Hamachi~\cite{hamachi} is the first well-known centralized VPN that used the
 ambiguous moniker ``P2P VPN''.  In reality, these systems are better classified
-as centralized VPN servers with P2P links.  Similar VPNs include
+as centralized VPN servers with P2P (peer-to-peer) links.  Similar VPNs include
 Wippien~\cite{wippien}, Gbridge~\cite{gbridge}, PVC~\cite{pvc}, and
 P2PVPN\footnote{Due to the similarities between the name P2PVPN and focus of
 this dissertation, ``P2PVPN'' refers to ~\cite{p2pvpn} and ``P2P VPN'' to to
 the use of P2P in VPNs.}~\cite{p2pvpn}.  The P2P in these systems is limited to
 direct connectivity between clients orchestrated through a central server: in
 Wippien it is a chat server, while P2PVPN uses a BitTorrent tracker.  If NAT
-traversal or firewalls prevent direct connectivity, the central server can act
-as a relay.  Each approach uses their own security protocols with most using a
-server to verify the authenticity and setup secure connections between clients.
-In regards to the P2PVPN, long term goals involve the creation of an
-unstructured, which would provide a method of decentralized organization.
+(network address translation) traversal or firewalls prevent direct
+connectivity, the central server can act as a relay.  Each approach uses their
+own security protocols with most using a server to verify the authenticity and
+setup secure connections between clients.  In regards to the P2PVPN, long term
+goals involve the creation of an unstructured, which would provide a method of
+decentralized organization.
 
 \subsection{Decentralized VPN Systems}
 Some examples of systems that assist in distributing load in VPN systems are
@@ -137,27 +139,28 @@ with decentralized address allocation.
 To address the scalability concerns in unstructured systems, this work uses
 structured P2P overlays.  As described in the first chapter, structured P2P
 overlays provide distributed look up services with guaranteed search time with
-in $O(\log(N))$ time in contrast to unstructured systems with $O(N)$ time.  In
+in $\log(N)$ time in contrast to unstructured systems with $N$ time.  In
 general, structured systems are able to make these guarantees by
-self-organizing a structured topology, such as a 1-D ring or a hypercube,
-deterministically by randomly generated node identifiers.
+self-organizing a structured topology, such as a one-dimensional (1-D) ring or
+a hypercube, deterministically by randomly generated node identifiers.
 
 The primary feature used by structured overlays is a distributed data store
-known as a distribute hash table (DHT), which stores key, value pairs.  In
-the overlay, the key is an overlay address, where the value is stored.  The
-peer closest to the key's overlay address is responsible for maintaining the
-value.  Cryptographic hashes like SHA and MD5 can be used to obtain the key's
-overlay address from a string or some other byte array.
+known as a distribute hash table (DHT), which stores key, value pairs.  In the
+overlay, the key is an overlay address, where the value is stored.  The peer
+closest to the key's overlay address is responsible for maintaining the value.
+Cryptographic hashes like SHA (Secure Hash Algorithm) and MD5 (Message-Digest
+algorithm 5) can be used to obtain the key's overlay address from a string or
+some other byte array.
 
 In~\cite{pcgrid07, i3}, a method for address allocation is described by using
-the DHT.  Each VPN has a unique name or namespace, when a peer requests an
-IP address, a mapping of $hash(namespace, IP)$ to the peers overlay address
-is atomically written to the DHT.  A success implies that the writer was the
-first writer to that value and other peers reading that value will be able to
-identify that peer as owner of that IP address in that namespace.  Likewise
-when a peer wants to route a packet to a remote VPN peer, they query the DHT
-using the mapping, which returns the overlay address.  The IP packet is then
-sent to the overlay destination.
+the DHT (distributed hash table).  Each VPN has a unique name or namespace,
+when a peer requests an IP address, a mapping of $hash(namespace, IP)$ to the
+peers overlay address is atomically written to the DHT.  A success implies that
+the writer was the first writer to that value and other peers reading that
+value will be able to identify that peer as owner of that IP address in that
+namespace.  Likewise when a peer wants to route a packet to a remote VPN peer,
+they query the DHT using the mapping, which returns the overlay address.  The
+IP packet is then sent to the overlay destination.
 
 Unicast messages are sent between two end points on the overlay using normal
 overlay routing mechanisms.  Direct overlay links can be used to improve
@@ -176,9 +179,9 @@ filter the packet.  This is sufficient to support deployments where multicast
 or broadcast is not relied upon extensively.  
 
 \section{Local Configuration} At first order, there are two approaches to local
-VPN configuration: a single VN endpoint per a host (Interface) and a VN router
-endpoint for many hosts on the same LAN (Router).  The components differing
-between the two approaches are:
+VPN configuration: a single VN endpoint per a host, Interface, and a VN router
+endpoint for many hosts on the same LAN (local area network), router.  The
+components differing between the two approaches are:
 
 \begin{itemize}
 
@@ -201,10 +204,11 @@ resource has their own Interface and is responsible for their own VPN
 connectivity.
 
 \item COMMUNICATION OVER THE WAN. Performing encryption can be expensive and
-may limit the bandwidth available due to CPU constraints.  A Router may
-struggle to use all the available bandwidth, whereas enough Interfaces will
-eventually be able to use all the bandwidth.  Although each additional VPN
-Interface also has idle traffic, potentially reducing usable bandwidth.
+may limit the bandwidth available due to CPU (central processing unit)
+constraints.  A Router may struggle to use all the available bandwidth, whereas
+enough Interfaces will eventually be able to use all the bandwidth.  Although
+each additional VPN Interface also has idle traffic, potentially reducing
+usable bandwidth.
 
 \end{itemize}
 
@@ -266,7 +270,7 @@ Nodes are independent \\ \hline
 \caption[Three VN Approaches]{Illustration of the three different deployment
 models considered in this dissertation. In VN interface mode (1), each node has
 an overlay ID and communicates to all other nodes through VN tunneling. In VN
-router mode (2), only the router has an overlay ID and routes for a set of
+router mode (2), only the Router has an overlay ID and routes for a set of
 resources; LAN communication does not require VN tunneling. In hybrid mode (3),
 each host has an overlay ID; LAN communication does not require VN tunneling.}
 
@@ -284,12 +288,12 @@ The two aspects that need configuration in the local configuration beyond the
 VPN architecture are address allocation, obtaining and setting an IP address on
 a resource, and address resolution, determining where to route a VPN packet.
 The keys to creating this environment involve the use of standard network
-protocols implemented uniformly across operating systems, including DHCP
-(dynamic host configuration protocol) and ARP (address resolution protocol).
-Many applications make use of names instead of IP addresses to resolve peers,
-as such a naming system, like DNS (domain name service) is almost as important
-as address resolution and allocation.  A state machine representation of this
-architecture is shown in Figure~\ref{fig:vn}.
+protocols implemented uniformly across operating systems, including DHCP and
+ARP (address resolution protocol).  Many applications make use of names instead
+of IP addresses to resolve peers, as such a naming system, like DNS (domain
+name service) is almost as important as address resolution and allocation.  A
+state machine representation of this architecture is shown in
+Figure~\ref{fig:vn}.
 
 \begin{figure}[ht]
 \centering
@@ -319,11 +323,11 @@ resources communicate with the VPN.  Each approach relies on the TAP device
 though in different configurations.  In the Interface
 (Figure~\ref{fig:interface}), the TAP device is used directly by the user as
 any other network device.  In short, packets are written to the TAP device by
-the O/S sockets and read by the VPN software to send to the remote location,
-packets received by the VPN are written to the TAP device and delivered to
-sockets by the O/S.  The Router (Figure~\ref{fig:router}) bridges the TAP
-device to a LAN, thus packets can be routed to it and sent through the VPN.
-TAP device virtualizes a bridge to other physical networks.  
+the O/S (operating system) sockets and read by the VPN software to send to the
+remote location, packets received by the VPN are written to the TAP device and
+delivered to sockets by the O/S.  The Router (Figure~\ref{fig:router}) bridges
+the TAP device to a LAN, thus packets can be routed to it and sent through the
+VPN.  TAP device virtualizes a bridge to other physical networks.  
 
 \begin{figure}
 \centering
@@ -489,13 +493,14 @@ address that the VN owns is the null address, 0.0.0.0, which is sent during
 DHCP to indicate that the machine has no address prior to the request.
 
 \subsection{Domain Name Servers and Services}
+
 Name services allow machines to be addressed with names that are more
-meaningful to users than numeric addresses.  Certain applications and
-services require domain name checking, such as Condor.  To support DNS, this
-requires that the OS be programmed with the VN's DNS servers IP, typically
-the lowest available IP address in a subnet.  In static configuration, this
-process requires the user to manually add this address, though through DHCP
-this is set automatically.
+meaningful to users than numeric addresses.  Certain applications and services
+require domain name checking, such as Condor.  To support DNS, this requires
+that the O/S be programmed with the VN's DNS servers IP, typically the lowest
+available IP address in a subnet.  In static configuration, this process
+requires the user to manually add this address, though through DHCP this is set
+automatically.
 
 In the state representation of the VN (Figure~\ref{fig:vn}), the VN checks the
 IP packet to ensure that the destination IP and port match that of the virtual
@@ -515,9 +520,9 @@ use in resource consolidation in the server industry as well as the domain of
 cloud computing.  Providers of cloud computing services have adopted virtual
 machines as the unit of granularity for providing services and service level
 agreement to the users.  Users are billed according to the number of VMs and
-their uptime. Major cloud-computing providers including Amazon EC2 and Go-Grid
-have adopted Xen as the virtualization platform for their services and sell
-compute resources in the form of virtual machines.
+their uptime. Major cloud-computing providers including Amazon EC2 (Elastic
+Cloud 2) and Go-Grid have adopted Xen as the virtualization platform for their
+services and sell compute resources in the form of virtual machines.
 
 Apart from advantages like performance isolation, security, and portability,
 one of the significant advantages of using VMs is the capability to migrate the
@@ -531,9 +536,9 @@ support migration with two critical requirements: (1) file systems (disk
 images) must be on a shared storage system (i.e. network file systems or
 storage area networks) and (2) to maintain network connectivity, the migration
 must occur within an IP subnet.  In order to retain network connectivity after
-migration, the VMM must notify the LAN of the VM's new location.  The new VMM
-host generates an unsolicited ARP reply which broadcasts to the entire network
-the VM's new location.  
+migration, the VMM (virtual machine manager) must notify the LAN of the VM's
+new location.  The new VMM host generates an unsolicited ARP reply which
+broadcasts to the entire network the VM's new location.  
 
 The VN Interface and Hybrid models support migration of the virtual address
 using techniques previously described in~\cite{ipop}.  This is a product of the
@@ -557,19 +562,19 @@ The VMM initiates a migration on a source node. Until the migration completes,
 the VN router at the source continues to route virtual IP packets for the VM.
 Upon completion of migration, the VN router at the target learns about the
 presence of the migrated VM by either receipt of an unsolicited ARP or by
-proactively issuing periodic broadcast ICMP messages on its LAN.  The VN router
-attempts to store (Put) the IP:P2P address mapping in the DHT, and queries for
-the existence of other IP:P2P mapping(s). If no previous mappings are found,
-the VN router assumes responsibility for the IP address. Otherwise, the VN
-router sends a migration request to each P2P address returned by the DHT. The
-VN router receiving a migration request confirms the existence of the IP
-address in its routing table and that if there is that there is no response to
-ARP requests sent to the IP address.  If these conditions hold, it deletes its
-IP:P2P mapping from the DHT and returns true to the migration request;
-otherwise, it returns false. If the migration request returns true, the VN
-router at the target LAN starts routing for the virtual IP address; if it
-returns, false, the VN router does not route for the virtual IP address until
-the previous IP:P2P mapping expires from the DHT.
+proactively issuing periodic broadcast ICMP (Internet Control Message Protocol)
+messages on its LAN.  The VN router attempts to store (Put) the IP:P2P address
+mapping in the DHT, and queries for the existence of other IP:P2P mapping(s).
+If no previous mappings are found, the VN router assumes responsibility for the
+IP address. Otherwise, the VN router sends a migration request to each P2P
+address returned by the DHT. The VN router receiving a migration request
+confirms the existence of the IP address in its routing table and that if there
+is that there is no response to ARP requests sent to the IP address.  If these
+conditions hold, it deletes its IP:P2P mapping from the DHT and returns true to
+the migration request; otherwise, it returns false. If the migration request
+returns true, the VN router at the target LAN starts routing for the virtual IP
+address; if it returns, false, the VN router does not route for the virtual IP
+address until the previous IP:P2P mapping expires from the DHT.
 
 In addition to VN routers synchronizing ownership of the migrated virtual IP
 address, any host that is connected to that machine must be informed of the new
@@ -596,22 +601,22 @@ attacks.
 
 VN router migration was analyzed through the use of two Xen-based VMware VMs
 co-located on the same quad-core Xeon 5335 2 GHz machine each with 1 GB memory
-allocated using a minimally configured OS with a SSH server.  The evaluation
-attempts to understand overlay overheads of the approach.  The experiment, as
-shown in Figure~\ref{fig:migration_ring}, involved migrating a Xen guest VM
-between two Xen host VMMs running in VMware.  Although they are hosted in the
-same infrastructure, the two domains are connected to two separate VLANs, and
-thus isolated.  The resource information is stored in a DHT running on top of
-PlanetLab.  Thus the migration overheads in the experiment capture the cost of
-wide-area messaging in a realistic environment.  During the course of the
-experiment, over 50 different IP addresses were migrated 10 times each in an
-attempt to gain some insights in the cost of using the DHT with support for
-deletes and VN router messages as a means to implement migration.  The result,
-presented in Figure~\ref{fig:mig} gathered from the experiment was how long the
-VN IP was offline, measured by means of ICMP ping packets.  On average, the
-overhead of VN migration was 20 seconds. This overhead is in addition to the
-time taken to migrate a VM, since the VN routers begin to communicate only
-after migration finishes. 
+allocated using a minimally configured O/S with a SSH (secure shell) server.
+The evaluation attempts to understand overlay overheads of the approach.  The
+experiment, as shown in Figure~\ref{fig:migration_ring}, involved migrating a
+Xen guest VM between two Xen host VMMs running in VMware.  Although they are
+hosted in the same infrastructure, the two domains are connected to two
+separate VLANs, and thus isolated.  The resource information is stored in a DHT
+running on top of PlanetLab.  Thus the migration overheads in the experiment
+capture the cost of wide-area messaging in a realistic environment.  During the
+course of the experiment, over 50 different IP addresses were migrated 10 times
+each in an attempt to gain some insights in the cost of using the DHT with
+support for deletes and VN router messages as a means to implement migration.
+The result, presented in Figure~\ref{fig:mig} gathered from the experiment was
+how long the VN IP was offline, measured by means of ICMP ping packets.  On
+average, the overhead of VN migration was 20 seconds. This overhead is in
+addition to the time taken to migrate a VM, since the VN routers begin to
+communicate only after migration finishes. 
 
 \begin{figure}
 \centering
@@ -640,12 +645,12 @@ time comes from VN migration, whereas VM migration requires less than a second.}
 
 This experiments explores bandwidth and latency in a distributed VPN system to
 motivate the usage of P2P links in a VPN.  The VPNs used are include the
-prototype (IPOP), OpenVPN, and Hamachi.  OpenVPN represents a typical
-centralized VPN, while Hamachi represents a well-tuned P2P-link VPN.  The
-evaluation was performed on Amazon EC2 using small instance sized Ubuntu i386
-instances to create various sized networks ranging from 1 to 32.  OpenVPN uses
-an additional node as the central server and Hamachi has an upper bound of 16
-due to limitations in the Linux version at the time of this evaluation.  To
+prototype, which extends from IPOP; OpenVPN; and Hamachi.  OpenVPN represents a
+typical centralized VPN, while Hamachi represents a well-tuned P2P-link VPN.
+The evaluation was performed on Amazon EC2 using small instance sized Ubuntu
+i386 instances to create various sized networks ranging from 1 to 32.  OpenVPN
+uses an additional node as the central server and Hamachi has an upper bound of
+16 due to limitations in the Linux version at the time of this evaluation.  To
 perform bandwidth tests, the instances are booted and query an NFS for the list
 virtual IP addresses, peers are ordered such that half the peers are act as
 clients and the other half the peers creating a 1 to 1 mapping between all
@@ -716,11 +721,12 @@ a baseline first where only Netperf is the only active workload.
 
 SPECjbb~\cite{specjbb} simulates a three-tier web application with all the
 clients, the middle tier, and the database running on a single system in a
-single address space (inside a JVM). On completion, the benchmark provides the
-metric in terms of business of operations per second (bops). The bops score of
-the system under test depends on both the CPU and the memory in the system, as
-the entire database for the benchmark is held in memory. This benchmark
-generates negligible disk activity and no network activity. 
+single address space (inside a Java virtual machine). On completion, the
+benchmark provides the metric in terms of business of operations per second
+(bops). The bops score of the system under test depends on both the CPU and the
+memory in the system, as the entire database for the benchmark is held in
+memory. This benchmark generates negligible disk activity and no network
+activity. 
 
 \subsection{On the Grid}
 
@@ -765,7 +771,7 @@ spec).(phys, interface, router).  Where ``spec'' indicates SPECjbb benchmark is
 active, while ``no spec'' indicates that SPECJbb is inactive. ``phys'' implies
 the absence of IPOP with benchmarks occurring directly over the ``physical''
 network card.  ``interface'' and ``router'' present the results for VN
-interface and router models respectively.}
+interface and Router respectively.}
 \label{fig:stream.netperf}
 \end{figure}
 
@@ -778,7 +784,7 @@ interface, router).  Where ``spec'' indicates SPECjbb benchmark is active,
 while ``no spec'' indicates that SPECJbb is inactive. ``phys'' implies the
 absence of IPOP with benchmarks occurring directly over the ``physical''
 network card.  ``interface'' and ``router'' present the results for VN
-interface and router models respectively.}
+interface and Router respectively.}
 \label{fig:rr.netperf}
 \end{figure}
 
@@ -786,12 +792,12 @@ interface and router models respectively.}
 Distinguishing features of the different VN models include the following.
 Figure~\ref{fig:stream.netperf} shows that bandwidth in all VN models is
 comparable with traffic control limit up to 75 Mbps. Beyond this point, the
-interface model achieves better bandwidth than the router model (VN processing
+interface model achieves better bandwidth than the Router (VN processing
 is distributed across multiple processes); the spec/no spec ratio in the router
 model is smaller than in the interface model because there is less resource
 contention caused by VN processing on end nodes. For the same reason, the
-router tends to achieve better SPEC results (Figure~\ref{fig:stream.spec}) than
-the interface.  Figure~\ref{fig:rr.netperf} shows that the router performs
+Router tends to achieve better SPEC results (Figure~\ref{fig:stream.spec}) than
+the interface.  Figure~\ref{fig:rr.netperf} shows that the Router performs
 poorly compared to the interface model in terms of transactions/second, though
 it achieves a better ratio of SPECjbb score (Figure~\ref{fig:rr.spec}) to
 transactions than the interface at constrained bandwidths (less than 5 Mbps).
@@ -828,7 +834,7 @@ interface, from the point of view of the WAN part of the VN, it is the same
 architecture.  These results are not reported in the plots as they add little
 value and further obfuscate the results.
 
-The bandwidth cap observed in the router approach reflects the performance
+The bandwidth cap observed in the Router approach reflects the performance
 achieved by the current prototype of the router, subject to VM overheads. The
 use of VM is an assumption that is valid in the domain of cloud computing where
 all resources run in a VM. This experiment focused on the interplay between
@@ -971,7 +977,7 @@ RR & 1863 & 2277 & 2253 & 3121 \\ \hline
 IPOP
 &
 %Overlay
-Structured P2P overlay with O(Log N) routing hops, where N is the size of P2P
+Structured P2P overlay with $\log(N)$ routing hops, where N is the size of P2P
 network. Self-optimizing shortcuts and STUN-based NAT traversal.
 &
 %Routing

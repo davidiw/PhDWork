@@ -18,12 +18,12 @@ As the use of social networking expands to become the primary way in which
 users communicate and express their identity amongst their peers, the users
 become more dependent on the policies of social network infrastructure owners.
 Recent work~\cite{p2p_socialnetwork} explores the coupling between social
-networks and P2P systems as a means to return ownership to the users, noting
-that a social network made up of social links is inherently a P2P system with
-the aside that they are currently developed on top of centralized systems.
-This chapter extends this idea with focus on the topic of topology; that is,
-how to organize social profiles that leverage the benefits offered by a
-structured P2P overlay abstraction.
+networks and P2P (peer-to-peer) systems as a means to return ownership to the
+users, noting that a social network made up of social links is inherently a P2P
+system with the aside that they are currently developed on top of centralized
+systems.  This chapter extends this idea with focus on the topic of topology;
+that is, how to organize social profiles that leverage the benefits offered by
+a structured P2P overlay abstraction.
 
 Structured P2P overlays provide a scalable, resilient, autonomic platform for
 distributed applications.  Structured overlays enable users to easily create
@@ -81,17 +81,17 @@ challenges introduced by this approach.
 \section{Related Works}
 \label{vpo:background}
 
-In~\cite{peerson}, Buchegger et al. describe how to use a DHT to store social
-networking profile.  The DHT provides look-up services for storing meta-data
-pertaining to a peer's profile.  Peers query the DHT for updated content from
-their friends by hashing their unique identifiers (e.g. friends' email
-addresses).  The retrieved meta-data contains information for obtaining the
-profile data such as IP address and file version. Their work relies on a PKI
-system that provides identification, encryption, and access control.  In
-contrast, OverSoc maps individual user profiles and groups to a private overlay
-secured by point-to-point encryption and authentication amongst all peers in
-the overlay.  The private overlay provides a clean abstraction of access
-control, whereby once admitted to a private overlay, users can access a
+In~\cite{peerson}, Buchegger et al. describe how to use a DHT (distributed hash
+table) to store social networking profile.  The DHT provides look-up services
+for storing meta-data pertaining to a peer's profile.  Peers query the DHT for
+updated content from their friends by hashing their unique identifiers (e.g.
+friends' email addresses).  The retrieved meta-data contains information for
+obtaining the profile data such as IP address and file version. Their work
+relies on a PKI system that provides identification, encryption, and access
+control.  In contrast, OverSoc maps individual user profiles and groups to a
+private overlay secured by point-to-point encryption and authentication amongst
+all peers in the overlay.  The private overlay provides a clean abstraction of
+access control, whereby once admitted to a private overlay, users can access a
 distributed data store which holds the contents of the owner's profile.
 
 Shakimov et al. in \cite{vis-a-vis} take a different approach by depending on
@@ -146,19 +146,19 @@ sharing.
 \subsection{Finding Friends}
 
 In a traditional social network, directories are used to search for users based
-upon public information, such as the user's full name, user ID, e-mail address,
-group affiliations, and friends.  The resulting search returns zero or more
-matching directory entries.  In OverSoc, directory entries are inserted into
-the DHT of a public overlay.  Since the public information has many components,
-various subsets form DHT keys that all point to a common, complete listing of
-the matching public information.  For example, a user can store a pointer at
-the DHT key $hash("alice")$ or $hash("alice bob")$.  The key here is that any
-subset of the user's public information in lower-case format can be hashed into
-a DHT index that would eventually direct the searching user to one or more
-users' public information.  More explicit searches could sift through the
-results and present to the user only those peers matching all the search
-parameters.  The amount of information shared publicly should be configurable
-by the user.
+upon public information, such as the user's full name, user ID
+(identification), e-mail address, group affiliations, and friends.  The
+resulting search returns zero or more matching directory entries.  In OverSoc,
+directory entries are inserted into the DHT of a public overlay.  Since the
+public information has many components, various subsets form DHT keys that all
+point to a common, complete listing of the matching public information.  For
+example, a user can store a pointer at the DHT key $hash("alice")$ or
+$hash("alice bob")$.  The key here is that any subset of the user's public
+information in lower-case format can be hashed into a DHT index that would
+eventually direct the searching user to one or more users' public information.
+More explicit searches could sift through the results and present to the user
+only those peers matching all the search parameters.  The amount of information
+shared publicly should be configurable by the user.
 
 While looking for an individual, a peer may discover that many individuals have
 overlapping public information components, such as the user's name.  Assuming
@@ -169,22 +169,22 @@ of each certificate.  Alternatively, a technique like Sword~\cite{sword}, which
 supports attribute based searching, could be used to efficiently find peers in
 an overlay.
 
-To address trust levels when searching for friends, a PGP certificate can be
-used to store user's public information and verify user's friends and groups.
-In OverSoc, the main portion of a PGP certificate contains information such as
-user name, full name, e-mail address, potentially other user-defined data, and
-signature packets from the user and those that trust the certificate including
-groups and individuals.  These signature packets represent a list of verifiable
-friends and groups assisting to further uniquely identify a user.  Each time a
-user befriends someone, they should exchange signature packets containing at a
-minimum the friend's PGP certificate ID, a signature expiration time, and a
-signature binding this information with the new friend's existing PGP
-certificate.  This increases the trust level of individuals searching for
-others especially if they have common friendships or group membership.  The use
-of a time stamp in the signature assists in deciding whether or not a
-friendship link is still active without accessing the profile overlay of either
-peers.  Thus peers that maintain friendships need to periodically exchange
-signature packets.
+To address trust levels when searching for friends, a PGP (pretty good privacy)
+certificate can be used to store user's public information and verify user's
+friends and groups.  In OverSoc, the main portion of a PGP certificate contains
+information such as user name, full name, e-mail address, potentially other
+user-defined data, and signature packets from the user and those that trust the
+certificate including groups and individuals.  These signature packets
+represent a list of verifiable friends and groups assisting to further uniquely
+identify a user.  Each time a user befriends someone, they should exchange
+signature packets containing at a minimum the friend's PGP certificate ID, a
+signature expiration time, and a signature binding this information with the
+new friend's existing PGP certificate.  This increases the trust level of
+individuals searching for others especially if they have common friendships or
+group membership.  The use of a time stamp in the signature assists in deciding
+whether or not a friendship link is still active without accessing the profile
+overlay of either peers.  Thus peers that maintain friendships need to
+periodically exchange signature packets.
 
 \begin{figure}
 \centering

@@ -4,20 +4,20 @@
 While P2P overlays provide a scalable, resilient, and self-configuring platform
 for distributed applications, their adoption rate for use across the Internet
 has been slow outside of large-scale systems, such as data distribution and
-communication.  General use of decentralized, P2P applications targeting homes
-and small/medium businesses (SMBs) has been limited in large part due to
-difficulty in decentralized discovery of P2P systems, the bootstrap problem,
-further inhibited by constrained network conditions due to firewalls and NATs
-(network address translators).  While these environments could benefit from
-P2P, many of these users lack the resources or expertise necessary to bootstrap
-private\footnote{In the context of this chapter, private implies that the
-overlay's purpose is not for general use. Once established, such overlays can
-support privacy in communication; however, overlay security is beyond the scope
-of this chapter and covered in more depth in chapter\ref{chap:security}.} P2P
-overlays particularly when the membership is unsteady and distributed across
-wide-area network environments where a significant amount of (or all) peers may
-be unable to initiate direct communication with each other due to firewalls and
-NATs.
+communication.  General use of decentralized, P2P (peer-to-peer) applications
+targeting homes and small/medium businesses (SMBs) has been limited in large
+part due to difficulty in decentralized discovery of P2P systems, the bootstrap
+problem, further inhibited by constrained network conditions due to firewalls
+and NATs (network address translators).  While these environments could benefit
+from P2P, many of these users lack the resources or expertise necessary to
+bootstrap private\footnote{In the context of this chapter, private implies that
+the overlay's purpose is not for general use. Once established, such overlays
+can support privacy in communication; however, overlay security is beyond the
+scope of this chapter and covered in more depth in chapter\ref{chap:security}.}
+P2P overlays particularly when the membership is unsteady and distributed
+across wide-area network environments where a significant amount of (or all)
+peers may be unable to initiate direct communication with each other due to
+firewalls and NAT (network address translation).
 
 Examples of large-scale P2P systems include Skype, BitTorrent, and Gnutella.
 Skype is a voice over P2P system, whereas BitTorrent and Gnutella are used for
@@ -33,8 +33,9 @@ In smaller-scale systems, P2P interests focus on decentralization.  For
 example, users may desire to run an application at many distributed sites, but
 the application lacks dedicated central servers to provide discovery or
 rendezvous service for peers.  In contrast, dedicated, centralized P2P service
-providers, such as LogMeIn's Hamachi, a P2P VPN, may collect usage data, which
-the users may wish to remain private, or are not free for use.
+providers, such as LogMeIn's Hamachi, a P2P VPN (virtual private network), may
+collect usage data, which the users may wish to remain private, or are not free
+for use.
 
 Many applications make sense for small-scale overlay usage, including
 multiplayer games, especially those that lack dedicated online services;
@@ -111,7 +112,7 @@ used to transparently bootstrap a private overlay with minimal user
 interaction.
 
 The requirements are presented and verified in the context of two prototype
-implementations: a XMPP (Jabber)~\cite{xmpp} and Brunet~\cite{brunet}.
+implementations: a XMPP / Jabber~\cite{xmpp} and Brunet~\cite{brunet}.
 XMPP-based overlays are commonly used as chat portals, such as GoogleTalk and
 Facebook Chat.  XMPP also supports an overlay amongst servers forming through
 the XMPP Federation, which allows inter-domain communication amongst chat
@@ -166,17 +167,17 @@ cache concept.  The tracker hosts file meta data and peers involved in sharing.
 For the VPN, the peer registers a virtual file used to organize the peers, a
 form of rendezvous.  Each peer in the VPN queries the tracker regarding the
 file, registers its IP address, and receives other active ``sharers'' IP
-addresses.  Peers on public addresses or using UPNP are able to receive
-incoming connections from all other peers.  The problem with this approach is
-that it is heavily user-driven.  A user must register with each BitTorrent
-tracker individually and maintain a connection with each of them, in order to
-handle cases where BitTorrent trackers go offline.  In addition, this does not
-use the BitTorrent trackers in a normal fashion, so it may be banned by tracker
-hosts.
+addresses.  Peers on public addresses or using UPnP (universal plug and play)
+are able to receive incoming connections from all other peers.  The problem
+with this approach is that it is heavily user-driven.  A user must register
+with each BitTorrent tracker individually and maintain a connection with each
+of them, in order to handle cases where BitTorrent trackers go offline.  In
+addition, this does not use the BitTorrent trackers in a normal fashion, so it
+may be banned by tracker hosts.
 
 Research has shown that peers can use the locality properties of recent IP
-addresses in a large-scale P2P system to make intelligent guesses about other
-peers in the P2P system using an approach called random
+(Internet Protocol) addresses in a large-scale P2P system to make intelligent
+guesses about other peers in the P2P system using an approach called random
 probing~\cite{bootstrapping_p2p, locality_aware}.  The results show that, in a
 network of tens to hundreds of thousands of peers, a bootstrapping peer can
 find an active peer in 100 guesses to 2,000 guesses, depending on the overlay.
@@ -185,19 +186,19 @@ peers are constrained by NATs and firewalls.
 
 Rather than distribute an IP address, which points explicitly to some location
 in the Internet, a small P2P network can apply a name abstraction around one
-peer in the overlay using Dynamic DNS~\cite{bootstrapping_ddns}.  Peers share a
-DNS entry, which points to a bootstrap server.  When the peers detect that the
-bootstrap server is offline, at random time intervals they will update the DNS
-entry with their own.  The application of this approach is well-suited to
-small, ad-hoc groups, as the service could be distributed across multiple
-Dynamic DNS registrations.  However, sharing a DNS entry requires trusting all
-peers in the overlay, making it easy for malicious peers to inhibit system
-bootstrapping.  Also the approach requires that at least one peer be publicly
-addressable; if a non-publicly addressable peer updates the cache
-inadvertently, it could delay or permanently prevent peers from creating a P2P
-system.  The results reported in~\cite{bootstrapping_ddns} were
-simulation-based and did not determine how well a dynamic DNS handles rapid
-changing of name to IP mappings.
+peer in the overlay using Dynamic DNS~\cite{bootstrapping_ddns} (domain name
+service).  Peers share a DNS entry, which points to a bootstrap server.  When
+the peers detect that the bootstrap server is offline, at random time intervals
+they will update the DNS entry with their own.  The application of this
+approach is well-suited to small, ad-hoc groups, as the service could be
+distributed across multiple Dynamic DNS registrations.  However, sharing a DNS
+entry requires trusting all peers in the overlay, making it easy for malicious
+peers to inhibit system bootstrapping.  Also the approach requires that at
+least one peer be publicly addressable; if a non-publicly addressable peer
+updates the cache inadvertently, it could delay or permanently prevent peers
+from creating a P2P system.  The results reported in~\cite{bootstrapping_ddns}
+were simulation-based and did not determine how well a dynamic DNS handles
+rapid changing of name to IP mappings.
 
 IP supports multicasting to groups interested in a common service.  In the case
 of bootstrapping a P2P system~\cite{pastry, locality_aware}, all peers would be
@@ -243,29 +244,30 @@ unique identifier, which also serves as a form of reflection.
 
 In IP communication, reflection enables NAT traversal.  The simplest method for
 NAT traversal relies on obtaining the public information for an existing UDP
-socket and then sharing that with other peers.  This behavior can be supported
-through either local service or remote assistance.  The local approach approach
-relies on having a router with a public IP address supporting either
-UPnP~\cite{upnp} or port forwarding / tracking.  In many cases, UPnP is not
-enabled by default and in most commercial venues it will rarely be enabled.
-Port forwarding / tracking requires non-trivial router configuration, outside
-the comfort range of many individuals and is not uniform across routers.  A
-peer using UPnP needs no further services, as UPnP enables a peer to set and
-obtain both public IP address and port mappings.  Port forwarding and tracking
-mechanisms still require that the user obtains and inputs into the application
-their public IP address or use in-band assistance described next.
+(user datagram protocol) socket and then sharing that with other peers.  This
+behavior can be supported through either local service or remote assistance.
+The local approach approach relies on having a router with a public IP address
+supporting either UPnP~\cite{upnp} or port forwarding / tracking.  In many
+cases, UPnP is not enabled by default and in most commercial venues it will
+rarely be enabled.  Port forwarding / tracking requires non-trivial router
+configuration, outside the comfort range of many individuals and is not uniform
+across routers.  A peer using UPnP needs no further services, as UPnP enables a
+peer to set and obtain both public IP address and port mappings.  Port
+forwarding and tracking mechanisms still require that the user obtains and
+inputs into the application their public IP address or use in-band assistance
+described next.
 
 In the remotely assisted scenario, a peer first sends a message to a reflection
-provider, perhaps using STUN~\cite{stun_rfc}.  The response from the provider
-tells the peer from which IP address and port the message was sent.  In the
-case of all cone NATs, this will create a binding so that the peer can then
-share that IP address and port with other peers behind NATs.  When the two
-peers communicate simultaneously, all types of cone NATs can be traversed; the
-timing of messages needs to be carefully considered, however, since NAT
-mappings may change over time.  So long as one peer is behind a cone NAT, NAT
-traversal using this mechanism is possible.  The situation becomes complicated
-when both peers are behind symmetric NATs, or when either one of them have a
-firewall preventing UDP communication.
+provider, perhaps using STUN~\cite{stun_rfc} (Simple Traversal of UDP through
+NATs).  The response from the provider tells the peer from which IP address and
+port the message was sent.  In the case of all cone NATs, this will create a
+binding so that the peer can then share that IP address and port with other
+peers behind NATs.  When the two peers communicate simultaneously, all types of
+cone NATs can be traversed; the timing of messages needs to be carefully
+considered, however, since NAT mappings may change over time.  So long as one
+peer is behind a cone NAT, NAT traversal using this mechanism is possible.  The
+situation becomes complicated when both peers are behind symmetric NATs, or
+when either one of them have a firewall preventing UDP communication.
 
 Peers behind symmetric NATs cannot easily communicate with each other, since
 there is no relation between remote hosts and ports and local ports.  Further
@@ -274,13 +276,14 @@ having behaviors similar to the various cone NAT types. In~\cite{ice} the
 authors describe methods to traverse these NATs so long as there is a
 predictable pattern to port selection.  
 
-Unlike UDP, TCP NAT traversal is complicated by the state associated with TCP.
-In many systems, the socket API can be used to enable a peer to both listen for
-incoming connections and form outgoing connections using the same local
-addressing information.  According to~\cite{ice-tcp}, this method works for
-various types of systems though the success rate on NATs is low, 40\%.  Other
-mechanisms rely on out-of-band communication~\cite{pvc}, or use of complicated
-predictive models~\cite{tcp-hole-punching}.
+Unlike UDP, TCP (transmission control packet) NAT traversal is complicated by
+the state associated with TCP.  In many systems, the socket API (application
+programming interface) can be used to enable a peer to both listen for incoming
+connections and form outgoing connections using the same local addressing
+information.  According to~\cite{ice-tcp}, this method works for various types
+of systems though the success rate on NATs is low, 40\%.  Other mechanisms rely
+on out-of-band communication~\cite{pvc}, or use of complicated predictive
+models~\cite{tcp-hole-punching}.
 
 \subsection{Relaying}
 \label{bs:relay}
@@ -294,8 +297,8 @@ intermediaries to exchange addresses as a method of relaying.  Another form of
 relaying exists when two peers are unable to form direct IP connections with
 each other and route data messages between a third-party.
 
-The most common method for relaying in IP is the use of TURN~\cite{turn}, or
-Traversal Using Relay NAT.  A peer using TURN obtains a public IP address and
+The most common method for relaying in IP is the use of TURN~\cite{turn}
+(Traversal Using Relay NAT).  A peer using TURN obtains a public IP address and
 port that can be used as a forwarding address.  When a remote peer sends to
 this address, the TURN server will forward the response to the peer who has
 been allocated that mapping.  The lack of abstraction in TURN makes the system
@@ -448,7 +451,7 @@ connections failed, then the ``Subring'' connections could be used as permanent
 connections.  The use of ``Pathing'' meant reuse of existing NAT traversal
 techniques and limited the amount of system resources required to run multiple
 overlays.  In terms of total lines of code, these abstractions enabled a
-recursive overlay bootstrapping with a relatively small code footprint --- less
+recursive overlay bootstrapping with a relatively small code footprint, less
 than 1000 lines of code.
 
 \begin{center}
@@ -463,13 +466,12 @@ than 1000 lines of code.
 \label{bs:xmpp_bootstrapping}
 
 In addition to supporting recursive bootstrapping of private overlays, the
-techniques described above can be extended to use a different public overlay
---- an XMPP-based federation --- to support the bootstrapping of private
-overlays.  The key features that make XMPP attractive are the distributed
-nature of the federation and the openness of the protocol.  As of December
-2009, there are over 70 active XMPP servers in the XMPP
-Federation~\cite{xmpp_servers}.  These include GoogleTalk, Jabber.org, and Live
-Journal Talk.
+techniques described above can be extended to use a different public overlay,
+an XMPP-based federation, to support the bootstrapping of private overlays.
+The key features that make XMPP attractive are the distributed nature of the
+federation and the openness of the protocol.  As of December 2009, there are
+over 70 active XMPP servers in the XMPP Federation~\cite{xmpp_servers}.  These
+include GoogleTalk, Jabber.org, and Live Journal Talk.
 
 In XMPP, each user has a unique identifier of the form ``username@domain''.
 Where the domain specifies the client's XMPP server and the username uniquely
@@ -545,9 +547,9 @@ experiment is primarily focused on the feasibility of forming small-scale
 overlays among network-constrained peers.  The experiment represents 5 peers
 desiring all-to-all direct connectivity, a feature transparently available to
 them if they bootstrap into a private Brunet overlay. The experiments were run
-on peers deployed on 5 distinct virtual machines --- each virtual machine had
-its own separate NAT, and thus peers were unable to communicate directly
-without assistance.
+on peers deployed on 5 distinct virtual machines.  Each virtual machine had its
+own separate NAT, and thus peers were unable to communicate directly without
+assistance.
 
 The public Brunet overlay used in this experiment consisted of over 600 nodes
 running on PlanetLab.  PlanetLab~\cite{planetlab} is a consortium of research

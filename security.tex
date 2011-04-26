@@ -3,13 +3,14 @@
 
 In this chapter, I take the results from Chapter~\ref{chap:bootstrapping} and
 apply them to IPOP~\cite{ipop} in order to construct a fully decentralized P2P
-VPN.  While sharing overlays in IPOP makes for simplified use of the system, in
-reality, it introduces significant security challenges.  For example, a
-misconfigured or malicious peer could potentially disable the entire overlay,
-rendering all VNs useless.  If security and hence isolation is important, prior
-to VN deployment, a user would need to deploy a secure overlay and configure
-their VPN to bootstrap from it, given the complexity many users may reconsider
-the P2P approach and use a simple centralized VPn.
+VPN (peer-to-peer virtual private network).  While sharing overlays in IPOP
+makes for simplified use of the system, in reality, it introduces significant
+security challenges.  For example, a misconfigured or malicious peer could
+potentially disable the entire overlay, rendering all VNs (virtual networks)
+useless.  If security and hence isolation is important, prior to VN deployment,
+a user would need to deploy a secure overlay and configure their VPN to
+bootstrap from it, given the complexity many users may reconsider the P2P
+approach and use a simple centralized VPn.
 
 To address this challenge and to make a fully decentralized P2P VPN, I have
 extended the IPOP concept to support bootstrapping from public infrastructures
@@ -31,16 +32,17 @@ The rest of this chapter is organized as follows.  Throughout the chapter,
 there are two techniques used to evaluate my approaches, simulation and real
 system deployments; these are described in Section~\ref{vpn:experimental}.
 Section~\ref{vpn:private_overlays} describes techniques that allow users to
-create their own private overlays from a shared public overlay in spite of
-NATs.  Use of security protocols has been assumed in many P2P works, though
-without consideration of implementation and overheads. I investigate
-implementation issues and overheads of security in P2P with emphasis on P2P
-VPNs in Section~\ref{vpn:security}.  Without revocation, use of security is
-limited, and in decentralized systems, the use of centralized revocation
-methods is are not sufficient, I present novel mechanisms for decentralized
-revocation in Section~\ref{vpn:revocation}.  The complete system, GroupVPN, is
-presented in Section~\ref{vpn:groupvpn}.  Section~\ref{vpn:related_work}
-compares and contrasts this work with related work.  
+create their own private overlays from a shared public overlay in spite of NAT
+(network address translation).  Use of security protocols has been assumed in
+many P2P works, though without consideration of implementation and overheads. I
+investigate implementation issues and overheads of security in P2P with
+emphasis on P2P VPNs in Section~\ref{vpn:security}.  Without revocation, use of
+security is limited, and in decentralized systems, the use of centralized
+revocation methods is are not sufficient, I present novel mechanisms for
+decentralized revocation in Section~\ref{vpn:revocation}.  The complete system,
+GroupVPN, is presented in Section~\ref{vpn:groupvpn}.
+Section~\ref{vpn:related_work} compares and contrasts this work with related
+work.  
 
 \section{Experimental Environment}
 \label{vpn:experimental}
@@ -66,20 +68,21 @@ address this, I have extended Brunet to support a simulation mode. The
 simulator inherits all of the Brunet P2P overlay logic but uses simulated
 virtual time based upon an event-driven scheduler instead of real time.
 Furthermore, the simulation framework uses a specialized transport layer to
-avoid the overhead of using TCP or UDP on the host system, both of which are
-limited resources and can hamper the ability to simulate large systems.   The
-specialized transport uses datagrams to pass messages between nodes, thus from
-the node's perspective, it is very similar to a UDP transport and can simulate
-both latency and packet dropping.  Latency between all node pairs is set to 100
-ms by default.
+avoid the overhead of using TCP (transmission control protocol) or UDP (user
+datagram protocol) on the host system, both of which are limited resources and
+can hamper the ability to simulate large systems.   The specialized transport
+uses datagrams to pass messages between nodes, thus from the node's
+perspective, it is very similar to a UDP transport and can simulate both
+latency and packet dropping.  Latency between all node pairs is set to 100 ms
+by default.
 
 Both simulation and real system evaluation provide unique advantages.
 Simulations allow faster than real time execution of reasonable sized networks
 (up to a few thousand) using a single resource, while enabling easy debugging.
 In contrast, deployment on real systems, in particular PlanetLab, presents
 opportunities to add non-deterministic, dynamic behavior into the system which
-can be difficult to replicate, such as network glitches and long CPU delays on
-processing.
+can be difficult to replicate, such as network glitches and long CPU (central
+processing unit) delays on processing.
 
 \section{Towards Private Overlays}
 \label{vpn:private_overlays}
@@ -93,12 +96,12 @@ overlay, similar attempts to construct their own were hindered and ultimately
 only successful after receiving feedback.
 
 Prior work in IPOP~\cite{pcgrid07} enabled many VPNs to share a single P2P
-overlay by storing IP address into the DHT at the key $hash(Namespace:IP)$.
-Unfortunately, this approach is fraught with security issues.  In the previous
-chapter, I established methods that enabled bootstrapping private Brunet
-overlays as easily as connecting to a public P2P overlay.  This chapter begins
-by focusing on the integration of the methodologies employed in recursive
-Brunet overlays as applied to IPOP.
+overlay by storing IP (Internet Protocol) address into the DHT (distributed
+hash table) at the key $hash(Namespace:IP)$.  Unfortunately, this approach is
+fraught with security issues.  In the previous chapter, I established methods
+that enabled bootstrapping private Brunet overlays as easily as connecting to a
+public P2P overlay.  This chapter begins by focusing on the integration of the
+methodologies employed in recursive Brunet overlays as applied to IPOP.
 
 To bootstrap from an existing Brunet overlay, peers first insert their public
 overlay node address into the key represented by $hash(\$Private Overlay
@@ -188,11 +191,12 @@ improve clarity.}.
 \begin{figure}[ht]
 \centering
 \includegraphics[width=4in]{figs/private.eps}
-\caption[CDF of private overlay bootstrap time]{CDF of the time to bootstrap a
-private overlay node in a private overlay of the size stated in the legend
-using a public overlay consisting of 600 nodes.  Using a 100 ms delay like the
-simulator results in 9.2 and 9.3 seconds for the analytical model for private
-network sizes of 68 and 147, respectively.}
+\caption[CDF of private overlay bootstrap time]{CDF (culmulative distribution
+function) of the time to bootstrap a private overlay node in a private overlay
+of the size stated in the legend using a public overlay consisting of 600
+nodes.  Using a 100 ms delay like the simulator results in 9.2 and 9.3 seconds
+for the analytical model for private network sizes of 68 and 147,
+respectively.}
 \label{fig:private_bootstrapping}
 \end{figure}
 
@@ -208,13 +212,13 @@ machine timeouts in Brunet, though I have not considered this in much depth.
 
 Much like the previous experiment, this verifies that the pathing technique has
 negligible overheads for VPN usage.  To determine the overheads, two GroupVPNs
-are deployed on resources on the same gigabit LAN.  To measure latency and
-throughput, netperf experiments are run for 30 seconds, 5 times each on an
-unutilized network switch.  Other specifications of the machine are ignored as
-the system without pathing is used as the baseline.  The results,
-Table~\ref{tab:pathing}, indicate that the use of pathing presents negligible
-overhead for both throughput and latency, justifying the use of this approach
-to transparently deal with NAT and firewall traversal.
+are deployed on resources on the same gigabit LAN (local area network).  To
+measure latency and throughput, netperf experiments are run for 30 seconds, 5
+times each on an unutilized network switch.  Other specifications of the
+machine are ignored as the system without pathing is used as the baseline.  The
+results, Table~\ref{tab:pathing}, indicate that the use of pathing presents
+negligible overhead for both throughput and latency, justifying the use of this
+approach to transparently deal with NAT and firewall traversal.
 
 \begin{table}[ht]
 \caption[Pathing overheads]{Pathing overheads}
@@ -246,11 +250,12 @@ sense for VPNs and common users, I have employed a public key infrastructure
 communication across the overlay, called point-to-point (PtP) and end-to-end
 (EtE) communication, respectively.
 
-Use of a PKI motivates from the ability to authenticate without a third party,
-ideal for P2P use, unlike a key distribution centers (KDC) used by other VPNs.
-A PKI can use either pre-exchange public keys or a certificate authority (CA)
-to sign public keys, i.e., certificates.  Thus peers can exchange keys and
-certificates without requiring a third-party to be online.
+Use of a PKI (public key infrastructure) motivates from the ability to
+authenticate without a third party, ideal for P2P use, unlike a key
+distribution centers (KDC) used by other VPNs.  A PKI can use either
+pre-exchange public keys or a certificate authority (CA) to sign public keys,
+i.e., certificates.  Thus peers can exchange keys and certificates without
+requiring a third-party to be online.
 
 The reasons for securing PtP and EtE are different.  Securing PtP communication
 prevents unauthorized access to the overlay, as peers must authenticate with
@@ -272,14 +277,15 @@ across individual nodes and the overlay.  EtE communication is
 datagram-oriented in IPOP.  Traditional approaches of securing communication
 such as IPsec are not convenient due to complexity, i.e., operating system
 specific, portability constraints, and lack of common APIs.  Security protocols
-that rely on reliable connections, such as SSL or TLS are undesirable as well
-as they would require a userspace implementation of reliable streams (akin to
-TCP).  As such, I have implemented an abstraction called a security filter as
-presented in Figure~\ref{fig:security_filter}, which enables nearly transparent
-use of security libraries and protocols.  To this date, I have implemented both
-a DTLS~\cite{dtls} filter using the OpenSSL implementation of DTLS as well as a
-protocol that reuses cryptographic libraries provided by .NET that behaves
-similarly to IPsec.
+that rely on reliable connections, such as SSL (secure sockets layer) or TLS
+(transport layer security) are undesirable as well as they would require a
+userspace implementation of reliable streams (akin to TCP).  As such, I have
+implemented an abstraction called a security filter as presented in
+Figure~\ref{fig:security_filter}, which enables nearly transparent use of
+security libraries and protocols.  To this date, I have implemented both a
+DTLS~\cite{dtls} (dtagram transport layer security) filter using the OpenSSL
+implementation of DTLS as well as a protocol that reuses cryptographic
+libraries provided by .NET that behaves similarly to IPsec.
 
 A security filter has two components: the manager, and individual sessions or
 filters.  While the individual sessions could act as filters by themselves, by
@@ -718,16 +724,15 @@ Hamachi~\cite{hamachi} is a centralized P2P VPN provider using the web site for
 authentication, peer discovery, and connection establishment.  While the
 Hamachi protocol claims to support various types of
 security~\cite{hamachi_security}, the implementation appears to only support
-the key distribution center (KDC) requiring that all peers establish trusted
-relationship through the central website.  The Hamachi approach makes it easy
-for users to deploy their own services, but places limitations on network size,
-uses a proprietary security stack, and does not allow independent VPN
-deployments.  In contrast, my approach presents a completely decoupled
-environment allowing peers to start using the shared system to bootstrap
-private overlays and migrate away without cost if need be.  Furthermore my
-approach relies only on a central server to obtain the certificate otherwise,
-it is decentralized.  In Hamachi, if the central server goes offline, no new
-peers can join the VPN.
+the KDC requiring that all peers establish trusted relationship through the
+central website.  The Hamachi approach makes it easy for users to deploy their
+own services, but places limitations on network size, uses a proprietary
+security stack, and does not allow independent VPN deployments.  In contrast,
+my approach presents a completely decoupled environment allowing peers to start
+using the shared system to bootstrap private overlays and migrate away without
+cost if need be.  Furthermore my approach relies only on a central server to
+obtain the certificate otherwise, it is decentralized.  In Hamachi, if the
+central server goes offline, no new peers can join the VPN.
 
 Campagnol VPN~\cite{campagnol} provides similar features to Hamachi: a P2P VPN
 that relies on a central server for rendezvous or discovery of peers.  The key

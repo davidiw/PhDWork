@@ -10,7 +10,7 @@ Common uses of VPNs include secure access to enterprise network resources from
 remote/insecure locations, connecting distributed resources from multiple
 sites, and establishing virtual LANs for multiplayer video games over the
 Internet.  VPNs in this context differ from others that provide ```emulation of
-a private Wide Area Network (WAN) facility using IP facilities' (including the
+a private WAN facility using IP (Internet Protocol) facilities' (including the
 public Internet or private IP backbones).  ''~\cite{ip_vpns}.  This style of
 VPN is used to connect large sets of machines behind routers to a virtual
 private WAN, whereas this dissertation focuses on the approach of connecting
@@ -39,9 +39,10 @@ dynamic and decentralized grid environment for computer architecture
 researchers to share and access compute cycles.  Use of centralized systems
 would limit the scope of Archer and require dedicated administration, whereas
 existing decentralized solutions require manual configuration of links between
-peers, which is beyond the scope of Archer's target users.  Current P2P virtual
-network (VN) approaches either lack scalability or proper security components
-to be considered VPNs; whereas my approach applies naturally to such systems.
+peers, which is beyond the scope of Archer's target users.  Current P2P
+(peer-to-peer) virtual network (VN) approaches either lack scalability or
+proper security components to be considered VPNs; whereas my approach applies
+naturally to such systems.
 
 There are various VPN architectures that attempt to deal with the challenges
 presented in these use cases.  In some, certain VPN approaches may work, where
@@ -55,11 +56,12 @@ following challenges:
 bootstrap into the overlay and to establish links with specific users inside
 the overlay.
 
-\item CONNECTIVITY. Network asymmetries created by firewalls, NATs, and
-Internet router outages motivate the use for VPNs.  One approach is to route
-all traffic through a third party, but this incurs overheads.  There also exist
-approaches to allow two peers behind NATs to communicate directly and falling
-back to a relay if the two peers are behind too restrictive networks.
+\item CONNECTIVITY. Network asymmetries created by firewalls, NAT (network
+address translation), and Internet router outages motivate the use for VPNs.
+One approach is to route all traffic through a third party, but this incurs
+overheads.  There also exist approaches to allow two peers behind NAT devices
+to communicate directly and falling back to a relay if the two peers are behind
+too restrictive networks.
 
 \item PEER MANAGEMENT. To ensure reliability and trust, a distributed system
 should employ security.  Peer management involves providing and obtaining
@@ -82,13 +84,13 @@ Collaborative environments can strongly benefit from a VPN that is both
 user-friendly as well as scalable.  A system that is only user-friendly will
 initially attract interest but frustrate users in the long run, while systems
 lacking user-friendliness may have limited user adoption.  By applying these
-requirements to the aforementioned challenges leads to the following goals:
-(1) a collaborative VPN should be easy to configure, such that users should be
-able to deploy and use them without being experts in operating systems (OSs) or
-networks; (2) the system should not require additional resources to support
-more users; (3) adding new users and resources should be straight-forward using
-approaches familiar to common users; (4) peers should be able to connect to
-each other directly if and when possible; and (5) all communication, not just
+requirements to the aforementioned challenges leads to the following goals: a
+collaborative VPN should be easy to configure, such that users should be able
+to deploy and use them without being experts in operating systems (O/Ss) or
+networks; the system should not require additional resources to support more
+users; adding new users and resources should be straight-forward using
+approaches familiar to common users; peers should be able to connect to each
+other directly if and when possible; and all communication, not just
 hop-by-hop, should be secure.
 
 While existing VPNs are able to meet some of these requirements, they are
@@ -96,13 +98,13 @@ unable to meet them all.  Centralized approaches (e.g.  OpenVPN~\cite{openvpn})
 by their very nature require dedicated infrastructures and do not allow direct
 communication between peers, though when configured to do so are able to
 guarantee all-to-all communication regardless of NAT and firewall conditions.
-Peer-to-peer (P2P) based approaches (e.g.  Hamachi~\cite{hamachi},
-Wippien~\cite{wippien}, Gbridge~\cite{gbridge}, PVC~\cite{pvc}) solve the issue
-of direct communication, though they are vulnerable to man-in-the-middle
-attacks when session management is handled by an external provider, rely on a
-central resource for the creation of VPN links, and require managed relays if
-direct peer communication across NATs and firewalls fails.  Distributed
-approaches (e.g., ViNe~\cite{vine}, Violin~\cite{violin}, VNET~\cite{vnet},
+P2P based approaches (e.g.  Hamachi~\cite{hamachi}, Wippien~\cite{wippien},
+Gbridge~\cite{gbridge}, PVC~\cite{pvc}) solve the issue of direct
+communication, though they are vulnerable to man-in-the-middle attacks when
+session management is handled by an external provider, rely on a central
+resource for the creation of VPN links, and require managed relays if direct
+peer communication across NATs and firewalls fails.  Distributed approaches
+(e.g., ViNe~\cite{vine}, Violin~\cite{violin}, VNET~\cite{vnet},
 tinc~\cite{tinc}) require manual configuration of links between members of the
 virtual network.  Existing P2P overlay approaches lack scalability
 (N2N~\cite{n2n} and P2PVPN~\cite{p2pvpn}) or are difficult to configure and
@@ -118,12 +120,12 @@ scalable, distributed data sharing via a distributed hash table (DHT).  Peers
 search for each other by querying the DHT and then use constructs provided by
 the P2P layer to form direct links or relays with remote peers.  Peer
 management is handled through common social networking interfaces such as
-dedicated group infrastructures or relationships based upon XMMP or Facebook.
-Both the VPN and the overlay are secured by a common security filter framework,
-which can be decentrally located and bootstrapped through existing overlays.
-Finally, through various VPN models, users and system administrators can take
-the same VPN software and install it in various environments with minimal
-configuration overhead.
+dedicated group infrastructures or relationships based upon XMPP (Extensible
+Messaging and Presence Protocol) or Facebook.  Both the VPN and the overlay are
+secured by a common security filter framework, which can be decentrally located
+and bootstrapped through existing overlays.  Finally, through various VPN
+models, users and system administrators can take the same VPN software and
+install it in various environments with minimal configuration overhead.
 
 \section{Virtual Private Network Basics}
 
@@ -173,7 +175,8 @@ better security than shared secrets, certificates require more configuration
 and maintenance.  In a system comprising of non-experts, like many university
 VPNs, the usual setup uses a shared secret and individual user accounts.
 Secrets can be packaged with the VPN application, so long as it is distributed
-through secure channels such as authenticated HTTPS.
+through secure channels such as authenticated HTTPS (hypertext transfer
+protocol secure).
 
 A VN device allows networking applications to communicate transparently over
 the VPN.  The VN device provides mechanisms for injecting incoming packets into
@@ -190,15 +193,15 @@ the OS delivers the packet to the appropriate socket.  Outgoing packets from
 local sockets are read from the TAP device.
 
 VN devices are no different than any other network device.  They can be
-configured manually through command-line tools or OS' APIs or dynamically by
-the universally supported dynamic host configuration process
-(DHCP)~\cite{dhcp0, dhcp1}.  Upon the VN device obtaining an IP address, the
-system adds a new rule to the routing table that directs all packets sent to
-the VPN address space to be directed to the VN device.  Packets read from the
-TAP device are encrypted and sent to the overlay via the VPN client.  The
-overlay delivers the packet to another client or a server with a VN stack
-enabled.  Received packets are decrypted, verified for authenticity, and then
-written to the VN device.  In most cases, the IP layer header remains
+configured manually through command-line tools or OS' APIs (application
+programming interface) or dynamically by the universally supported dynamic host
+configuration process (DHCP)~\cite{dhcp0, dhcp1}.  Upon the VN device obtaining
+an IP address, the system adds a new rule to the routing table that directs all
+packets sent to the VPN address space to be directed to the VN device.  Packets
+read from the TAP device are encrypted and sent to the overlay via the VPN
+client.  The overlay delivers the packet to another client or a server with a
+VN stack enabled.  Received packets are decrypted, verified for authenticity,
+and then written to the VN device.  In most cases, the IP layer header remains
 unchanged, while VPN configuration determines how the Ethernet header is
 handled.
 
@@ -354,12 +357,12 @@ the node address space~\cite{symphony}.
 
 Structured overlays support decentralized query systems that can be used to
 build distributed data structures such as a distributed hash table (DHT) by
-mapping keys via a hash function to P2P IDs in an overlay.  The data associated
-with the key is then stored at the node closest to the P2P id of the key and
-for fault tolerance can be stored by other nodes nearby or more keys can be
-generated by recursively hashing the original key.  Using the DHT primitives,
-Past~\cite{past} and Kosha~\cite{kosha} projects have designed more complex
-distributed data stores.
+mapping keys via a hash function to node IDs in an overlay.  The data
+associated with the key is then stored at the node closest to the node ID of
+the key and for fault tolerance can be stored by other nodes nearby or more
+keys can be generated by recursively hashing the original key.  Using the DHT
+primitives, Past~\cite{past} and Kosha~\cite{kosha} projects have designed more
+complex distributed data stores.
 
 The actual mechanism for querying nodes or routing in a P2P overlay can be
 either iterative or recursive.  In iterative routing, the querying node
@@ -389,25 +392,25 @@ well controlled and defined, symmetry cannot be guaranteed.  P2P used in wide
 area systems often relies on the Internet.  Besides the potential routing
 outages on the Internet, significant amount of resources which are not directly
 accessible are connected to it.  The issue is only further pressed by the
-current means of connecting to the Internet: Internet Protocol (IP) version 4
-(IPv4) with its limited address space of only $2^{32}$ (approximately 4
-billion).  With the Earth's population at over 6.8 billion and each individual
-potentially having multiple Internet-capable devices, these limitations become
-more apparent.
+current means of connecting to the Internet: IPv4 (Internet Protocol version 4)
+with its limited address space of only $2^{32}$ (approximately 4 billion).
+With the Earth's population at over 6.8 billion and each individual potentially
+having multiple Internet-capable devices, these limitations become more
+apparent.
 
-Currently the two approaches addressing IPv4 limitations are:  the use of
-NATs to enable many machines and devices to share a single IP address but
-preventing bidirectional connection initiation and IPv6 which supports
-$2^{128}$ addresses.  The use of NATs, as shown in Figure~\ref{fig:nat},
-complicates the bootstrapping of P2P systems as it prevents peers from simply
-exchanging addresses with each other to form connections, as the addresses may
-not be public.  In addition, firewalls may prevent peers from receiving
-incoming connections.  Thus, while the eventual widespread use IPv6 may
-eliminate the need for address translation, it does not deal with the issue of
-firewalls preventing P2P applications from communicating as well as routing
-outages, and it is not clear that IPv6 users will not continue to rely on
-NAT/firewall devices to provide a well-defined boundary of isolation for their
-local networks.
+Currently the two approaches addressing IPv4 limitations are:  the use of NATs
+to enable many machines and devices to share a single IP address but preventing
+bidirectional connection initiation and IPv6 (Internet Protocol version 6)
+which supports $2^{128}$ addresses.  The use of NATs, as shown in
+Figure~\ref{fig:nat}, complicates the bootstrapping of P2P systems as it
+prevents peers from simply exchanging addresses with each other to form
+connections, as the addresses may not be public.  In addition, firewalls may
+prevent peers from receiving incoming connections.  Thus, while the eventual
+widespread use IPv6 may eliminate the need for address translation, it does not
+deal with the issue of firewalls preventing P2P applications from communicating
+as well as routing outages, and it is not clear that IPv6 users will not
+continue to rely on NAT/firewall devices to provide a well-defined boundary of
+isolation for their local networks.
 
 \begin{figure}
 \centering

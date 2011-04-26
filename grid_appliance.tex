@@ -89,16 +89,16 @@ machine (VM), and starting the VM inside a VM manager (VMM).  Upon completion of
 the booting process, users are connected to the grid and able to submit and
 receive jobs.
 
-At the heart of my approach lies a P2P infrastructure based upon a distributed
-hash table (DHT) useful for decentralized configuration and organization of
-systems.  Peers are able to store key, value pairs into the DHT and to query
-the DHT with a key and potentially receive multiple values efficiently.  The
-DHT provides discovery and coordination primitives for the configuration of a
-decentralized P2P virtual private network (VPN), which supports unmodified
-applications across a network overlay.  The DHT is also used for the
-decentralized coordination of the grid.  Users can configure their grid through
-a web interface, which outputs configuration files that can be used with the
-``Grid Appliance.''
+At the heart of my approach lies a P2P (peer-to-peer) infrastructure based upon
+a distributed hash table (DHT) useful for decentralized configuration and
+organization of systems.  Peers are able to store key, value pairs into the DHT
+and to query the DHT with a key and potentially receive multiple values
+efficiently.  The DHT provides discovery and coordination primitives for the
+configuration of a decentralized P2P virtual private network (VPN), which
+supports unmodified applications across a network overlay.  The DHT is also
+used for the decentralized coordination of the grid.  Users can configure their
+grid through a web interface, which outputs configuration files that can be
+used with the ``Grid Appliance.''
 
 The techniques described in this paper have many applications.  The basic
 system supports the creation of local grids by starting a virtual machine on
@@ -174,15 +174,16 @@ messaging~\cite{groupvpn}.
 \subsection{Virtual Private Networks}
 
 A common question with regards to this work is ``why VPNs?''  The core reason
-is connectivity.  IPv4 has a limited address space, which has been extended
-through the use of NAT allowing a single IP to be multiplexed by multiple
-devices.  This creates a problem; however, as it breaks symmetry in the
-Internet limiting the ability for certain peers to become connected and which
-peers can initiate connections.  With the advent of IPv6, the situation might
-improve, but there are no guarantees that NATs will disappear nor can users be
-certain that firewalls will not be in place that inhibit symmetry.  A VPN
-circumvents these issues, so long as the user can connect to the VPN, as all
-traffic is routed through a successfully connected pathway.
+is connectivity.  IPv4 (Internet Protocol version 4) has a limited address
+space, which has been extended through the use of NAT allowing a single IP to
+be multiplexed by multiple devices.  This creates a problem; however, as it
+breaks symmetry in the Internet limiting the ability for certain peers to
+become connected and which peers can initiate connections.  With the advent of
+IPv6 (Internet Protocol version 6), the situation might improve, but there are
+no guarantees that NATs will disappear nor can users be certain that firewalls
+will not be in place that inhibit symmetry.  A VPN circumvents these issues, so
+long as the user can connect to the VPN, as all traffic is routed through a
+successfully connected pathway.
 
 The problem with traditional VPN approaches is management overhead including
 maintaining resources on public IP addresses and establishing links amongst
@@ -384,9 +385,10 @@ Joining is easy; a grid requires a user to sign onto a website and download a
 configuration data, which can then be used on multiple systems.  To support
 this process, the configuration data contains cryptographic information that
 facilitates acquisition of a signed certificate from the web interface through
-XML-RPC over HTTPS.  The process begins by either booting the ``Grid
-Appliance'' or restarting a ``Grid Appliance'' service.  When starting the
-service will detect if there is new configuration data, and if there is, it
+XML-RPC over HTTPS (Extensible Markup Language Remote Procedure Call over
+Hypertext Transfer Protocol Secure).  The process begins by either booting the
+``Grid Appliance'' or restarting a ``Grid Appliance'' service.  When starting
+the service will detect if there is new configuration data, and if there is, it
 contacts the web interface with the cryptographic information and a public key.
 The web interface verifies the user's identity, retrieves their profile from
 its database and binds that information with the public key to create a
@@ -831,10 +833,10 @@ Because of the demands put on Archer in terms of avoiding the overheads of
 virtualization and the perceived simplicity of managing physical resources as
 opposed to virtual resources running on top of a physical resources, many users
 have requested the ability to run Grid Appliances directly on their machine.
-Unlike clouds with machine imamges such as AMIs or VM appliances, physical
-machines images cannot be easily exported.  Most physical OS installed on
-phyiscal machines will need some some custom tailoring to handle environment
-specific issues.
+Unlike clouds with machine imamges such as AMIs (Amazon Machine Image) or VM
+appliances, physical machines images cannot be easily exported.  Most physical
+OS installed on phyiscal machines will need some some custom tailoring to
+handle environment specific issues.
 
 With this in mind, I moved away from stackable file systems and towards
 creating repositories with installable packages, such as DEB or RPM.  The
