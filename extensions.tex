@@ -261,7 +261,7 @@ have further extended this model to support cases when nodes do not have an
 overlap set.  This involves having the peers connect to each other's neighbor
 sets proactively creating overlap, as represented in Figure~\ref{fig:relay}.
 
-\begin{figure}[ht]
+\begin{figure}
 \centering
 \epsfig{file=figs/relay.png.eps, width=4in}
 \caption[Motivation for relays]{Creating relays across the node address space,
@@ -363,8 +363,8 @@ S[table-format=4.2,table-number-alignment=right]
 \multicolumn{1}{c}{stdev} &
 \multicolumn{1}{c}{Kbit/s} &
 \multicolumn{1}{c}{stdev} \\ \hline
-Hamachi-Free & 60.8 & 2.54 & 40.2 & 0.87 \\ \hline
-Hamachi-Pro & 60.2 & 1.68 & 1000 & 1.29 \\ \hline
+Hamachi-Free & 60.8 & 2.54 & 40.2 & 0.87 \\
+Hamachi-Pro & 60.2 & 1.68 & 1000 & 1.29 \\ 
 Latency-aware & 58.1 & 35.5 & 2245 & 1080 \\ \hline
 \end{tabular*}
 \label{tab:relay_eval}
@@ -444,9 +444,9 @@ iPlane, which makes it clear that PlanetLab exacerbates the situation.  While
 this is a well-known issue, it is a very important conclusion since many of the
 public systems provided by my research group rely on PlanetLab.
 
-\begin{figure}[ht]
+\begin{figure}
 \centering
-\includegraphics[width=3.5in]{figs/latency_plab.eps}
+\includegraphics[width=4.5in]{figs/latency_plab.eps}
 \caption[Latency in PlanetLab deployment]{Average latency in a round trip
 message between two nodes specified by the amount of hops between them.  The
 PlanetLab average is compared against data available from iPlane.  The CDF
@@ -455,9 +455,9 @@ reference.}
 \label{fig:latency_plab}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}
 \centering
-\includegraphics[width=3.5in]{figs/drop_rate.eps}
+\includegraphics[width=4.5in]{figs/drop_rate.eps}
 \caption[Drop rate in PlanetLab deployment]{Average drop rate in a round trip
 message between two nodes specified by the amount of hops between them.  The
 PlanetLab average is compared against data available from iPlane.  The CDF for
@@ -524,7 +524,7 @@ finally establish a direct connection between each other.  The On-demand
 approach involved optionally creating a security connection followed by the
 direct connection.  
 
-\begin{figure}[ht]
+\begin{figure}
 \centering
 \includegraphics[width=3.5in]{figs/connections.eps}
 \caption[Time to form a direct connection]{CDF of the connection establishment
@@ -568,24 +568,17 @@ select how many peers they would like to forward the message to.  Otherwise in
 many cases, this algorithm will degenerate into one similar to the previous
 approach.  
 
-\begin{figure}
-\centering
-\caption{IP Broadcast using the DHT compared to overlay broadcast}
-\label{fig:ipbroadcast}
-\end{figure}
-
-A validation of the overlay broadcast method for IP broadcast and multicast
-communication comparing it to the original DHT method is presented in
-Figure~\ref{fig:ipbroadcast}.  Metrics measured include bandwidth used by the
-packet originator and time required for all peers to receive the packet.
-System bandwidth remains the same as bounded-broadcast requires exactly $N$
-messages to broadcast the message to the entire overlay.  By using a broadcast
-algorithm to route multicast and broadcast IP packets instead of the unicast
-packets, the sending node has much less used bandwidth.  The time required by
-the DHT approach involves the time to retrieve all entries from the DHT and the
-latency to the peer farthest away.  Whereas the broadcast approach has no DHT
-lookup and is somewhere around the average latency in the system multiplied by
-$\log^2(N)$.
+The overlay broadcast method for IP broadcast and multicast can easily be
+analytically compared to the original DHT method.  A message routed via the
+overlay will take approximately $\log(N)$ hops.  So for the DHT method, this
+involves $N$ messages with $\log(N)$ hops each or $N\log(N)$ messages total and
+completing in a total time of $\log(N)$ excluding the limitations of bandwidth.
+Whereas efficient overlay takes exactly $N$ messages and completes in
+$\log^2(N)$ time.  The overlay broadcast significantly reduces bandwidth, which
+can have a direct effect on the success of packets actually making it to the
+end peer.  Also as the overlay grows in size, storing all peers inside a single
+DHT may create other problems that cannot be resolved easily through analytical
+modeling.
 
 \section{Full Tunnel VPN Operations}
 \label{full_tunnel}
@@ -715,19 +708,6 @@ Windows using OS dependent TAP devices and bridge utilities.
 \subsection{Full Tunnel Overhead}
 \label{full_tunnel_eval}
 
-While the full tunnel client method effectively resolves the lingering problem
-of ensuring that all packets in a full tunnel will be secure, it raises an
-issue:  could the effect of having all packets traverse the VPN application be
-prohibitively expensive.  Analysis of this approach compares it with one that
-uses the traditional routing rule switch.  Figure~\ref{tab:full_tunnel_eval}
-present the ping time from a residential location to one of Google's IP
-addresses using a gateway located at the University of Florida when the VPN is
-in split tunnel mode, full tunnel using the routing rule switch, and full
-tunnel using Ethernet forwarding.  The results express that there is negligible
-difference between the full tunnel approaches.  One interesting result is the
-latency to gateways public address in the routing test, which most likely is a
-result of the ping being sent insecurely avoiding the VPN stack completely.
-
 \begin{center}
 \begin{table}
 \caption[Full tunnel evaluation]{Latency results comparing full tunnel
@@ -745,11 +725,24 @@ S[table-format=2.1,table-number-alignment=right]
 \hline &
 \multicolumn{1}{c}{Google} &
 \multicolumn{1}{c}{GW Pri} &
-\multicolumn{1}{c}{GW Pub} \\ \hline \hline
-Ethernet & 70.6 & 12.9 & 13.9 \\ \hline
-Routing & 71.4 & 13.2 & 11.0 \\ \hline
+\multicolumn{1}{c}{GW Pub} \\ \hline
+Ethernet & 70.6 & 12.9 & 13.9 \\ 
+Routing & 71.4 & 13.2 & 11.0 \\ 
 None & 66.1 & N/A & 10.9 \\ \hline
 \end{tabular*}
 \label{tab:full_tunnel_eval}
 \end{table}
 \end{center}
+
+While the full tunnel client method effectively resolves the lingering problem
+of ensuring that all packets in a full tunnel will be secure, it raises an
+issue:  could the effect of having all packets traverse the VPN application be
+prohibitively expensive.  Analysis of this approach compares it with one that
+uses the traditional routing rule switch.  Figure~\ref{tab:full_tunnel_eval}
+present the ping time from a residential location to one of Google's IP
+addresses using a gateway located at the University of Florida when the VPN is
+in split tunnel mode, full tunnel using the routing rule switch, and full
+tunnel using Ethernet forwarding.  The results express that there is negligible
+difference between the full tunnel approaches.  One interesting result is the
+latency to gateways public address in the routing test, which most likely is a
+result of the ping being sent insecurely avoiding the VPN stack completely.

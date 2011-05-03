@@ -42,17 +42,17 @@ below.
 \caption{VPN Network Classifications}
 \label{tab:vpn_types}
 \begin{tabular}{p{1.5in}p{4.5in}} \hline
-Type & Description \\ \hline \hline
+Type & Description \\ \hline
 Centralized & Clients communicate through one or more servers which are statically
-configured \\ \hline
+configured \\
 Centralized Servers / P2P Clients & Servers provide authentication, session management, and
 optionally relay traffic; peers may communicate directly with each
-other via P2P links if NAT traversal succeeds\\ \hline
+other via P2P links if NAT traversal succeeds\\
 Decentralized Servers and Clients & No distinction between clients and servers;
 each member in the system authenticates directly with each other; links between
-members must be explicitly defined \\ \hline
+members must be explicitly defined \\
 Unstructured P2P & No distinction between clients and servers; members either know
-the entire network or use broadcast to discover routes between each other \\ \hline
+the entire network or use broadcast to discover routes between each other \\
 Structured P2P & No distinction between clients and servers; members are usually
 within $O(\log N)$ hops of each other via a greedy routing algorithm; use
 distributed data store for discovery \\ \hline
@@ -185,26 +185,26 @@ components differing between the two approaches are:
 
 \begin{itemize}
 
-\item SOFTWARE LOCATION. Interfaces execute the software on each VPN connected
-resource, whereas any machine connected to the same LAN as a Router will be
-able to access the VPN.  The Router requires a dedicated resource.
+\item {\bf Software Location}. Interfaces execute the software on each VPN
+connected resource, whereas any machine connected to the same LAN as a Router
+will be able to access the VPN.  The Router requires a dedicated resource.
 
-\item NETWORK CONFIGURATION. Since the Interface software runs on each machine,
-it is able to directly configure networking parameters, whereas a Router must
-use external methods to configure the resources.
+\item {\bf Network Configuration}. Since the Interface software runs on each
+machine, it is able to directly configure networking parameters, whereas a
+Router must use external methods to configure the resources.
 
-\item COMMUNICATION ON A LAN. When two peers on a LAN using a VPN Interface to
-communicate, all traffic must pass through the VPN adding unnecessary overhead,
-though in a Router the two peers have a merged physical and virtual network
-between them and the traffic is able to bypass the VPN.
+\item {\bf Communication on a LAN}. When two peers on a LAN using a VPN
+Interface to communicate, all traffic must pass through the VPN adding
+unnecessary overhead, though in a Router the two peers have a merged physical
+and virtual network between them and the traffic is able to bypass the VPN.
 
-\item FAULT TOLERANCE. The Router only has a single instance running, when it
-goes offline, all resources will lose their VPN access, whereas each individual
-resource has their own Interface and is responsible for their own VPN
-connectivity.
+\item {\bf Fault Tolerance}. The Router only has a single instance running,
+when it goes offline, all resources will lose their VPN access, whereas each
+individual resource has their own Interface and is responsible for their own
+VPN connectivity.
 
-\item COMMUNICATION OVER THE WAN. Performing encryption can be expensive and
-may limit the bandwidth available due to CPU (central processing unit)
+\item {\bf Communication Over the WAN}. Performing encryption can be expensive
+and may limit the bandwidth available due to CPU (central processing unit)
 constraints.  A Router may struggle to use all the available bandwidth, whereas
 enough Interfaces will eventually be able to use all the bandwidth.  Although
 each additional VPN Interface also has idle traffic, potentially reducing
@@ -217,7 +217,7 @@ usable bandwidth.
 \label{tab:three_models}
 \centering
 \begin{tabular}{p{.95in}p{1.25in}p{1.5in}p{2.2in}} \hline
- & Interface & Router & Hybrid \\ \hline \hline
+ & Interface & Router & Hybrid \\ \hline
 Host LAN 
 & 
 No assumption 
@@ -226,33 +226,35 @@ Ideally, VLAN
 &
 No assumption, though may have duplicate address allocation in the same subnet
 for different namespaces.\footnotemark[2]
-\\ \hline
+\\
 Host software
 &
 IPOP, tap
 &
 End node: none. Router: IPOP, tap, bridge 
 &
-IPOP, tap, VETH, bridge \\ \hline
+IPOP, tap, VETH, bridge \\
 Host overhead
 &
 CPU, memory
 & 
 End node: none. Router: CPU, memory
 &
-CPU, memory \\ \hline
+CPU, memory \\
 LAN traffic
 &
 Through IPOP
 &
-\multicolumn{2}{c|}{Bypasses IPOP} \\ \hline
+Bypasses IPOP*
+&
+Bypasses IPOP* \\
 Migration
 &
 Handled by node
 &
 Involves source and target routers
 &
-Handled by node \\ \hline
+Handled by node \\
 Tolerance to faults
 &
 Nodes are independent
@@ -900,11 +902,11 @@ S[table-format=2.2,table-number-alignment=right]
 \hline & 
 \multicolumn{1}{c}{EC2 / UF} &
 \multicolumn{1}{c}{EC2 / GoGrid} &
-\multicolumn{1}{c}{UF / GoGrid} \\ \hline \hline
+\multicolumn{1}{c}{UF / GoGrid} \\ \hline
 
-Stream Phys & 89.21 & 35.93 & 30.17\\ \hline
-Stream VN & 75.31 & 19.21 & 25.65\\ \hline
-RR Phys & 13.35 & 11.09  & 9.97 \\ \hline
+Stream Phys & 89.21 & 35.93 & 30.17\\
+Stream VN & 75.31 & 19.21 & 25.65\\
+RR Phys & 13.35 & 11.09  & 9.97 \\
 RR VN & 13.33 & 10.69 & 9.76 \\ \hline
 
 \end{tabular*}
@@ -952,8 +954,8 @@ S[table-format=4.0,table-number-alignment=right]
 \multicolumn{1}{c}{VN Interface} &
 \multicolumn{1}{c}{VN Router} &
 \multicolumn{1}{c}{VN Hybrid} &
-\multicolumn{1}{c}{Physical} \\ \hline \hline
-Stream & 109 & 325 & 324 & 327 \\ \hline
+\multicolumn{1}{c}{Physical} \\ \hline
+Stream & 109 & 325 & 324 & 327 \\
 RR & 1863 & 2277 & 2253 & 3121 \\ \hline
 \end{tabular*}
 \label{tab:cloud-lan}
@@ -966,14 +968,13 @@ RR & 1863 & 2277 & 2253 & 3121 \\ \hline
 \begin{longtable}{p{.8in}p{1.15in}p{1.3in}p{1.25in}p{1.25in}}
 \caption[Virtual Network Comparison]{Virtual Network Comparison} \\
 
-\hline & Overlay & Routing & Configuration & Miscellaneous \\ \hline \hline
+\hline & Overlay & Routing & Configuration & Miscellaneous \\ \hline
 \endfirsthead
 
 \multicolumn{5}{l}{\normalsize{Table \ref{tab:virtual_networks}. Continued}}\\
-\hline & Overlay & Routing & Configuration & Miscellaneous \\ \hline \hline
+\hline & Overlay & Routing & Configuration & Miscellaneous \\ \hline
 \endhead
 
-\hline
 IPOP
 &
 %Overlay
@@ -992,7 +993,7 @@ Common configuration shared amongst all hosts.
 Supports encrypted P2P links and end-to-end VPN tunnels (unpublished work).
 Migration possible; routes self-configure without user intervention, product of
 the P2P overlay.
-\\ \hline
+\\
 N2N
 &
 %Overlay
@@ -1010,7 +1011,7 @@ layer 2 Ethernet network.
 % Misc.
 Supports shared secrets to create private tunnels between edges.  Migration not
 discussed, but potentially free due to layer 2 approach.
-\\ \hline
+\\
 OCALA
 &
 %Overlay
@@ -1024,7 +1025,7 @@ Requires OCALA stack, overlay configuration, and IP to overlay mapping.
 &
 % Misc.
 Security is overlay based or SSH tunnels.  Migration not mentioned.
-\\ \hline
+\\
 SoftUDC VNET
 &
 %Overlay
@@ -1038,7 +1039,7 @@ Requires software on each host and one proxy per site.  Layer 2 networking.
 &
 %Misc.
 Security is not discussed nor is wide-area migration.
-\\ \hline
+\\
 ViNe
 &
 %Overlay
@@ -1054,7 +1055,7 @@ regular and ViNe networks, but no VN software needed on host.
 &
 % Misc.
 Supports encrypted tunnels between ViNe routers, migration not discussed.
-\\ \hline
+\\
 Violin
 &
 %Overlay
@@ -1071,7 +1072,7 @@ allocated an IP address space.
 % Misc.
 Security potentially through the use of SSH Tunnels.  Migration possible;
 requires reconfiguration of switches. 
-\\ \hline
+\\
 Virtuoso VNET
 &
 %Overlay
@@ -1088,7 +1089,7 @@ forward packets to local proxy.  Proxies configured to connect to other proxies.
 % Misc.
 Security through the use of SSL and SSH Tunnels.  Layer 3 migration, product of
 layer 2 virtualization.
-\\ \hline
+\\
 OpenVPN
 &
 %Overlay
@@ -1104,7 +1105,7 @@ server from pre-shared list
 %Misc
 All communication traverses central server, end to end traffic by default is not
 protected from central server
-\\ \hline
+\\
 Tinc and CloudVPN
 &
 %Overlay
@@ -1118,7 +1119,7 @@ Manual configuration
 &
 %Misc
 NAT traversal through relays only
-\\ \hline
+\\
 Hamachi
 &
 %Overlay
@@ -1136,7 +1137,7 @@ centralized server to manage the VPN
 %Misc
 Lacks portability, Linux version out of date, inability to run external relay
 servers, UDP NAT traversal
-\\ \hline
+\\
 GBridge
 &
 %Overlay
@@ -1154,7 +1155,7 @@ centralized server to manage the VPN
 %Misc
 Lacks portability and inability to run external relay servers, uses TCP NAT
 traversal
-\\ \hline
+\\
 Wippien
 &
 %Overlay
@@ -1173,7 +1174,7 @@ Requires a GUI, difficulty penetrating NATs, claims to be open source though
 most of the code is unavailable, Linux client out of date and does not support
 NAT traversal
 %Misc
-\\ \hline
+\\
 P2PVPN
 &
 %Overlay

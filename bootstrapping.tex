@@ -91,19 +91,19 @@ of a private overlay from a public overlay with consideration for network
 constrained peers.  The public overlay must support the following mechanisms as
 illustrated in Figure~\ref{fig:bootstrap}:
 
-\begin{enumerate}
+\begin{itemize}
 
-\item REFLECTION. A method for obtaining global application and IP addresses or
-identifier for a peer that can be shared with others to enable direct
-communication.
+\item {\bf Reflection}. A method for obtaining global application and IP
+addresses or identifier for a peer that can be shared with others to enable
+direct communication.
 
-\item RELAYING. A method for peers to exchange arbitrary data, when a direct IP
-link is unavailable.
+\item {\bf Relaying}. A method for peers to exchange arbitrary data, when a
+direct IP link is unavailable.
 
-\item RENDEZVOUS. A method for identifying peers interested in the same P2P
-service.
+\item {\bf Rendezvous}. A method for identifying peers interested in the same
+P2P service.
 
-\end{enumerate}
+\end{itemize}
 
 This work motivates from the belief that while small-scale P2P systems are
 attractive for decentralized systems, the overheads relating to creating and
@@ -592,8 +592,8 @@ S[table-format=2.2,table-number-alignment=right]
 \multicolumn{1}{c}{Reflection} &
 \multicolumn{1}{c}{Rendezvous} &
 \multicolumn{1}{c}{Relaying} &
-\multicolumn{1}{c}{Connected} \\ \hline \hline
-XMPP & .035 & .110 & .243 & 20.3 \\ \hline
+\multicolumn{1}{c}{Connected} \\ \hline
+XMPP & .035 & .110 & .243 & 20.3 \\
 Brunet & 3.05 & .330 & .533 & 23.22 \\ \hline
 \end{tabular*}
 \label{tab:results}
@@ -664,7 +664,6 @@ chatting between the two peers.
 \hline & Description & Reflection & Rendezvous & Relay \\ \hline
 \endhead
 
-\hline
 BitTorrent &
 Default BitTorrent implementations rely on a centralized tracker to provide the
 initial bootstrapping.  Peers can establish new connections through information
@@ -682,7 +681,7 @@ be stored with the tracker.
 &
 Peers receive each other's IP addresses from the tracker, there is no inherent
 relaying.
-\\ \hline
+\\ 
 Gnutella &
 Gnutella is a large-scale unstructured overlay with over a million peers;
 primarily, it is used for file sharing.  Gnutella consists of a couple
@@ -698,7 +697,7 @@ millions of peers, small overlays will most likely not be able to discover each
 other.
 &
 Not explicitly, could potentially utilize ping messages to exchange messages.
-\\ \hline
+\\ 
 Skype &
 Skype is a large-scale unstructured overlay, consisting of over a million
 active peers, and primarily used for voice over P2P communication.  Skype, like
@@ -715,7 +714,7 @@ application installed.  Thus Skype does support rendezvous.
 Skype applications are allowed to route messages via the Skype overlay, but
 because Skype lacks reflection, all communication must traverse the Skype
 overlay.
-\\ \hline
+\\ 
 XMPP &
 XMPP consists of a federation of distributed servers.  Peers must register an
 account with a server, though registration can be done through XMPP APIs without
@@ -733,7 +732,7 @@ other peers using the same P2P service.  Thus XMPP supports rendezvous.
 The XMPP specification allows peers to exchange arbitrary out-of-band
 communication with each other.  Most servers support this behavior, even
 when sent across the Federation.  Thus XMPP supports relaying.
-\\ \hline
+\\ 
 Kademlia~\cite{kademlia} &
 There exists two popular Kademlia systems, one used by many BitTorrent systems,
 Kad, and the other used by Gnutella, called Mojito.  Kademlia implements an
@@ -748,7 +747,7 @@ Peers can use the DHT as a rendezvous service, storing their connectivity
 information in the DHT at key location:  $hash(SERVICE)$.
 &
 An iterative structured overlay has no support for relaying messages.
-\\ \hline
+\\ 
 OpenDHT~\cite{opendht} &
 OpenDHT is a recently decommissioned DHT running on PlanetLab.  OpenDHT is
 built using Bamboo, a Pastry-like protocol~\cite{pastry}.  Pastry implements
@@ -763,7 +762,7 @@ information in the DHT at key location:  $hash(SERVICE)$.
 Because Pastry uses recursive routing, it can be used as a relay.  Furthermore,
 extensions to Pastry have enabled explicit relays called virtual
 connections~\cite{epost}.
-\\ \hline
+\\ 
 Brunet~\cite{brunet} &
 Brunet like OpenDHT is a freely available DHT running on PlanetLab, though
 still in active development.  Brunet creates a Symphony~\cite{symphony} overlay
@@ -777,7 +776,7 @@ information in the DHT at key location:  $hash(SERVICE)$.
 &
 Like Pastry, Brunet supports recursive routing and relays called
 tunnels~\cite{hpdc08_0}.
-\\ \hline
+\\ 
 \label{tab:overlays}
 \end{longtable}}}
 \end{center}

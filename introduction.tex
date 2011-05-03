@@ -52,31 +52,32 @@ following challenges:
 
 \begin{itemize}
 
-\item OVERLAY CONFIGURATION. Peers must be able to find each other in order to
-bootstrap into the overlay and to establish links with specific users inside
-the overlay.
+\item {\bf Overlay Configuration}. Peers must be able to find each other in
+order to bootstrap into the overlay and to establish links with specific users
+inside the overlay.
 
-\item CONNECTIVITY. Network asymmetries created by firewalls, NAT (network
-address translation), and Internet router outages motivate the use for VPNs.
-One approach is to route all traffic through a third party, but this incurs
-overheads.  There also exist approaches to allow two peers behind NAT devices
-to communicate directly and falling back to a relay if the two peers are behind
-too restrictive networks.
+\item {\bf Connectivity}. Network asymmetries created by firewalls, NAT
+(network address translation), and Internet router outages motivate the use for
+VPNs.  One approach is to route all traffic through a third party, but this
+incurs overheads.  There also exist approaches to allow two peers behind NAT
+devices to communicate directly and falling back to a relay if the two peers
+are behind too restrictive networks.
 
-\item PEER MANAGEMENT. To ensure reliability and trust, a distributed system
-should employ security.  Peer management involves providing and obtaining
-security credentials as well as preventing misbehaving peers from communicating
-with a user's resource or excluding them entirely from the system.
+\item {\bf Peer Management}. To ensure reliability and trust, a distributed
+system should employ security.  Peer management involves providing and
+obtaining security credentials as well as preventing misbehaving peers from
+communicating with a user's resource or excluding them entirely from the
+system.
 
-\item PRIVACY. The original intention for VPNs was network security, thus all
-communication between peers is private.  Many VPNs only secure traffic between
-hops and are thus susceptible to man-in-the-middle attacks.  Unfortunately,
-establishing end-to-end privacy can be challenging as it requires additional
-out-of-band exchanges.
+\item {\bf Privacy}. The original intention for VPNs was network security, thus
+all communication between peers is private.  Many VPNs only secure traffic
+between hops and are thus susceptible to man-in-the-middle attacks.
+Unfortunately, establishing end-to-end privacy can be challenging as it
+requires additional out-of-band exchanges.
 
-\item ENDPOINT CONFIGURATION. Applications transfer packets through a network
-interface.  Endpoint configuration is necessary to enable sending and receiving
-packets from userspace through the VPN.
+\item {\bf Endpoint Configuration}. Applications transfer packets through a
+network interface.  Endpoint configuration is necessary to enable sending and
+receiving packets from userspace through the VPN.
 
 \end{itemize}
 
@@ -439,19 +440,21 @@ p2p_nats_rfc}.  The following list focuses on the more prevalent types:
 
 \begin{itemize}
 
-\item FULL CONE. All requests from the same internal IP and port are mapped to
-a static external IP and port, thus any external host can communicate with the
-internal host once a mapping has been made.
+\item {\bf Full Cone}. All requests from the same internal IP and port are
+mapped to a static external IP and port, thus any external host can communicate
+with the internal host once a mapping has been made.
 
-\item RESTRICTED CONE. Like a full cone, but it requires that the internal host
-has sent a message to the external host before the NAT will pass the packets.
+\item {\bf Restricted Cone}. Like a full cone, but it requires that the
+internal host has sent a message to the external host before the NAT will pass
+the packets.
 
-\item PORT RESTRICTED CONE. Like a restricted cone, but it requires that the
-internal host has sent the packet to the external hosts specific port, before
-the NAT will pass packets.
+\item {\bf Port Restricted Cone}. Like a restricted cone, but it requires that
+the internal host has sent the packet to the external hosts specific port,
+before the NAT will pass packets.
 
-\item SYMMETRIC. Each source and destination pair have no relation, thus only a
-machine receiving a message from an internal host can send a message back.
+\item {\bf Symmetric}. Each source and destination pair have no relation, thus
+only a machine receiving a message from an internal host can send a message
+back.
 
 \end{itemize}
 
@@ -474,84 +477,84 @@ the privacy of its users To address these requirements, I propose a novel
 GroupVPN using structured overlays consisting of the following novel
 contributions:
 
-SECURE OVERLAYS. Typical overlays are secured using heuristics that limit the
-effects of malicious users.  Challenges of using secure sessions for
-instituting trust or security into an overlay depends on the communication
-path ways.  If the goal for the system is to support asymmetries on the
-network, then the system will have to make significant use of datagram
-technologies.  This work proposes a unique filter mechanism to support
-encrypting any form of communication between two parties and examines the
-overheads of deploying it in simulated and real environments.
+{\bf Secure Overlays}. Typical overlays are secured using heuristics that limit
+the effects of malicious users.  Challenges of using secure sessions for
+instituting trust or security into an overlay depends on the communication path
+ways.  If the goal for the system is to support asymmetries on the network,
+then the system will have to make significant use of datagram technologies.
+This work proposes a unique filter mechanism to support encrypting any form of
+communication between two parties and examines the overheads of deploying it in
+simulated and real environments.
 
-BOOTSTRAPPING AD-HOC, DECENTRALIZED SYSTEMS. Secure overlays present a
+{\bf Bootstrapping Ad-Hoc, Decentralized Systems}. Secure overlays present a
 challenge when there is a one to one mapping between overlay and VPN in order
 to securely isolate a VPN.  This stems from the fact that at any given time,
 peers may or may not be connected to the overlay.  When used in small groups,
 most or all members may be behind NATs or remain online for short periods of
 time, creating a situation where not a single user on a publicly addressable
-resource will be online, limiting the use of private overlays.  To address
-this issue, I propose the reusing of public free-to-join overlays to bootstrap
-into a private overlay.  Peers use the public overlay to find each other and
+resource will be online, limiting the use of private overlays.  To address this
+issue, I propose the reusing of public free-to-join overlays to bootstrap into
+a private overlay.  Peers use the public overlay to find each other and
 exchange connection information using secure messages.  Only peers with
 appropriate security credentials are able to join the private overlay.
 
-DECENTRALIZED RELAYS. In collaborative environments, most peers are behind NATs
-and potentially firewalls as well.  While in general most NATs are traversable
-through existing approaches, not all are.  Firewalls only complicate the
-matter.  While these peers may be able to communicate through the overlay, as
-the overlay grows, this latency can become a hinderace to usability and
-interactivity.  To improve this situation, I propose the creation of autonomic
-2-hop relays between the peers.
+{\bf Decentralized Relays}. In collaborative environments, most peers are
+behind NATs and potentially firewalls as well.  While in general most NATs are
+traversable through existing approaches, not all are.  Firewalls only
+complicate the matter.  While these peers may be able to communicate through
+the overlay, as the overlay grows, this latency can become a hinderace to
+usability and interactivity.  To improve this situation, I propose the creation
+of autonomic 2-hop relays between the peers.
 
-USING SOCIAL INFRASTRUCTURES FOR MANAGEMENT AND DISTRIBUTION OF SECURITY
-CREDENTIALS. In order to simplify the management and access to a VPN, this
-component explores the use of social networks in terms of both groups and
-peers to facilitate trust establishment for a VPN.  Beyond the contribution of
+{\bf Using Social Infrastructures For Management and Distribution of Security
+Credentials}. In order to simplify the management and access to a VPN, this
+component explores the use of social networks in terms of both groups and peers
+to facilitate trust establishment for a VPN.  Beyond the contribution of
 uniquely using social networks to establish VPN trust, this work shows how
 systems can leverage trust in an existing environments for use in another.
 
-SELF-CONFIGURING VPN ARCHITECTURES. Many existing VPN approaches require the
-users to setup their environment and do not provide a plug and play system.  In
-addition, different environments call for different types of VPNs, explicitly,
-individual users connect via their own VPN connections, while clusters may
-benefit from a shared VPN or may desire fault tolerance of having many but do
-not want the communication overhead when talking to VPN peers on the LAN.  I
-address this issue with a self-configuring VPN approach that can be applied to
-various local environments scaling from a single computer to many.
+{\bf Self-Configuring VPN Architectures}. Many existing VPN approaches require
+the users to setup their environment and do not provide a plug and play system.
+In addition, different environments call for different types of VPNs,
+explicitly, individual users connect via their own VPN connections, while
+clusters may benefit from a shared VPN or may desire fault tolerance of having
+many but do not want the communication overhead when talking to VPN peers on
+the LAN.  I address this issue with a self-configuring VPN approach that can be
+applied to various local environments scaling from a single computer to many.
 
-P2P VPN ENABLED INTERNET TRAFFIC TUNNELING. When in insecure environments such
-as browsing private information in a coffee shop, users may desire to prevent
-local users and administrators from sniffing their traffic.  Traditional VPNs
-support this behavior, but the approach is difficult to implement in P2P
-systems due to their dynamic nature.  Currently, no decentralized VPN supports
-the ability to perform this behavior.  I propose a method that not only works
-for decentralized and P2P systems but ensures a greater level of security than
-existing approaches by securing other non-VPN communication between the peer
-and gateway resources.
+{\bf PP2P VPN Enabled Internet Traffic Tunneling}. When in insecure
+environments such as browsing private information in a coffee shop, users may
+desire to prevent local users and administrators from sniffing their traffic.
+Traditional VPNs support this behavior, but the approach is difficult to
+implement in P2P systems due to their dynamic nature.  Currently, no
+decentralized VPN supports the ability to perform this behavior.  I propose a
+method that not only works for decentralized and P2P systems but ensures a
+greater level of security than existing approaches by securing other non-VPN
+communication between the peer and gateway resources.
 
-APPLICATIONS IN AD-HOC, DISTRIBUTED SYSTEMS. The value in a complex system
-like the one proposed herein can be realized when tied together for the
-creation of ad-hoc, distributed systems.  The type of system focused on in
-this dissertation is a grid.  While there are many grid topologies, approaches
-that share resources amongst users and even most that are used by a single
-user require a user with expertise in operating systems, networks, and
-middleware.  This dissertation shows the applicability of P2P VPN methods and
-techniques that can be used to create a trusted, ad-hoc, distributed grid that
-requires little if any expertise in the underlying technology being utilized.
+{\bf Applications in Ad-Hoc, Distributed Systems}. The value in a complex
+system like the one proposed herein can be realized when tied together for the
+creation of ad-hoc, distributed systems.  The type of system focused on in this
+dissertation is a grid.  While there are many grid topologies, approaches that
+share resources amongst users and even most that are used by a single user
+require a user with expertise in operating systems, networks, and middleware.
+This dissertation shows the applicability of P2P VPN methods and techniques
+that can be used to create a trusted, ad-hoc, distributed grid that requires
+little if any expertise in the underlying technology being utilized.
 
-DECENTRALIZED SOCIAL NETWORKS. Traditional approaches to social networks, such
-as Facebook and MySpace, requires trust in a third-party entity.  These
+{\bf Decentralized Social Networks}. Traditional approaches to social networks,
+such as Facebook and MySpace, requires trust in a third-party entity.  These
 third-parties mine users information for advertisements, potentially violating
 user's privacy.  This dissertation presents a decentralized social network that
 addresses real problems by taking advantage of the P2P system described herein
 by providing each user in a social network their own private overlay whose
 members constitute the friends of that individual.
 
-IMPROVED MODELS FOR DIRECT CONNECTION ESTABLISHMENT.  Originally, direct links
-in the P2P VN were based upon packet flow passing a threshold.  Through the use
-of profiling real systems and published results of Internet behavior, I have
-concluded that this model does not scale well and have design and implemented a
-model that satisfactorily solves this problem.
+{\bf Improved Models For Direct Connection Establishment}.  Originally, direct
+links in the P2P VN were based upon packet flow passing a threshold.  Through
+the use of profiling real systems and published results of Internet behavior, I
+have concluded that this model does not scale well and have design and
+implemented a model that satisfactorily solves this problem.
 
 The rest of this dissertation is organized as follows.
 Chapter~\ref{chap:vpns} overviews existing VN and VPN approaches and discusses

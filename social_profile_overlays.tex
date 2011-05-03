@@ -422,10 +422,10 @@ While structured P2P overlays have been well-studied in a variety of
 applications, their use in social profile overlays raises new interesting
 questions, including:
 
-{\bf 1) Handling small overlay networks} - P2P overlay research typically
-focuses on networks larger than the typical user's friend count (Facebook's
-average is 130\footnote{http://www.facebook.com/press/info.php?statistics}).
-Because social profile overlays are comparatively smaller, this can impact the
+{\bf Handling small overlay networks} - P2P overlay research typically focuses
+on networks larger than the typical user's friend count (Facebook's average is
+130\footnote{http://www.facebook.com/press/info.php?statistics}).  Because
+social profile overlays are comparatively smaller, this can impact the
 reliability of the overlay and availability of profile data.  A user can host
 their own profile; however when the user is disconnected it is important that
 their profile remains available even under churn. It is thus important to
@@ -434,15 +434,15 @@ problem. An optional of per-user deployment of a virtual individual server
 (VIS) and the use of replication schemes aware of a user's resources provide
 possible directions to address this issue.
 
-{\bf 2) Overlay support for low throughput, unconnected devices} - devices such
-as smart phones cannot constantly be actively connected to the overlay and the
+{\bf Overlay support for low throughput, unconnected devices} - devices such as
+smart phones cannot constantly be actively connected to the overlay and the
 connection time necessary to retrieve something like a phone number may be too
 much to make this approach useful.  Similar to the previous challenge, this
 approach could benefit from using a VIS enabling users access to their social
 overlays by proxy without establishing a direct connection to the overlay
 network.
 
-{\bf 3) Reliability of the directory and profile overlay} - Overlays are
+{\bf Reliability of the directory and profile overlay} - Overlays are
 susceptible to attacks that can nullify their usefulness.  While the profile
 overlay does have point-to-point security, in the public, directory overlay,
 the lack of any form centralization makes policing the system a complicated
@@ -456,13 +456,12 @@ methods should be used. A possible approach is to replicate public information
 within a user's profile overlay thus providing an alternative directory overlay
 for querying prior to using the public directory overlay.
 
-{\bf 4) Social profile data storage} - In previous works, DHTs have been used
-as the building blocks to form more complex distributed data stores as
-presented in Past~\cite{past} and Kosha~\cite{kosha}.  Application of data
-stores will be heavily dependent on the churn rate associated with the overlay.
-If the system lacks any reasonably stable membership, large data files may be
-corrupted while smaller data sets are completely lost.  Ideally, the usage
-model would be similar to those of Skype and Twitter, which have active
-processes for the duration of the computers usage.  In an environment like
-this, data storage would be limited only by the available bandwidth of the
-participants.
+{\bf Social profile data storage} - In previous works, DHTs have been used as
+the building blocks to form more complex distributed data stores as presented
+in Past~\cite{past} and Kosha~\cite{kosha}.  Application of data stores will be
+heavily dependent on the churn rate associated with the overlay.  If the system
+lacks any reasonably stable membership, large data files may be corrupted while
+smaller data sets are completely lost.  Ideally, the usage model would be
+similar to those of Skype and Twitter, which have active processes for the
+duration of the computers usage.  In an environment like this, data storage
+would be limited only by the available bandwidth of the participants.
