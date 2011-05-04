@@ -271,7 +271,7 @@ users own resources.
 
 \begin{center}
 \begin{table}
-\caption{Grid Middleware Comparison}
+\caption{Grid middleware comparison.}
 \footnotesize{
 \begin{tabular}[c]{p{1.6cm}p{3.25cm}p{3.4cm}p{3.2cm}p{3.05cm}} \hline
 & Description & Scalability & Job queue / submission site & API Requirements \\ \hline
@@ -833,9 +833,9 @@ Because of the demands put on Archer in terms of avoiding the overheads of
 virtualization and the perceived simplicity of managing physical resources as
 opposed to virtual resources running on top of a physical resources, many users
 have requested the ability to run Grid Appliances directly on their machine.
-Unlike clouds with machine imamges such as AMIs (Amazon Machine Image) or VM
+Unlike clouds with machine images such as AMIs (Amazon Machine Image) or VM
 appliances, physical machines images cannot be easily exported.  Most physical
-OS installed on phyiscal machines will need some some custom tailoring to
+OS installed on physical machines will need some some custom tailoring to
 handle environment specific issues.
 
 With this in mind, I moved away from stackable file systems and towards
@@ -895,11 +895,11 @@ Configuring systems can be difficult, which makes it important to have the
 ability to share the resulting system with others.  The approach of actually
 creating packages can be overly complicated for novices.  To address this
 concern, the original ``Grid Appliance'' supported a built-in mechanism to
-create packages through a stackable file system using copy-on-write, as
-describe in~\cite{vtdc}.  In this environment, the VM used 3 disks: the ``Grid
-Appliance'' base image, the software stack configured by us; a module; and a
-home disk.  In normal usage, both the base and module images are treated as
-read-only file systems with all user changes to the system being recorded by
+create packages through a stackable file system using
+copy-on-write~\cite{vtdc}.  In this environment, the VM used 3 disks: the
+``Grid Appliance'' base image, the software stack configured by us; a module;
+and a home disk.  In normal usage, both the base and module images are treated
+as read-only file systems with all user changes to the system being recorded by
 the home image, as depicted in Figure~\ref{fig:stackfs}.
 
 \begin{figure}
@@ -1000,7 +1000,7 @@ environments.  Additionally, users that wanted to multipurpose a physical
 resource may not want to run a modified kernel, while in most cloud setups the
 kernel choice is limited.
 
-I have since moved towards using the 5.0.0.0 - \\*5.255.255.255 address range.
+I have since moved towards using the 5.0.0.0 - 5.255.255.255 address range.
 Like the class E address space it is unallocated, but it requires no changes to
 any operating systems.  The only limitation is that some other VPNs also use
 it, thus a user would not be able to run two VPNs on the same address space

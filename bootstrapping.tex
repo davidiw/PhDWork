@@ -13,11 +13,12 @@ from P2P, many of these users lack the resources or expertise necessary to
 bootstrap private\footnote{In the context of this chapter, private implies that
 the overlay's purpose is not for general use. Once established, such overlays
 can support privacy in communication; however, overlay security is beyond the
-scope of this chapter and covered in more depth in chapter\ref{chap:security}.}
-P2P overlays particularly when the membership is unsteady and distributed
-across wide-area network environments where a significant amount of (or all)
-peers may be unable to initiate direct communication with each other due to
-firewalls and NAT (network address translation).
+scope of this chapter and covered in more depth in
+Chapter~\ref{chap:security}.} P2P overlays particularly when the membership is
+unsteady and distributed across wide-area network environments where a
+significant amount of (or all) peers may be unable to initiate direct
+communication with each other due to firewalls and NAT (network address
+translation).
 
 Examples of large-scale P2P systems include Skype, BitTorrent, and Gnutella.
 Skype is a voice over P2P system, whereas BitTorrent and Gnutella are used for
@@ -196,7 +197,7 @@ entry requires trusting all peers in the overlay, making it easy for malicious
 peers to inhibit system bootstrapping.  Also the approach requires that at
 least one peer be publicly addressable; if a non-publicly addressable peer
 updates the cache inadvertently, it could delay or permanently prevent peers
-from creating a P2P system.  The results reported in~\cite{bootstrapping_ddns}
+from creating a P2P system.  The reported results~\cite{bootstrapping_ddns}
 were simulation-based and did not determine how well a dynamic DNS handles
 rapid changing of name to IP mappings.
 
@@ -272,17 +273,17 @@ when either one of them have a firewall preventing UDP communication.
 Peers behind symmetric NATs cannot easily communicate with each other, since
 there is no relation between remote hosts and ports and local ports.  Further
 complicating the matter is that there are various types of symmetric NATs,
-having behaviors similar to the various cone NAT types. In~\cite{ice} the
-authors describe methods to traverse these NATs so long as there is a
-predictable pattern to port selection.  
+having behaviors similar to the various cone NAT types. There does exists
+methods to traverse these NATs so long as there is a predictable pattern to
+port selection~\cite{ice}.
 
 Unlike UDP, TCP (transmission control packet) NAT traversal is complicated by
 the state associated with TCP.  In many systems, the socket API (application
 programming interface) can be used to enable a peer to both listen for incoming
 connections and form outgoing connections using the same local addressing
-information.  According to~\cite{ice-tcp}, this method works for various types
-of systems though the success rate on NATs is low, 40\%.  Other mechanisms rely
-on out-of-band communication~\cite{pvc}, or use of complicated predictive
+information.  This method works for various types of systems though the success
+rate on NATs is low, 40\%~\cite{ice-tcp}.  Other mechanisms rely on out-of-band
+communication~\cite{pvc}, or use of complicated predictive
 models~\cite{tcp-hole-punching}.
 
 \subsection{Relaying}
@@ -389,11 +390,11 @@ Brunet is configurable at run time.
 Prior to this work, Brunet bootstrapped using a recently online cache of peers
 and IP multicast.  Brunet already supports behavior similar to STUN, such that,
 with every connection Brunet makes, peers inform each other of their view of
-the remote peers network state, a form of passive \textbf{reflection}.  Peers
+the remote peers network state, a form of passive reflection.  Peers
 also generate a unique 160-bit node identifier that can be used in the overlay
 as a directly receive packets regardless of the underlay conditions.
 
-In a single overlay, Brunet supports \textbf{relaying} either through the
+In a single overlay, Brunet supports relaying either through the
 overlay or pseudo direct connections called ``Tunnels''~\cite{hpdc08_0}, where
 peers route to each other through common neighboring connections.  The relaying
 in this context is used either to maintain a necessary overlay connection, or
@@ -404,7 +405,7 @@ discovered through reflection using the overlay relay mechanisms, dealing with
 the issue of more restrictive cone NATs and the case when the peer is behind a
 non-traversable NAT.  
 
-To support \textbf{relaying} within the scope of a private overlay, I have
+To support relaying within the scope of a private overlay, I have
 further extended Brunet's transport library to support treating an existing
 overlay as a medium for point-to-point communication. This is called a
 ``Subring'' transport, because it supports the abstraction of multiple private
@@ -415,7 +416,7 @@ delivered to the correct private destination usually by means of greedy routing
 on the public overlay.  In order to instruct peers to establish ``Subring''
 links, they exchange an identifier of the form ``brunet://P2P\_ID''.
 
-Peers store their ``Subring'' identifiers into the DHT for \textbf{rendezvous}.
+Peers store their ``Subring'' identifiers into the DHT for rendezvous.
 The DHT provides a scalable and self-maintaining mechanism for maintaining a
 bootstrap, so long as the DHT supports multiple values at the same key, as
 Brunet does.  The key used for the DHT rendezvous is a hash of the services
@@ -489,7 +490,7 @@ using ``IQ''.  Once peers have established a connection or subscription, they
 are informed through a ``Presence'' notification that the peer has come online,
 this include the full user identifier.
 
-The first form of \textbf{reflection} in XMPP is the unique client identifier.
+The first form of reflection in XMPP is the unique client identifier.
 Another is an IP reflection service available from some XMPP service providers
 called ``Jingle''~\cite{jingle}.  ``Jingle'' uses ``IQ'' to determine available
 STUN and TURN servers.  Fortunately, these services are provided free of charge
@@ -500,7 +501,7 @@ set to 0 as well as a static cookie found in all messages.
 
 In order to support the situation where two peers are unable to communicate
 through the exchanged addresses, I have extended XMPP ``IQ'' as a transport to
-support \textbf{relaying}.  Once peers has formed a connection through XMPP,
+support relaying.  Once peers has formed a connection through XMPP,
 they are able to route connection information to each other and attempt to form
 a direct connection.  In the case that this is unsuccessful, they are able to
 fall back to this link as a means to transmit P2P data.  This approach also has
@@ -510,7 +511,7 @@ reflection, eventually, if one of the peers in the system has a public address,
 it will automatically assist the other peers into forming direct links with
 each other.
 
-\textbf{Rendezvous} uses a two step approach.  First peers advertise their use
+Rendezvous uses a two step approach.  First peers advertise their use
 of private overlay in the resource identifier.  The name is hashed to ensure
 that the users complete identifier does not extend past 1,023 bytes, the
 maximum length for these identifiers.  In addition, a cryptographically
@@ -655,7 +656,7 @@ chatting between the two peers.
 \footnotesize{
 \begin{longtable}{p{.85in}p{1.5in}p{1.2in}p{1.05in}p{1.05in}}
 
-\caption[Public and research overlays]{Public and research overlays} \\
+\caption{Public and research overlays.} \\
 
 \hline & Description & Reflection & Rendezvous & Relay \\ \hline
 \endfirsthead

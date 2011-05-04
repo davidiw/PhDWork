@@ -13,7 +13,7 @@ efficiently supports these dynamic environments.  Certainly, ISP (Internet
 service providers) large scale VPNs such as Multiprotocol Label
 Switching~\cite{mpls} (MPLS) do not as well due to the manual configuration and
 expertise required.  An overview of these and the one described herein are
-presented in Table~\ref{tab:virtual_networks}
+presented in Table~\ref{tab:virtual_networks}.
 
 The organization of a VPN has a direct effect on the amount of user effort
 required to connect multiple sites.  In this regard there are two components of
@@ -39,7 +39,7 @@ below.
 
 \begin{center}
 \begin{table}
-\caption{VPN Network Classifications}
+\caption{VPN classifications}
 \label{tab:vpn_types}
 \begin{tabular}{p{1.5in}p{4.5in}} \hline
 Type & Description \\ \hline
@@ -269,12 +269,12 @@ Nodes are independent \\ \hline
 \centering
 \epsfig{file=figs/three_models.png.eps}
 
-\caption[Three VN Approaches]{Illustration of the three different deployment
-models considered in this dissertation. In VN interface mode (1), each node has
-an overlay ID and communicates to all other nodes through VN tunneling. In VN
-router mode (2), only the Router has an overlay ID and routes for a set of
-resources; LAN communication does not require VN tunneling. In hybrid mode (3),
-each host has an overlay ID; LAN communication does not require VN tunneling.}
+\caption[Three VN approaches]{Three VN approaches.  In VN interface mode (1),
+each node has an overlay ID and communicates to all other nodes through VN
+tunneling. In VN router mode (2), only the Router has an overlay ID and routes
+for a set of resources; LAN communication does not require VN tunneling. In
+hybrid mode (3), each host has an overlay ID; LAN communication does not
+require VN tunneling.}
 
 \label{fig:three_models}
 \end{figure}
@@ -391,7 +391,7 @@ through appropriate ports as opposed to broadcasting or dropping them.
 \begin{figure}
 \centering
 \epsfig{file=figs/arp.png.eps, width=4in}
-\caption{ARP request/reply interaction}
+\caption{ARP request/reply interaction.}
 \label{fig:arp}
 \end{figure}
 
@@ -445,7 +445,7 @@ This model focuses on static and dynamic addressing.
 \begin{figure}
 \centering
 \epsfig{file=figs/dhcp.png.eps, width=4in}
-\caption{DHCP client/server interaction}
+\caption{DHCP client/server interaction.}
 \label{fig:dhcp}
 \end{figure}
 
@@ -543,12 +543,12 @@ new location.  The new VMM host generates an unsolicited ARP reply which
 broadcasts to the entire network the VM's new location.  
 
 The VN Interface and Hybrid models support migration of the virtual address
-using techniques previously described in~\cite{ipop}.  This is a product of the
-decentralized, isolated overlay approach where each overlay end point has a
-one-to-one mapping to VN end point, e.g., P2P to IP.  When a VN Interface or
-Hybrid model migrates, the overlay software must reconnect to the overlay, at
-which point, packets will begin to be routed to the VN endpoint again,
-completing migration.
+using techniques previously described by Ganguly et al.~\cite{ipop}.  This is a
+product of the decentralized, isolated overlay approach where each overlay end
+point has a one-to-one mapping to VN end point, e.g., P2P to IP.  When a VN
+Interface or Hybrid model migrates, the overlay software must reconnect to the
+overlay, at which point, packets will begin to be routed to the VN endpoint
+again, completing migration.
 
 Unlike Interface and Hybrid models, the VN Router does not support a one-to-one
 mapping.  In fact, a VN router tends to have one P2P address for many IP
@@ -588,7 +588,7 @@ direct approach, as implemented in the prototype, involves the VN router
 notifying the connected host of a change in ownership, resulting in the host
 querying the DHT for the updated P2P end point.  An evaluation of trade offs in
 the migration design, while interesting, is outside the scope of this
-dissertatoin. 
+dissertation. 
 
 A static address allocation is similar to a migration without there being an
 IP:P2P value in the DHT, though without querying the DHT, the situation is
@@ -738,7 +738,7 @@ Gigabit network connectivity.  Each VM was allocated 512 MB of RAM and ran
 Debian 4.0 using a Linux 2.6.25 kernel.  The client side consisted of 4 VMs on
 5 machines.  The server side consisted of 5 VMs on one machine with 4 acting as
 servers and 1 acting as a gateway, which was necessary to control bandwidth
-into the system, done through the Linux utility \textbf{tc}~\cite{tc}, traffic
+into the system, done through the Linux utility tc~\cite{tc}, traffic
 control.  In this environment, each server had 5 clients communicating with it.
 The setup is shown in Figure~\ref{fig:gridsetup}.
 
@@ -888,7 +888,7 @@ Table~\ref{tab:cloud-wan}.
 
 \begin{center}
 \begin{table}
-\caption[WAN Results for inter-cloud networking]{WAN Results for inter-cloud
+\caption[WAN results for inter-cloud networking]{WAN results for inter-cloud
 networking.  Stream is in Mbs and RR is in trans/s (The inverse of trans/s
 would be equal to the average latency).}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}
@@ -966,7 +966,7 @@ RR & 1863 & 2277 & 2253 & 3121 \\ \hline
 \singlespacing{
 \footnotesize{
 \begin{longtable}{p{.8in}p{1.15in}p{1.3in}p{1.25in}p{1.25in}}
-\caption[Virtual Network Comparison]{Virtual Network Comparison} \\
+\caption{Virtual network comparison.} \\
 
 \hline & Overlay & Routing & Configuration & Miscellaneous \\ \hline
 \endfirsthead

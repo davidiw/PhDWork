@@ -25,8 +25,8 @@ nodes connected by overlay edges.  Security requires a means for peer
 revocation; however, current revocation techniques rely on centralized systems
 such as certificate revocation lists (CRLs). The proposed approach allows
 revocation using scalable techniques provided by the P2P overlay itself.  I
-call the completed system and the interface used to administrate it {\bf
-GroupVPN}, a novel decentralized P2P VPN.
+call the completed system and the interface used to administrate it GroupVPN, a
+novel decentralized P2P VPN.
 
 The rest of this chapter is organized as follows.  Throughout the chapter,
 there are two techniques used to evaluate my approaches, simulation and real
@@ -51,7 +51,7 @@ Throughout this paper, my quantitative evaluation environment uses both real
 deployments on PlanetLab and simulation.  The evaluation requirements dictate
 the environment used.  When the perspective of a single node is useful,
 PlanetLab's overloaded nature makes complex system analysis challenging,
-especially when attempting to simulate an instanteous behavior on a system,
+especially when attempting to simulate an instantaneous behavior on a system,
 which has random outage and delays in access.
 
 IPOP uses Brunet as the underlying P2P infrastructure for connectivity.  Brunet
@@ -191,7 +191,7 @@ improve clarity.}.
 \begin{figure}[ht]
 \centering
 \includegraphics[width=4in]{figs/private.eps}
-\caption[CDF of private overlay bootstrap time]{CDF (culmulative distribution
+\caption[CDF of private overlay bootstrap time]{CDF (cumulative distribution
 function) of the time to bootstrap a private overlay node in a private overlay
 of the size stated in the legend using a public overlay consisting of 600
 nodes.  Using a 100 ms delay like the simulator results in 9.2 and 9.3 seconds
@@ -221,7 +221,7 @@ negligible overhead for both throughput and latency, justifying the use of this
 approach to transparently deal with NAT and firewall traversal.
 
 \begin{table}[ht]
-\caption[Pathing overheads]{Pathing overheads}
+\caption{Pathing overheads.}
 \centering
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}
 l
@@ -283,7 +283,7 @@ userspace implementation of reliable streams (akin to TCP).  As such, I have
 implemented an abstraction called a security filter as presented in
 Figure~\ref{fig:security_filter}, which enables nearly transparent use of
 security libraries and protocols.  To this date, I have implemented both a
-DTLS~\cite{dtls} (dtagram transport layer security) filter using the OpenSSL
+DTLS~\cite{dtls} (datagram transport layer security) filter using the OpenSSL
 implementation of DTLS as well as a protocol that reuses cryptographic
 libraries provided by .NET that behaves similarly to IPsec.
 
@@ -356,7 +356,7 @@ used for forming secure connections.
 \begin{figure}[ht]
 \centering
 \includegraphics[width=4in]{figs/dtls.eps}
-\caption[DTLS handshake]{DTLS handshake}
+\caption{DTLS handshake.}
 \label{fig:dtls}
 \end{figure}
 
@@ -492,7 +492,7 @@ $\log(N)$ time.
 \begin{figure}[ht]
 \centering
 \includegraphics[width=4in]{figs/broadcast.eps}
-\caption[Overlay broadcast time]{Overlay broadcast time CDF.}
+\caption{Overlay broadcast time.}
 \label{fig:broadcast_cdf}
 \end{figure}
 
@@ -578,7 +578,7 @@ with a peer, is illustrated in Figure~\ref{fig:groupvpn}.
 \begin{figure}[ht]
 \centering
 \includegraphics[width=3.5in,angle=-90]{figs/groupvpn.ps}
-\caption[Bootstrapping a new GroupVPN]{Bootstrapping a new GroupVPN}
+\caption{Bootstrapping a new GroupVPN.}
 \label{fig:groupvpn}
 \end{figure}
 
@@ -597,14 +597,13 @@ as the group members trust the site to host the CA private key.
 
 Groups are very useful for coordinating a set of individuals when a subset of
 them can be used to establish trust amongst them all.  However, groups can lack
-clear and concise individuality and limit independence from the collective.  As
-noted in~\cite{socialvpn}, trust can be leveraged from existing social networks
-to create trust in other domains.  Much like that of a social network, a VPN
-consists of trusted links, tying the two together produced the
-SocialVPN~\cite{socialvpn}.  In this work, I along with my fellow researchers
-implemented a prototype for SocialVPN, which exemplifies the utility of my
-approaches in handling security both in terms of trust and session
-establishment as well as endpoint configuration of the VPN.
+clear and concise individuality and limit independence from the collective.
+Trust can be leveraged from existing social networks to create trust in other
+domains.  Much like that of a social network, a VPN consists of trusted links,
+tying the two together produced the SocialVPN~\cite{socialvpn}.  In this work,
+I along with my fellow researchers implemented a prototype for SocialVPN, which
+exemplifies the utility of my approaches in handling security both in terms of
+trust and session establishment as well as endpoint configuration of the VPN.
 
 Besides the content described in the following subsections, namely establishing
 identity and trust as well as address allocation and discovery, SocialVPN
@@ -737,7 +736,7 @@ central server goes offline, no new peers can join the VPN.
 Campagnol VPN~\cite{campagnol} provides similar features to Hamachi: a P2P VPN
 that relies on a central server for rendezvous or discovery of peers.  The key
 differences between Hamachi and Campagnol is that Campagnol is free and does
-not provide a service; users msut deploy their own rendezvous service.  The
+not provide a service; users must deploy their own rendezvous service.  The
 authors of Campagnol also state that the current approach limits the total
 number of peers sharing a VPN to 100 so not to overload the rendezvous service.
 The current implementation does not support a set of rendezvous nodes, though

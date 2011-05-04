@@ -1,7 +1,7 @@
 \chapter{EXTENSIONS TO P2P OVERLAYS AND VIRTUAL NETWORKS}
 \label{chap:extensions}
 
-This chapter contains components that extend the VPN (virtual private netwrk)
+This chapter contains components that extend the VPN (virtual private network)
 software to provide additional important features.  Many of these components
 derive from experiences and demands that have arisen as a result of the
 deployment of the VPN software in real systems.  Deployment experiences include
@@ -264,7 +264,7 @@ sets proactively creating overlap, as represented in Figure~\ref{fig:relay}.
 \begin{figure}
 \centering
 \epsfig{file=figs/relay.png.eps, width=4in}
-\caption[Motivation for relays]{Creating relays across the node address space,
+\caption[Creating relays]{Creating relays across the node address space,
 when direct connectivity is not possible.  Two members, 0000 and ABCD,  desire
 a direct connection but are unable to directly connect, perhaps due to NATs or
 firewalls.  They exchange neighbor information through the overlay and connect
@@ -308,7 +308,7 @@ would be the cause of a triangular inequality.
 \begin{figure}
 \centering
 \epsfig{file=figs/relay_motivation.png.eps, width=4in}
-\caption[Motivation for relays]{A comparison of the average all-to-all overlay
+\caption[The evaluation of relays]{A comparison of the average all-to-all overlay
 routing, two-hop relay, and direct connection latency in a Structured P2P
 environment, Brunet, using the King data set.}
 \label{fig:simulated_relays}
@@ -527,9 +527,9 @@ direct connection.
 \begin{figure}
 \centering
 \includegraphics[width=3.5in]{figs/connections.eps}
-\caption[Time to form a direct connection]{CDF of the connection establishment
-time for secure and security-free Chota and On-demand connections in an overlay
-of 1,024 nodes and a drop rate of .00925\%.}
+\caption[Time to form a direct connection]{CDF for direct connection
+establishment of secure and security-free Chota and On-demand connections in an
+overlay of 1,024 nodes and a drop rate of 0.835\%.}
 \label{fig:connections}
 \end{figure}
 
@@ -645,7 +645,7 @@ explored to provide intelligent selection and load balancing of gateways.
 VPN Clients wishing to use full tunnel must redirect their default traffic to
 their VN device.  In the prototype VPN model, a virtual IP address is allocated
 for the purpose of providing distributed VN services DHCP and DNS.  This same
-address is used as the the default gateway's IP.  Because this IP address never
+address is used as the default gateway's IP.  Because this IP address never
 appears in a Internet bound packet, only its Ethernet address does, as shown in
 Figure~\ref{fig:tunnel_packet}, this approach enables the use of any and
 multiple remote gateways.

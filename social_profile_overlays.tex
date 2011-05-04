@@ -29,7 +29,7 @@ Structured P2P overlays provide a scalable, resilient, autonomic platform for
 distributed applications.  Structured overlays enable users to easily create
 their own decentralized systems for the purpose of data sharing, interactive
 activities, and other networking-enabled activities.  This chapter is based
-upon my previous work~\cite{groupvpn, bootstrapping} discussed in chapters
+upon my previous work~\cite{groupvpn, bootstrapping} discussed in Chapters
 \ref{chap:bootstrapping} and \ref{chap:security} to enable social network
 profile overlays.  These works address the challenges of bootstrapping secure,
 private overlays in environments constrained by network address translators
@@ -81,7 +81,7 @@ challenges introduced by this approach.
 \section{Related Works}
 \label{vpo:background}
 
-In~\cite{peerson}, Buchegger et al. describe how to use a DHT (distributed hash
+Buchegger et al.~\cite{peerson} describe how to use a DHT (distributed hash
 table) to store social networking profile.  The DHT provides look-up services
 for storing meta-data pertaining to a peer's profile.  Peers query the DHT for
 updated content from their friends by hashing their unique identifiers (e.g.
@@ -94,7 +94,7 @@ all peers in the overlay.  The private overlay provides a clean abstraction of
 access control, whereby once admitted to a private overlay, users can access a
 distributed data store which holds the contents of the owner's profile.
 
-Shakimov et al. in \cite{vis-a-vis} take a different approach by depending on
+Shakimov et al.~\cite{vis-a-vis} take a different approach by depending on
 virtual individual servers (VIS) hosted on a cloud infrastructure such as
 Amazon EC2. Friends contact each other's VIS directly for updates.  A DHT is
 used as a directory for groups and interest-based searches. Their approach
@@ -106,7 +106,7 @@ have  asymmetric connectivity and does not require constant up time through the
 use of NAT traversal support and the ability to store the profile in the
 overlay's distributed data store.
 
-The approach presented by Cutillo et al. in~\cite{matryoshka} relies on a
+The approach presented by Cutillo et al.~\cite{matryoshka} relies on a
 central system to host identities and certificates that can then be used to
 query a DHT to discover an initial hop in a route to a specific peer through
 their circle of friends.  The circle of friends consists of an unstructured
@@ -117,8 +117,8 @@ from a central entity, whereas OverSoc makes a clean break from all
 centralization and enables scalability through distributed replication
 techniques.
 
-Unlike the above approaches, the P2P social network presented by Abbas et al.
-in~\cite{tribler-osn} uses an unstructured overlay without a DHT where peers
+Unlike the above approaches, the P2P social network presented by Abbas et
+al.~\cite{tribler-osn} uses an unstructured overlay without a DHT where peers
 connect directly to each other rather than through the overlay establishing
 unique identifiers to deal with dynamic IPs.  Peers cache each other's data to
 improve availability, while helper nodes are used to assist with communication
