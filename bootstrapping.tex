@@ -20,8 +20,8 @@ significant amount of (or all) peers may be unable to initiate direct
 communication with each other due to firewalls and NAT (network address
 translation).
 
-Examples of large-scale P2P systems include Skype, BitTorrent, and Gnutella.
-Skype is a voice over P2P system, whereas BitTorrent and Gnutella are used for
+Examples of large-scale P2P systems include Skype$^\registered$, BitTorrent$^\registered$, and Gnutella.
+Skype$^\registered$ is a voice over P2P system, whereas BitTorrent$^\registered$ and Gnutella are used for
 file sharing.  The bootstrapping in these systems typically relies on overlay
 maintainers using high availability systems for bootstrapping, bundling their
 connection information with the application distribution.  The application then
@@ -34,7 +34,7 @@ In smaller-scale systems, P2P interests focus on decentralization.  For
 example, users may desire to run an application at many distributed sites, but
 the application lacks dedicated central servers to provide discovery or
 rendezvous service for peers.  In contrast, dedicated, centralized P2P service
-providers, such as LogMeIn's Hamachi, a P2P VPN (virtual private network), may
+providers, such as LogMeIn's Hamachi$^\registered$, a P2P VPN (virtual private network), may
 collect usage data, which the users may wish to remain private, or are not free
 for use.
 
@@ -52,7 +52,7 @@ interaction with the P2P component.
 \begin{figure}
 \centering
 \epsfig{file=figs/bootstrap.eps, width=5.5in}
-\caption{Bootstrapping a P2P system using an existing (generic) overlay.}
+\caption{Bootstrapping a P2P system using an existing (generic) overlay}
 \label{fig:bootstrap}
 \end{figure}
 
@@ -82,8 +82,8 @@ be accessible.
 
 To address this, I have explored the possibility of using existing public
 overlays as a means to bootstrap private overlays.  There are many existing
-public overlays with high availability, such as Skype, Gnutella, XMPP
-(Extensible Messaging and Presence Protocol), and BitTorrent; by leveraging
+public overlays with high availability, such as Skype$^\registered$, Gnutella, XMPP
+(Extensible Messaging and Presence Protocol), and BitTorrent$^\registered$; by leveraging
 these systems, system integrators can easily enable users to seamlessly
 bootstrap their own private P2P systems.  In the preceding paragraphs, I have
 identified the components necessary for bootstrapping a homogeneous system; in
@@ -115,7 +115,7 @@ interaction.
 The requirements are presented and verified in the context of two prototype
 implementations: a XMPP / Jabber~\cite{xmpp} and Brunet~\cite{brunet}.
 XMPP-based overlays are commonly used as chat portals, such as GoogleTalk and
-Facebook Chat.  XMPP also supports an overlay amongst servers forming through
+Facebook$^\registered$ Chat.  XMPP also supports an overlay amongst servers forming through
 the XMPP Federation, which allows inter-domain communication amongst chat
 peers, so that users from various XMPP servers can communicate with each other.
 Brunet provides generic P2P abstractions as well as an implementation of the
@@ -149,7 +149,7 @@ bootstrap resources.  Peers desiring to join the overlay query bootstrap nodes,
 until a successful connection is made to one.  The bootstrap server will then
 assist in connecting the peer to other nodes in the P2P system.  Bootstrap
 nodes are either packaged with the application at distribution time or through
-a meta data file, such as in BitTorrent.  Drawbacks to this approach for small,
+a meta data file, such as in BitTorrent$^\registered$.  Drawbacks to this approach for small,
 ad-hoc pools include that the same server would have to be used every time to
 bootstrap the system, or users would have to reconfigure their software to
 connect to new bootstrap servers over time; at least one peer must have a
@@ -163,7 +163,7 @@ caches.  For small, ad-hoc networks, a host cache acts no differently than a
 centralized rendezvous point, requiring that at least one peer has a publicly
 accessible address.
 
-``P2P VPN's''~\cite{p2pvpn} use of a BitTorrent tracker is similar to the host
+``P2P VPN's''~\cite{p2pvpn} use of a BitTorrent$^\registered$ tracker is similar to the host
 cache concept.  The tracker hosts file meta data and peers involved in sharing.
 For the VPN, the peer registers a virtual file used to organize the peers, a
 form of rendezvous.  Each peer in the VPN queries the tracker regarding the
@@ -171,9 +171,9 @@ file, registers its IP address, and receives other active ``sharers'' IP
 addresses.  Peers on public addresses or using UPnP (universal plug and play)
 are able to receive incoming connections from all other peers.  The problem
 with this approach is that it is heavily user-driven.  A user must register
-with each BitTorrent tracker individually and maintain a connection with each
-of them, in order to handle cases where BitTorrent trackers go offline.  In
-addition, this does not use the BitTorrent trackers in a normal fashion, so it
+with each BitTorrent$^\registered$ tracker individually and maintain a connection with each
+of them, in order to handle cases where BitTorrent$^\registered$ trackers go offline.  In
+addition, this does not use the BitTorrent$^\registered$ trackers in a normal fashion, so it
 may be banned by tracker hosts.
 
 Research has shown that peers can use the locality properties of recent IP
@@ -342,7 +342,7 @@ style usually provide an efficient means for rendezvous, thus reducing the
 network and time overhead of finding another peer.  For example, in the case of
 a DHT, peers can use a single DHT key to store multiple values, all of which
 would be addresses used to communicate with peers in the overlay.
-Alternatively, in a system like BitTorrent, peers could use the same tracker
+Alternatively, in a system like BitTorrent$^\registered$, peers could use the same tracker
 and become ``seeds'' to the same virtual file.
 
 \section{Implementations}
@@ -370,8 +370,8 @@ The application of structured overlays as the basis private overlays focuses on
 the autonomous, self-managing property of the overlay network rather than the
 ability to scale to very large numbers.  This has also been the motivation of
 related work which has employed structured overlays in systems in the order of
-10s to 100s of nodes.  For example, Amazon's shopping cart runs on
-Dynamo~\cite{dynamo} using a ``couple of hundred of nodes'' or less.  Facebook
+10s to 100s of nodes.  For example, Amazon$^\registered$'s shopping cart runs on
+Dynamo~\cite{dynamo} using a ``couple of hundred of nodes'' or less.  Facebook$^\registered$
 provides an inbox search system using Cassandra~\cite{cassandra} running on
 ``600+ cores''.  Structured overlays simplify organization of an overlay and
 provide each member a unique identifier abstracted from the underlying network.
@@ -458,7 +458,7 @@ than 1000 lines of code.
 \begin{center}
 \begin{figure}
 \epsfig{file=figs/bootstrap_brunet.eps, width=5.5in}
-\caption{Bootstrapping a P2P system using Brunet.}
+\caption{Bootstrapping a P2P system using Brunet}
 \label{fig:bootstrap_brunet}
 \end{figure}
 \end{center}
@@ -603,11 +603,11 @@ Brunet & 3.05 & .330 & .533 & 23.22 \\ \hline
 
 \subsection{Deployment Experiences}
 
-Recently, Facebook announced that they would be supporting XMPP as a means to
-connect to Facebook chat.  This was rather exciting and further motivated this
-work, as Facebook has over 400 million active users, which would have made
+Recently, Facebook$^\registered$ announced that they would be supporting XMPP as a means to
+connect to Facebook$^\registered$ chat.  This was rather exciting and further motivated this
+work, as Facebook$^\registered$ has over 400 million active users, which would have made
 their XMPP overlay, potentially, the largest free-to-join overlay.
-Unfortunately, Facebook does not employ a traditional XMPP setup, instead it
+Unfortunately, Facebook$^\registered$ does not employ a traditional XMPP setup, instead it
 provides a proxy into their chat network, preventing features like arbitrary
 IQs and other forms of out-of-band messages to be exchanged between peers.
 User identifiers are also translated, so a peer cannot obtain a remote peers
@@ -656,7 +656,7 @@ chatting between the two peers.
 \footnotesize{
 \begin{longtable}{p{.85in}p{1.5in}p{1.2in}p{1.05in}p{1.05in}}
 
-\caption{Public and research overlays.} \\
+\caption{Public and research overlays} \\
 
 \hline & Description & Reflection & Rendezvous & Relay \\ \hline
 \endfirsthead
@@ -665,16 +665,16 @@ chatting between the two peers.
 \hline & Description & Reflection & Rendezvous & Relay \\ \hline
 \endhead
 
-BitTorrent &
-Default BitTorrent implementations rely on a centralized tracker to provide the
+BitTorrent$^\registered$ &
+Default BitTorrent$^\registered$ implementations rely on a centralized tracker to provide the
 initial bootstrapping.  Peers can establish new connections through information
 obtained from established connections.  This relegates the tracker as a means
-of monitoring the state of the file distribution.  BitTorrent specifies a
+of monitoring the state of the file distribution.  BitTorrent$^\registered$ specifies a
 protocol, though each client may support additional features not covered by the
 protocol.
 &
 The current specification does not support NAT traversal, though future
-versions may potentially use UDP NAT traversal.  At which point, BitTorrent may
+versions may potentially use UDP NAT traversal.  At which point, BitTorrent$^\registered$ may
 support a reflection service.
 &
 Peers can register as seeds to the same file hash, thus their IP address will
@@ -699,21 +699,21 @@ other.
 &
 Not explicitly, could potentially utilize ping messages to exchange messages.
 \\ 
-Skype &
-Skype is a large-scale unstructured overlay, consisting of over a million
-active peers, and primarily used for voice over P2P communication.  Skype, like
-Gnutella, also has super peers, though the owners of Skype provide
-authentication and bootstrap servers.  Though Skype is free-to-join, it
+Skype$^\registered$ &
+Skype$^\registered$ is a large-scale unstructured overlay, consisting of over a million
+active peers, and primarily used for voice over P2P communication.  Skype$^\registered$, like
+Gnutella, also has super peers, though the owners of Skype$^\registered$ provide
+authentication and bootstrap servers.  Though Skype$^\registered$ is free-to-join, it
 requires registration to use.
 &
-Skype APIs provide no means for reflection.
+Skype$^\registered$ APIs provide no means for reflection.
 &
-Skype supports applications, or add-ons, which can used to transparently
+Skype$^\registered$ supports applications, or add-ons, which can used to transparently
 broadcast queries to a users friend to determine if the peer has the
-application installed.  Thus Skype does support rendezvous.
+application installed.  Thus Skype$^\registered$ does support rendezvous.
 &
-Skype applications are allowed to route messages via the Skype overlay, but
-because Skype lacks reflection, all communication must traverse the Skype
+Skype$^\registered$ applications are allowed to route messages via the Skype$^\registered$ overlay, but
+because Skype$^\registered$ lacks reflection, all communication must traverse the Skype$^\registered$
 overlay.
 \\ 
 XMPP &
@@ -727,7 +727,7 @@ creation, servers exchange XMPP Federation signed certificates.
 While not provided by all XMPP servers, there exist extensions for NAT
 traversal.  GoogleTalk, for example, provides both STUN and TURN servers.
 &
-Similar to Skype, XMPP friends can broadcast queries to each other to find
+Similar to Skype$^\registered$, XMPP friends can broadcast queries to each other to find
 other peers using the same P2P service.  Thus XMPP supports rendezvous.
 &
 The XMPP specification allows peers to exchange arbitrary out-of-band
@@ -735,7 +735,7 @@ communication with each other.  Most servers support this behavior, even
 when sent across the Federation.  Thus XMPP supports relaying.
 \\ 
 Kademlia~\cite{kademlia} &
-There exists two popular Kademlia systems, one used by many BitTorrent systems,
+There exists two popular Kademlia systems, one used by many BitTorrent$^\registered$ systems,
 Kad, and the other used by Gnutella, called Mojito.  Kademlia implements an
 iterative structured overlays, where peers query each other directly when
 searching the overlay.  Thus all resources of a Kademlia overlay must have

@@ -259,18 +259,17 @@ neighbor sets through the overlay.  Upon receiving this list, the two peers use
 the overlap in the neighbor sets to form a two-hop connection.  In this work, I
 have further extended this model to support cases when nodes do not have an
 overlap set.  This involves having the peers connect to each other's neighbor
-sets proactively creating overlap, as represented in Figure~\ref{fig:relay}.
+sets proactively creating overlap.  In Figure~\ref{fig:relay}, two members,
+0000 and ABCD,  desire a direct connection but are unable to directly connect,
+perhaps due to NATs or firewalls.  They exchange neighbor information through
+the overlay and connect to one of each other's neighbors, creating an overlap.
+The overlap then becomes a relay path (represented by dashed lines), improving
+performance over routing across the entire overlay.
 
 \begin{figure}
 \centering
 \epsfig{file=figs/relay.png.eps, width=4in}
-\caption[Creating relays]{Creating relays across the node address space,
-when direct connectivity is not possible.  Two members, 0000 and ABCD,  desire
-a direct connection but are unable to directly connect, perhaps due to NATs or
-firewalls.  They exchange neighbor information through the overlay and connect
-to one of each other's neighbors, creating an overlap.  The overlap then
-becomes a relay path (represented by dashed lines), improving performance over
-routing across the entire overlay.}
+\caption{Creating relays}
 \label{fig:relay}
 \end{figure}
 
@@ -308,9 +307,8 @@ would be the cause of a triangular inequality.
 \begin{figure}
 \centering
 \epsfig{file=figs/relay_motivation.png.eps, width=4in}
-\caption[The evaluation of relays]{A comparison of the average all-to-all overlay
-routing, two-hop relay, and direct connection latency in a Structured P2P
-environment, Brunet, using the King data set.}
+\caption{A comparison of all-to-all overlay
+routing, two-hop relay, and direct connection in Brunet}
 \label{fig:simulated_relays}
 \end{figure}
 
@@ -329,21 +327,19 @@ overlay would significantly benefit from the use of two-hop relays.
 
 In this experiment, I share my experiences of testing the use of latency-aware
 relays using the public P2P pool running on Planet-Lab as well as Hamachi-Free
-and Hamachi-Pro relays.  Due to Hamachi not supporting relays in Linux, this
-experiment was performed in Windows Vista 64-bit.  Hamachi is discussed in
+and Hamachi-Pro relays.  Due to Hamachi$^\registered$ not supporting relays in Linux, this
+experiment was performed in Windows Vista 64-bit.  Hamachi$^\registered$ is discussed in
 greater depth in Chapter~\ref{chap:vpns}.  The testing platform consists of two
 virtual machine located on the same host with a firewall preventing them from
 establishing direct connections.  All experiments were repeated 5 times using a
-clean configuration each time.  In Hamachi, this meant that the server would
+clean configuration each time.  In Hamachi$^\registered$, this meant that the server would
 need to re-evaluate NAT traversing capabilities and the optimal relay to use.
 In Brunet, this meant a new node ID and establishing relays with peers in
 different regions of the overlay.  The results are presented in
 Table~\ref{tab:relay_eval}.
 
 \begin{table}
-\caption[Relay comparison]{Results of the evaluation comparing latency and
-bandwidth of Hamachi relays and IPOP latency-aware autonomic relay selection.}
-
+\caption{Relay comparison}
 \centering
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}
 l
@@ -370,9 +366,9 @@ Latency-aware & 58.1 & 35.5 & 2245 & 1080 \\ \hline
 \label{tab:relay_eval}
 \end{table}
 
-As Hamachi was started and figured out that NAT traversal was not possible, it
+As Hamachi$^\registered$ was started and figured out that NAT traversal was not possible, it
 began using multiple different relays as evident by several different ping
-times.  Eventually Hamachi settled on a relay server and it appeared to be the
+times.  Eventually Hamachi$^\registered$ settled on a relay server and it appeared to be the
 same one every time, for both Hamachi-Free and Hamachi-Pro.  The only
 difference between Hamachi-Pro and Hamachi-Free is that in Pro there is a
 bandwidth cap of approximately 1 Mbit/s whereas Free is limited to 40 Kbit/s.
@@ -447,21 +443,14 @@ public systems provided by my research group rely on PlanetLab.
 \begin{figure}
 \centering
 \includegraphics[width=4.5in]{figs/latency_plab.eps}
-\caption[Latency in PlanetLab deployment]{Average latency in a round trip
-message between two nodes specified by the amount of hops between them.  The
-PlanetLab average is compared against data available from iPlane.  The CDF
-(cumulative distribution function) for node distance is also plotted for
-reference.}
+\caption{Latency in PlanetLab deployment compared to iPlane}
 \label{fig:latency_plab}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=4.5in]{figs/drop_rate.eps}
-\caption[Drop rate in PlanetLab deployment]{Average drop rate in a round trip
-message between two nodes specified by the amount of hops between them.  The
-PlanetLab average is compared against data available from iPlane.  The CDF for
-node distance is also plotted for reference.}
+\caption{Drop rate in PlanetLab deployment compared to iPlane}
 \label{fig:drop_rate_plab}
 \end{figure}
 
@@ -527,9 +516,7 @@ direct connection.
 \begin{figure}
 \centering
 \includegraphics[width=3.5in]{figs/connections.eps}
-\caption[Time to form a direct connection]{CDF for direct connection
-establishment of secure and security-free Chota and On-demand connections in an
-overlay of 1,024 nodes and a drop rate of 0.835\%.}
+\caption{Time to form a direct connection}
 \label{fig:connections}
 \end{figure}
 
@@ -584,10 +571,10 @@ modeling.
 \label{full_tunnel}
 
 The configuration detailed so far describes a split tunnel: a VPN connection
-that handles \emph{internal VPN traffic only, not Internet traffic}.  Prior to
-this work, only centralized VPNs currently support full tunnel: providing the
-features of a split tunnel in addition to securely forwarding \emph{all their
-Internet traffic} through a VPN gateway.  A full tunnel provides network-layer
+that handles internal VPN traffic only, not Internet traffic.  Prior to this
+work, only centralized VPNs currently support full tunnel: providing the
+features of a split tunnel in addition to securely forwarding all their
+Internet traffic through a VPN gateway.  A full tunnel provides network-layer
 privacy when a user is in a remote, insecure location such as an open wireless
 network at a coffee shop by securely relaying all Internet traffic through a
 trusted third party, the VPN gateway.  Both models are illustrated in
@@ -596,11 +583,7 @@ Figure~\ref{fig:tunnel}.
 \begin{figure}
 \centering
 \epsfig{file=figs/tunnel.png.eps, width=4in}
-\caption[An example of both full and split tunnel VPN modes]{An example of both
-full and split tunnel VPN modes.  In both, packets for the server are sent
-directly to the server.  In split tunnel mode, Internet packets bypass the VPN
-and are routed directly to the Internet.  In full tunnel mode, Internet packets
-are first routed to the VPN gateway, and then to their Internet destination.}
+\caption{An example of both full and split tunnel VPN modes}
 \label{fig:tunnel}
 \end{figure}
 
@@ -648,14 +631,13 @@ for the purpose of providing distributed VN services DHCP and DNS.  This same
 address is used as the default gateway's IP.  Because this IP address never
 appears in a Internet bound packet, only its Ethernet address does, as shown in
 Figure~\ref{fig:tunnel_packet}, this approach enables the use of any and
-multiple remote gateways.
+multiple remote gateways.  In this figure, PN and VN translate to phyiscal and
+virtual network, respectively.
 
 \begin{figure}
 \centering
 \epsfig{file=figs/tunnel_packet.png.eps, width=4in}
-\caption[The contents of a full tunnel Ethernet packet]{The contents of a full
-tunnel Ethernet packet.  PN and VN are defined as physical and virtual network,
-respectively.}
+\caption{The contents of a full tunnel Ethernet packet}
 \label{fig:tunnel_packet}
 \end{figure}
 
@@ -710,10 +692,7 @@ Windows using OS dependent TAP devices and bridge utilities.
 
 \begin{center}
 \begin{table}
-\caption[Full tunnel evaluation]{Latency results comparing full tunnel
-approaches measured in ms.  Legend: GW Pri - gateway's VPN address, GW Pub -
-gateway's VPN address, Ethernet - full tunnel Ethernet packet method, Routing -
-full tunnel routing rule switch, None - split tunnel or no VPN.}
+\caption{Full tunnel evaluation}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}
 l
 S[table-format=2.1,table-number-alignment=right]
@@ -723,12 +702,12 @@ S[table-format=2.1,table-number-alignment=right]
 }
 
 \hline &
-\multicolumn{1}{c}{Google} &
-\multicolumn{1}{c}{GW Pri} &
-\multicolumn{1}{c}{GW Pub} \\ \hline
+\multicolumn{1}{c}{Google$^\registered$} &
+\multicolumn{1}{c}{Gateway VPN address} &
+\multicolumn{1}{c}{Gateway public address} \\ \hline
 Ethernet & 70.6 & 12.9 & 13.9 \\ 
 Routing & 71.4 & 13.2 & 11.0 \\ 
-None & 66.1 & N/A & 10.9 \\ \hline
+No VPN & 66.1 & N/A & 10.9 \\ \hline
 \end{tabular*}
 \label{tab:full_tunnel_eval}
 \end{table}
@@ -739,7 +718,7 @@ of ensuring that all packets in a full tunnel will be secure, it raises an
 issue:  could the effect of having all packets traverse the VPN application be
 prohibitively expensive.  Analysis of this approach compares it with one that
 uses the traditional routing rule switch.  Figure~\ref{tab:full_tunnel_eval}
-present the ping time from a residential location to one of Google's IP
+present the ping time from a residential location to one of Google$^\registered$'s IP
 addresses using a gateway located at the University of Florida when the VPN is
 in split tunnel mode, full tunnel using the routing rule switch, and full
 tunnel using Ethernet forwarding.  The results express that there is negligible

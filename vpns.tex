@@ -63,7 +63,7 @@ distributed data store for discovery \\ \hline
 
 \subsection{Centralized VPN Systems}
 
-OpenVPN is an open and well-documented platform for deploying centralized VPNs.
+OpenVPN$^\registered$ is an open and well-documented platform for deploying centralized VPNs.
 In this dissertation, it is used as the basis for understanding centralized
 VPNs as it represents features common to most centralized VPNs.
 
@@ -93,15 +93,15 @@ the computing overhead on communication.
 
 \subsection{Centralized P2P VPN Systems}
 
-Hamachi~\cite{hamachi} is the first well-known centralized VPN that used the
+Hamachi$^\registered$~\cite{hamachi} is the first well-known centralized VPN that used the
 ambiguous moniker ``P2P VPN''.  In reality, these systems are better classified
 as centralized VPN servers with P2P (peer-to-peer) links.  Similar VPNs include
-Wippien~\cite{wippien}, Gbridge~\cite{gbridge}, PVC~\cite{pvc}, and
+Wippien~\cite{wippien}, Gbridge$^\registered$~\cite{gbridge}, PVC~\cite{pvc}, and
 P2PVPN\footnote{Due to the similarities between the name P2PVPN and focus of
 this dissertation, ``P2PVPN'' refers to ~\cite{p2pvpn} and ``P2P VPN'' to to
 the use of P2P in VPNs.}~\cite{p2pvpn}.  The P2P in these systems is limited to
 direct connectivity between clients orchestrated through a central server: in
-Wippien it is a chat server, while P2PVPN uses a BitTorrent tracker.  If NAT
+Wippien it is a chat server, while P2PVPN uses a BitTorrent$^\registered$ tracker.  If NAT
 (network address translation) traversal or firewalls prevent direct
 connectivity, the central server can act as a relay.  Each approach uses their
 own security protocols with most using a server to verify the authenticity and
@@ -113,9 +113,9 @@ decentralized organization.
 Some examples of systems that assist in distributing load in VPN systems are
 tinc~\cite{tinc}, CloudVPN~\cite{cloudvpn}, ViNe~\cite{vine}, VNET~\cite{vnet},
 and Violin~\cite{violin}.  These systems are not autonomic and require explicit
-specification of links between resources.  This means that, like OpenVPN, these
+specification of links between resources.  This means that, like OpenVPN$^\registered$, these
 systems can suffer VPN outages when nodes go offline, thus administrators must
-maintain the VPN connection table.  Unlike OpenVPN, these approaches typically
+maintain the VPN connection table.  Unlike OpenVPN$^\registered$, these approaches typically
 do not require all-to-all direct connectivity for all-to-all communication.
 Users can either setup out-of-band NAT traversal or route through relays.  Links
 are manually configured.
@@ -152,24 +152,25 @@ Cryptographic hashes like SHA (Secure Hash Algorithm) and MD5 (Message-Digest
 algorithm 5) can be used to obtain the key's overlay address from a string or
 some other byte array.
 
-In~\cite{pcgrid07, i3}, a method for address allocation is described by using
-the DHT (distributed hash table).  Each VPN has a unique name or namespace,
-when a peer requests an IP address, a mapping of $hash(namespace, IP)$ to the
-peers overlay address is atomically written to the DHT.  A success implies that
-the writer was the first writer to that value and other peers reading that
-value will be able to identify that peer as owner of that IP address in that
-namespace.  Likewise when a peer wants to route a packet to a remote VPN peer,
-they query the DHT using the mapping, which returns the overlay address.  The
-IP packet is then sent to the overlay destination.
+Ganguly et al.~\cite{pcgrid07} and Stoica et al.~\cite{i3} describe methods for
+address allocation using a DHT (distributed hash table).  Each VPN has a unique
+name or namespace, when a peer requests an IP address, a mapping of
+$hash(namespace, IP)$ to the peers overlay address is atomically written to the
+DHT.  A success implies that the writer was the first writer to that value and
+other peers reading that value will be able to identify that peer as owner of
+that IP address in that namespace.  Likewise when a peer wants to route a
+packet to a remote VPN peer, they query the DHT using the mapping, which
+returns the overlay address.  The IP packet is then sent to the overlay
+destination.
 
 Unicast messages are sent between two end points on the overlay using normal
 overlay routing mechanisms.  Direct overlay links can be used to improve
-performance between end points.  ~\cite{ipop} describes a method by which peers
-can form autonomic direct connections with each other using an unstructured
-overlay.  As IP traffic increases over a period of time, a direct connection to
-bypass the overlay is initiated by the receiver of the packets.  Alternatively,
-a VPN may wish to form all-to-all connections with VPN peers as described
-in~\cite{cops08}.
+performance between end points.  Ganguly et al.~\cite{ipop} describes a method
+by which peers can form autonomic direct connections with each other using an
+unstructured overlay.  As IP traffic increases over a period of time, a direct
+connection to bypass the overlay is initiated by the receiver of the packets.
+Alternatively, a VPN may wish to form all-to-all connections with VPN
+peers~\cite{cops08}.
 
 To support broadcast and multicast in an overlay, all members of a subnet
 associate through the DHT by placing their overlay address at a specific key,
@@ -268,14 +269,7 @@ Nodes are independent \\ \hline
 \begin{figure}
 \centering
 \epsfig{file=figs/three_models.png.eps}
-
-\caption[Three VN approaches]{Three VN approaches.  In VN interface mode (1),
-each node has an overlay ID and communicates to all other nodes through VN
-tunneling. In VN router mode (2), only the Router has an overlay ID and routes
-for a set of resources; LAN communication does not require VN tunneling. In
-hybrid mode (3), each host has an overlay ID; LAN communication does not
-require VN tunneling.}
-
+\caption{Three VN approaches: router, interface, and hybrid}
 \label{fig:three_models}
 \end{figure}
 
@@ -283,29 +277,28 @@ This dissertation identifies methods by which a single software stack can be
 implemented to support self-configuration and resource migration in a way that
 is platform independent.  This method lends itself to a new architecture known
 as Hybrid, allowing an instance to be run on each VPN resource but enabling
-direct communication amongst peers on a LAN as described in~\cite{sc09}.  The
-architectures are shown communicating via an overlay in
-Figure~\ref{fig:three_models} and compared in Table~\ref{tab:three_models}.
-The two aspects that need configuration in the local configuration beyond the
-VPN architecture are address allocation, obtaining and setting an IP address on
-a resource, and address resolution, determining where to route a VPN packet.
-The keys to creating this environment involve the use of standard network
-protocols implemented uniformly across operating systems, including DHCP and
-ARP (address resolution protocol).  Many applications make use of names instead
-of IP addresses to resolve peers, as such a naming system, like DNS (domain
-name service) is almost as important as address resolution and allocation.  A
-state machine representation of this architecture is shown in
-Figure~\ref{fig:vn}.
+direct communication amongst peers on a LAN~\cite{sc09}.  The architectures are
+shown communicating via an overlay in Figure~\ref{fig:three_models} and
+compared in Table~\ref{tab:three_models}.  The two aspects that need
+configuration in the local configuration beyond the VPN architecture are
+address allocation, obtaining and setting an IP address on a resource, and
+address resolution, determining where to route a VPN packet.  The keys to
+creating this environment involve the use of standard network protocols
+implemented uniformly across operating systems, including DHCP and ARP (address
+resolution protocol).  Many applications make use of names instead of IP
+addresses to resolve peers, as such a naming system, like DNS (domain name
+service) is almost as important as address resolution and allocation.  A state
+machine representation of this architecture is shown in Figure~\ref{fig:vn}.
+In this representation, a VN interface is identical to a VN router with the
+caveat that the TAP device is not bridged, thus isolating the VN traffic.  The
+``Should Handle'' with dashed lines is a feature that is specific to the VN
+hybrid; that is, a VN hybrid must be configured to communicate for a single
+network device.
 
 \begin{figure}[ht]
 \centering
 \epsfig{file=figs/vn.png.eps, width=\textwidth}
-\caption[The state diagram of a self-configuring VN.]{The state diagram of a
-self-configuring VN.  In this model, a VN interface is identical to a VN router
-with the caveat that the TAP device is not bridged, thus isolating the VN
-traffic.  The ``Should Handle'' with dashed lines is a feature that is specific
-to the VN hybrid; that is, a VN hybrid must be configured to communicate for a
-single network device.}
+\caption{The state diagram of a self-configuring VN}
 \label{fig:vn}
 \end{figure}
 
@@ -314,9 +307,7 @@ single network device.}
 \begin{figure}
 \centering
 \epsfig{file=figs/tap_workstation.png.eps, width=\textwidth}
-\caption[VN Interface]{A VN deployed as an interface for single machine usage.
-The user of the machine is presented two interfaces on two different IP subnets.
-All non-VN subnet based traffic is routed normally via the default interface.}
+\caption{VN interface}
 \label{fig:interface}
 \end{figure}
 
@@ -334,11 +325,7 @@ VPN.  TAP device virtualizes a bridge to other physical networks.
 \begin{figure}
 \centering
 \epsfig{file=figs/tap_cluster.png.eps, width=4in}
-\caption[VN Router]{A VN deployed as a router providing virtual network access
-for an entire layer 2 network.  Each machine in the network only has a VN-based
-address, though they can communicate directly with each other (and with proper
-routing rules and NAT setup the Internet as well).  The machine hosting the VN
-can also have an IP address in the network by assigning one to the bridge.}
+\caption{VN router}
 \label{fig:router}
 \end{figure}
 
@@ -363,11 +350,7 @@ example, DHCP does not work on aliased network cards.
 \begin{figure}
 \centering
 \epsfig{file=figs/tap_hybrid.png.eps, width=4in}
-\caption[VN Hybrid]{A VN deployed in a hybrid mode providing virtual network
-access for a single machine but bypassing the VN when a VN peer is local.  This
-model is similar to having two network cards from a single machine going to one
-switch.  The key feature is that this model allows a machine to be in multiple
-IP address space subnets and have layer 2 traffic as well.}
+\caption{VN hybrid}
 \label{fig:hybrid}
 \end{figure}
 
@@ -391,7 +374,7 @@ through appropriate ports as opposed to broadcasting or dropping them.
 \begin{figure}
 \centering
 \epsfig{file=figs/arp.png.eps, width=4in}
-\caption{ARP request/reply interaction.}
+\caption{ARP request/reply interaction}
 \label{fig:arp}
 \end{figure}
 
@@ -445,15 +428,15 @@ This model focuses on static and dynamic addressing.
 \begin{figure}
 \centering
 \epsfig{file=figs/dhcp.png.eps, width=4in}
-\caption{DHCP client/server interaction.}
+\caption{DHCP client/server interaction}
 \label{fig:dhcp}
 \end{figure}
 
-The network components configurable by DHCP as defined by~\cite{dhcp0,dhcp1}
-that are interesting to a VPN are addresses, routing, and other networking
-related features.  While many different client and servers exist, they all tend
-to support the basic features of allowing the server to specify to a client and
-IP address, a gateway address, and domain name servers.  As shown in
+The network components configurable by DHCP~\cite{dhcp0,dhcp1} that are
+interesting to a VPN are addresses, routing, and other networking related
+features.  While many different client and servers exist, they all tend to
+support the basic features of allowing the server to specify to a client and IP
+address, a gateway address, and domain name servers.  As shown in
 Figure~\ref{fig:dhcp}, the steps in DHCP are:
 
 \begin{enumerate}
@@ -522,7 +505,7 @@ use in resource consolidation in the server industry as well as the domain of
 cloud computing.  Providers of cloud computing services have adopted virtual
 machines as the unit of granularity for providing services and service level
 agreement to the users.  Users are billed according to the number of VMs and
-their uptime. Major cloud-computing providers including Amazon EC2 (Elastic
+their uptime. Major cloud-computing providers including Amazon$^\registered$ EC2 (Elastic
 Cloud 2) and Go-Grid have adopted Xen as the virtualization platform for their
 services and sell compute resources in the form of virtual machines.
 
@@ -623,23 +606,14 @@ communicate only after migration finishes.
 \begin{figure}
 \centering
 \epsfig{file=figs/Migration.png.eps, width=\textwidth}
-\caption[VN Router migration]{The VN operations that occur after a guest (VM)
-has been migrated.  (1) The destination retrieves the P2P information of the
-source from the DHT and optimistically places its information into the DHT.
-(2) The destination requests that the source delete its information from the
-DHT.  (3)  The source confirms that the VM is no longer present and performs
-the delete.  (4)  The source notifies the destination that its request has
-finished successfully.}
+\caption{VN router migration}
 \label{fig:migration_ring}
 \end{figure}
 
 \begin{figure}
 \centering
 \epsfig{file=figs/migration_results.png.eps, width=3.5in}
-\caption[VN Router migration evaluation]{VN Router migration evaluation.  Over
-50 different IPs migrated about 10 times each.  The average was 20.11 seconds
-with a standard deviation of 10.89.  In this experiment, the majority of this
-time comes from VN migration, whereas VM migration requires less than a second.}
+\caption{VN router migration evaluation}
 \label{fig:mig}
 \end{figure}
 
@@ -647,11 +621,11 @@ time comes from VN migration, whereas VM migration requires less than a second.}
 
 This experiments explores bandwidth and latency in a distributed VPN system to
 motivate the usage of P2P links in a VPN.  The VPNs used are include the
-prototype, which extends from IPOP; OpenVPN; and Hamachi.  OpenVPN represents a
-typical centralized VPN, while Hamachi represents a well-tuned P2P-link VPN.
-The evaluation was performed on Amazon EC2 using small instance sized Ubuntu
-i386 instances to create various sized networks ranging from 1 to 32.  OpenVPN
-uses an additional node as the central server and Hamachi has an upper bound of
+prototype, which extends from IPOP; OpenVPN$^\registered$; and Hamachi$^\registered$.  OpenVPN$^\registered$ represents a
+typical centralized VPN, while Hamachi$^\registered$ represents a well-tuned P2P-link VPN.
+The evaluation was performed on Amazon$^\registered$ EC2 using small instance sized Ubuntu
+i386 instances to create various sized networks ranging from 1 to 32.  OpenVPN$^\registered$
+uses an additional node as the central server and Hamachi$^\registered$ has an upper bound of
 16 due to limitations in the Linux version at the time of this evaluation.  To
 perform bandwidth tests, the instances are booted and query an NFS for the list
 virtual IP addresses, peers are ordered such that half the peers are act as
@@ -662,14 +636,14 @@ no knowledge of each other, except the virtual IP addresses, thus connection
 startup costs are included in the test.  Test are run for 10 minutes diluting
 the connection initiation overhead but represent an example of real usage.
 Results from the clients are polled at all locations and averaged together,
-though the OpenVPN server is measured separately.  IPOP and OpenVPN use
-authenticated 128-bit AES, while Hamachi does not allow configuration of the
-security parameters and uses the default Hamachi settings.
+though the OpenVPN$^\registered$ server is measured separately.  IPOP and OpenVPN$^\registered$ use
+authenticated 128-bit AES, while Hamachi$^\registered$ does not allow configuration of the
+security parameters and uses the default Hamachi$^\registered$ settings.
 
 \begin{figure}
 \centering
 \epsfig{file=figs/latency.eps}
-\caption{System transaction rate for various VPN approaches.}
+\caption{System transaction rate for various VPN approaches}
 \label{fig:latency}
 \end{figure}
 
@@ -678,9 +652,9 @@ and bandwidth respectively.  Latency is measured in transactions of successful
 request/reply messages.  In the latency test, it is obvious that having the
 central server increases the delay between the client and server and the results
 degrade more quickly as additional peers are added to the system.  In small
-systems, OpenVPN shines probably due to optimized software, though as the system
+systems, OpenVPN$^\registered$ shines probably due to optimized software, though as the system
 grows, the system bandwidth does not.  By the time 8 peers have entered into
-the system, both decentralized approaches perform better than the OpenVPN
+the system, both decentralized approaches perform better than the OpenVPN$^\registered$
 solution.  To summarize, decentralized VPN approaches provide better
 scalability, which can be immediately noticed by low latency times and, as the
 system grows, available bandwidth.
@@ -688,7 +662,7 @@ system grows, available bandwidth.
 \begin{figure}
 \centering
 \epsfig{file=figs/bandwidth.eps}
-\caption{System bandwidth for various VPN approaches.}
+\caption{System bandwidth for various VPN approaches}
 \label{fig:bandwidth}
 \end{figure}
 
@@ -709,7 +683,7 @@ involved. The evaluation focuses on CPU as experience suggest that this is the
 most significant limiting factor.  As will be presented, the CPU load offered
 by these models depends on the bandwidth of the underlying network link, since
 a larger bandwidth requires more processing of packets.  The tools for
-evaluating these VN models are Netperf and SPECjbb.
+evaluating these VN models are Netperf and SPECjbb$^\registered$.
 
 Netperf~\cite{netperf} is used to estimate the latency and bandwidth of the
 different VN models. The latency is measured by deploying Netperf in the
@@ -721,7 +695,7 @@ both directions.  Since both latency and bandwidth are dependent on the CPU
 comparison, evaluations that include CPU utilization tasks require creating
 a baseline first where only Netperf is the only active workload.
 
-SPECjbb~\cite{specjbb} simulates a three-tier web application with all the
+SPECjbb$^\registered$~\cite{specjbb} simulates a three-tier web application with all the
 clients, the middle tier, and the database running on a single system in a
 single address space (inside a Java virtual machine). On completion, the
 benchmark provides the metric in terms of business of operations per second
@@ -738,21 +712,31 @@ Gigabit network connectivity.  Each VM was allocated 512 MB of RAM and ran
 Debian 4.0 using a Linux 2.6.25 kernel.  The client side consisted of 4 VMs on
 5 machines.  The server side consisted of 5 VMs on one machine with 4 acting as
 servers and 1 acting as a gateway, which was necessary to control bandwidth
-into the system, done through the Linux utility tc~\cite{tc}, traffic
-control.  In this environment, each server had 5 clients communicating with it.
-The setup is shown in Figure~\ref{fig:gridsetup}.
+into the system, done through the Linux utility tc~\cite{tc}, traffic control.
+In this environment, each server had 5 clients communicating with it.  The
+setup is shown in Figure~\ref{fig:gridsetup}.  The VM ``Servers'' ran
+SPECjbb$^\registered$ and were also the site for the collection of the netperf
+benchmarks.  All the VM ``Servers'' were connected through the TC Gateway
+through host-only networking to the VM ``Clients''.  All traffic for the VM
+``Servers'' passes through the TC Gateway, which also doubled as the Router in
+the Router experiments.
 
 \begin{figure}
 \centering
 \epsfig{file=figs/grid_setup.png.eps, width=4in}
-\caption[Grid evaluation setup]{The system setup for the grid experiments.  The
-VM ``Servers'' ran SPECjbb and were also the site for the collection of the
-netperf benchmarks.  All the VM ``Servers'' were connected through the TC
-Gateway through host-only networking to the VM ``Clients''.  All traffic for
-the VM ``Servers'' passes through the TC Gateway, which also doubled as the
-Router in the Router experiments.}
+\caption{Grid evaluation setup}
 \label{fig:gridsetup}
 \end{figure}
+
+All the evaluations presented in Figures \ref{fig:stream.netperf},
+\ref{fig:rr.netperf}, \ref{fig:stream.spec}, and \ref{fig:rr.spec} are marked
+up in the same fashion.  The evaluations were performed with and without a
+SPECjbb$^\registered$ load.  Lines are of the form (no spec, spec).(phys,
+interface, router).  Where ``spec'' indicates SPECjbb$^\registered$ benchmark
+is active, while ``no spec'' indicates that SPECJbb is inactive. ``phys''
+implies the absence of IPOP with benchmarks occurring directly over the
+``physical'' network card.  ``interface'' and ``router'' present the results
+for VN interface and Router respectively.
 
 The maximum bandwidth of 600 Mbps is achieved when neither virtual network nor
 traffic shaping are enabled (``no spec.phys'' at 1000 Mbps limit in
@@ -767,26 +751,14 @@ data up to this limit.
 \begin{figure}
 \centering
 \includegraphics[width=4in]{figs/stream.netperf.jpg.eps}
-\caption[Grid Netperf bandwidth evaluation]{Netperf TCP Stream bandwidth
-measurements with and without SPECjbb load.  Lines are of the form (no spec,
-spec).(phys, interface, router).  Where ``spec'' indicates SPECjbb benchmark is
-active, while ``no spec'' indicates that SPECJbb is inactive. ``phys'' implies
-the absence of IPOP with benchmarks occurring directly over the ``physical''
-network card.  ``interface'' and ``router'' present the results for VN
-interface and Router respectively.}
+\caption{Grid Netperf bandwidth (TCP STREAM) evaluation}
 \label{fig:stream.netperf}
 \end{figure}
 
 \begin{figure}
 \centering
 \includegraphics[width=4in]{figs/rr.netperf.jpg.eps}
-\caption[Grid Netperf latency evaluation]{Netperf TCP RR latency measurements
-with and without SPECjbb load.  Lines are of the form (no spec, spec).(phys,
-interface, router).  Where ``spec'' indicates SPECjbb benchmark is active,
-while ``no spec'' indicates that SPECJbb is inactive. ``phys'' implies the
-absence of IPOP with benchmarks occurring directly over the ``physical''
-network card.  ``interface'' and ``router'' present the results for VN
-interface and Router respectively.}
+\caption{Grid Netperf latency (TCP RR) evaluation}
 \label{fig:rr.netperf}
 \end{figure}
 
@@ -801,19 +773,13 @@ contention caused by VN processing on end nodes. For the same reason, the
 Router tends to achieve better SPEC results (Figure~\ref{fig:stream.spec}) than
 the interface.  Figure~\ref{fig:rr.netperf} shows that the Router performs
 poorly compared to the interface model in terms of transactions/second, though
-it achieves a better ratio of SPECjbb score (Figure~\ref{fig:rr.spec}) to
+it achieves a better ratio of SPECjbb$^\registered$ score (Figure~\ref{fig:rr.spec}) to
 transactions than the interface at constrained bandwidths (less than 5 Mbps).
 
 \begin{figure}
 \centering
 \includegraphics[width=4in]{figs/stream.spec.jpg.eps}
-\caption[Grid SPECjbb evaluation, Stream load]{SPECjbb scores with and without
-Netperf Stream load.  Lines are of the form spec.(control, phys, interface,
-router).  ``spec'' implies that SPECJbb executes in all tests.  In ``control''
-Netperf is inactive, that is, it is the maximum attainable value for SPECJbb.
-``phys'' implies the absence of IPOP with benchmarks occurring directly over
-the ``physical'' network card.  ``interface'' and ``router'' present the
-results for VN interface and router models respectively.}
+\caption{Grid SPECjbb evaluation with Netperf TCP STREAM load}
 \label{fig:stream.spec}
 \end{figure}
 
@@ -821,13 +787,7 @@ results for VN interface and router models respectively.}
 \begin{figure}
 \centering
 \includegraphics[width=4in]{figs/rr.spec.jpg.eps}
-\caption[Grid SPECjbb evaluation, RR load]{SPECjbb scores with and without
-Netperf RR load.  Lines are of the form spec.(control, phys, interface,
-router).  ``spec'' implies that SPECJbb executes in all tests.  In ``control''
-Netperf is inactive, that is, it is the maximum attainable value for SPECJbb.
-``phys'' implies the absence of IPOP with benchmarks occurring directly over
-the ``physical'' network card.  ``interface'' and ``router'' present the
-results for VN interface and router models respectively.}
+\caption{Grid SPECjbb evaluation with Netperf TCP RR load}
 \label{fig:rr.spec}
 \end{figure}
 
@@ -858,7 +818,7 @@ setting a network interface into promiscuous mode.
 The goal of this experiment is to demonstrate the feasibility of connecting
 multiple cloud providers as well as local resources together through virtual
 networking.  The sites chosen for evaluation were local resources at University
-of Florida and cloud resources provided by Amazon EC2 and GoGrid.  A
+of Florida and cloud resources provided by Amazon$^\registered$ EC2 and GoGrid$^\registered$.  A
 qualitative observation here was that the differences in the networking
 infrastructure exposed by different cloud providers reinforce the importance of
 the virtual network to allow flexibility in how end nodes are connected.
@@ -866,11 +826,11 @@ Specific network configurations for the clouds were as follows:
 
 \begin{itemize}
 
-\item Amazon EC2 provides static IP networking (public and private), no
+\item Amazon$^\registered$ EC2 provides static IP networking (public and private), no
 Ethernet connectivity, and no ability to reconfigure IP addresses for network.
 Currently, only the VN interface model is supported.
 
-\item GoGrid provides 3 interfaces (one public, statically configured, and two
+\item GoGrid$^\registered$ provides 3 interfaces (one public, statically configured, and two
 private, which can be configured in any manner); the 2 private interfaces are
 on separate VLANs supporting Ethernet connectivity. The VN interface, router,
 and hybrid models are supported.
@@ -879,18 +839,16 @@ and hybrid models are supported.
 
 This experiment narrows down the performance evaluation to focus on WAN and LAN
 performance of VNs in cloud environments and consider Netperf single
-client-server interactions only. Amazon only supports Interface mode, thus it
+client-server interactions only. Amazon$^\registered$ only supports Interface mode, thus it
 is only evaluated in the WAN experiment. It has been observed that, within
-Amazon, the VN is able to self-organize direct overlay connections~\cite{wow}.
+Amazon$^\registered$, the VN is able to self-organize direct overlay connections~\cite{wow}.
 Each test was run 5 times for 30 seconds, the standard deviation for all
 results was less than 1.  Because of this, only the average is presented in
 Table~\ref{tab:cloud-wan}.
 
 \begin{center}
 \begin{table}
-\caption[WAN results for inter-cloud networking]{WAN results for inter-cloud
-networking.  Stream is in Mbs and RR is in trans/s (The inverse of trans/s
-would be equal to the average latency).}
+\caption{WAN results for inter-cloud networking}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}
 l
 S[table-format=2.2,table-number-alignment=right]
@@ -901,13 +859,13 @@ S[table-format=2.2,table-number-alignment=right]
 
 \hline & 
 \multicolumn{1}{c}{EC2 / UF} &
-\multicolumn{1}{c}{EC2 / GoGrid} &
-\multicolumn{1}{c}{UF / GoGrid} \\ \hline
+\multicolumn{1}{c}{EC2 / GoGrid$^\registered$} &
+\multicolumn{1}{c}{UF / GoGrid$^\registered$} \\ \hline
 
-Stream Phys & 89.21 & 35.93 & 30.17\\
-Stream VN & 75.31 & 19.21 & 25.65\\
-RR Phys & 13.35 & 11.09  & 9.97 \\
-RR VN & 13.33 & 10.69 & 9.76 \\ \hline
+Stream Phys (Mbs) & 89.21 & 35.93 & 30.17\\
+Stream VN (Mbs) & 75.31 & 19.21 & 25.65\\
+RR Phys (Trans. / s) & 13.35 & 11.09  & 9.97 \\
+RR VN (Trans. / s) & 13.33 & 10.69 & 9.76 \\ \hline
 
 \end{tabular*}
 \label{tab:cloud-wan}
@@ -915,15 +873,15 @@ RR VN & 13.33 & 10.69 & 9.76 \\ \hline
 \end{center}
 
 It can be seen in Table~\ref{tab:cloud-wan} that the VN adds little overhead in
-the Netperf-RR experiment. Between UF and GoGrid as well as between UF and
-Amazon EC2, the overhead for the Stream experiment was about 15\%.  This may be
+the Netperf-RR experiment. Between UF and GoGrid$^\registered$ as well as between UF and
+Amazon$^\registered$ EC2, the overhead for the Stream experiment was about 15\%.  This may be
 attributed to the additional per-packet overhead of the VN and the small MTU
 set for the VN interface (1200).  The MTU, or maximum transmission unit, is the
 largest packet that is sent from an interface.  IPOP conservatively limits the
 VN MTU to 1200 down from the default 1500 to allow for overlay headers and to
 work properly with poorly configured routers, which has encountered in
 practical deployments.  A more dynamic MTU, which will improve performance, is
-left as future work.  The EC2 / GoGrid experiment had greater overhead which
+left as future work.  The EC2 / GoGrid$^\registered$ experiment had greater overhead which
 could possibly be attributed to by the VM encapsulation of cloud resources.
 
 Table~\ref{tab:cloud-lan} shows that some of the performance expectations for
@@ -937,10 +895,7 @@ interface.
 
 \begin{center}
 \begin{table}
-\caption[LAN results performed at GoGrid]{LAN results performed at GoGrid.
-Stream is in Mbs and RR is in trans/s.  Interface and Physical used the eth0
-NIC, while Router and Hybrid used eth1.  Different VLANs may give different
-results.}
+\caption{LAN results performed at GoGrid}
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}
 l
 S[table-format=4.0,table-number-alignment=right]
@@ -955,8 +910,8 @@ S[table-format=4.0,table-number-alignment=right]
 \multicolumn{1}{c}{VN Router} &
 \multicolumn{1}{c}{VN Hybrid} &
 \multicolumn{1}{c}{Physical} \\ \hline
-Stream & 109 & 325 & 324 & 327 \\
-RR & 1863 & 2277 & 2253 & 3121 \\ \hline
+Stream (Mbs) & 109 & 325 & 324 & 327 \\
+RR (Trans. / s) & 1863 & 2277 & 2253 & 3121 \\ \hline
 \end{tabular*}
 \label{tab:cloud-lan}
 \end{table}
@@ -966,7 +921,7 @@ RR & 1863 & 2277 & 2253 & 3121 \\ \hline
 \singlespacing{
 \footnotesize{
 \begin{longtable}{p{.8in}p{1.15in}p{1.3in}p{1.25in}p{1.25in}}
-\caption{Virtual network comparison.} \\
+\caption{Virtual network comparison} \\
 
 \hline & Overlay & Routing & Configuration & Miscellaneous \\ \hline
 \endfirsthead
@@ -1090,7 +1045,7 @@ forward packets to local proxy.  Proxies configured to connect to other proxies.
 Security through the use of SSL and SSH Tunnels.  Layer 3 migration, product of
 layer 2 virtualization.
 \\
-OpenVPN
+OpenVPN$^\registered$
 &
 %Overlay
 Centralized
@@ -1120,7 +1075,7 @@ Manual configuration
 %Misc
 NAT traversal through relays only
 \\
-Hamachi
+Hamachi$^\registered$
 &
 %Overlay
 Centralized Discovery, P2P links
@@ -1181,7 +1136,7 @@ P2PVPN
 Centralized Discovery, P2P links
 &
 %Routing
-Peers discover each other through a BitTorrent tracker and attempt to form
+Peers discover each other through a BitTorrent$^\registered$ tracker and attempt to form
 direct links with each other, attempts to form all-to-all connectivity, if
 direct links are unavailable, indirect links can be used to forward packets
 &

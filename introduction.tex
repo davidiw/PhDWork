@@ -95,12 +95,12 @@ other directly if and when possible; and all communication, not just
 hop-by-hop, should be secure.
 
 While existing VPNs are able to meet some of these requirements, they are
-unable to meet them all.  Centralized approaches (e.g.  OpenVPN~\cite{openvpn})
+unable to meet them all.  Centralized approaches (e.g.  OpenVPN$^\registered$~\cite{openvpn})
 by their very nature require dedicated infrastructures and do not allow direct
 communication between peers, though when configured to do so are able to
 guarantee all-to-all communication regardless of NAT and firewall conditions.
-P2P based approaches (e.g.  Hamachi~\cite{hamachi}, Wippien~\cite{wippien},
-Gbridge~\cite{gbridge}, PVC~\cite{pvc}) solve the issue of direct
+P2P based approaches (e.g.  Hamachi$^\registered$~\cite{hamachi}, Wippien~\cite{wippien},
+Gbridge$^\registered$~\cite{gbridge}, PVC~\cite{pvc}) solve the issue of direct
 communication, though they are vulnerable to man-in-the-middle attacks when
 session management is handled by an external provider, rely on a central
 resource for the creation of VPN links, and require managed relays if direct
@@ -122,7 +122,7 @@ search for each other by querying the DHT and then use constructs provided by
 the P2P layer to form direct links or relays with remote peers.  Peer
 management is handled through common social networking interfaces such as
 dedicated group infrastructures or relationships based upon XMPP (Extensible
-Messaging and Presence Protocol) or Facebook.  Both the VPN and the overlay are
+Messaging and Presence Protocol) or Facebook$^\registered$.  Both the VPN and the overlay are
 secured by a common security filter framework, which can be decentrally located
 and bootstrapped through existing overlays.  Finally, through various VPN
 models, users and system administrators can take the same VPN software and
@@ -144,13 +144,7 @@ implemented.
 \begin{figure}
 \centering
 \epsfig{file=figs/vpn.png.eps, width=4in}
-
-\caption[A typical VPN client]{A typical VPN client.  A VN device makes
-application interaction with the VPN transparent.  Packets going to the VPN
-destination are sent by routing rules to the VN device interfaced by the VPN
-client.  The VPN client sends and receives packets from other VPN participants
-via the hosts physical network device.}
-
+\caption{A typical VPN client}
 \label{fig:vpn}
 \end{figure}
 
@@ -179,19 +173,20 @@ Secrets can be packaged with the VPN application, so long as it is distributed
 through secure channels such as authenticated HTTPS (hypertext transfer
 protocol secure).
 
-A VN device allows networking applications to communicate transparently over
-the VPN.  The VN device provides mechanisms for injecting incoming packets into
-and retrieving outgoing packets from the networking stack, enabling the use of
-common network APIs such as Berkeley Sockets, allowing existing applications to
-work over the VPN without modification.  While there are many different types
-of VN devices, TAP~\cite{tap} stands out from the rest due to its open source
-and pervasive nature.  TAP allows the creation of one or more Virtual Ethernet
-and / or IP devices and is available for almost all modern operating systems
-including Windows, Linux, Mac OS/X, BSD, and Solaris.  A TAP device presents
-itself as a character device providing read and write operations.  Incoming
-packets from the VPN are written to the TAP device and the networking stack in
-the OS delivers the packet to the appropriate socket.  Outgoing packets from
-local sockets are read from the TAP device.
+A VN device as presented in Figure~\ref{fig:vpn} allows networking applications
+to communicate transparently over the VPN.  The VN device provides mechanisms
+for injecting incoming packets into and retrieving outgoing packets from the
+networking stack, enabling the use of common network APIs such as Berkeley
+Sockets, allowing existing applications to work over the VPN without
+modification.  While there are many different types of VN devices,
+TAP~\cite{tap} stands out from the rest due to its open source and pervasive
+nature.  TAP allows the creation of one or more Virtual Ethernet and / or IP
+devices and is available for almost all modern operating systems including
+Windows, Linux, Mac OS/X, BSD, and Solaris.  A TAP device presents itself as a
+character device providing read and write operations.  Incoming packets from
+the VPN are written to the TAP device and the networking stack in the OS
+delivers the packet to the appropriate socket.  Outgoing packets from local
+sockets are read from the TAP device.
 
 VN devices are no different than any other network device.  They can be
 configured manually through command-line tools or OS' APIs (application
@@ -223,15 +218,15 @@ organizing, through a dedicated centralized resource. Clients never communicate
 with each other directly, but rather every message between two clients must
 traverse the server.  For instance, most online social networks (OSNs) are
 representative of these type of systems.  Users of OSNs like
-Facebook~\cite{facebook} and MySpace~\cite{myspace} communicate through
+Facebook$^\registered$~\cite{facebook} and MySpace$^\registered$~\cite{myspace} communicate through
 centralized environments, never directly to each other's computers.
-OpenVPN~\cite{openvpn} represents this VPN approach.  These systems rely on
+OpenVPN$^\registered$~\cite{openvpn} represents this VPN approach.  These systems rely on
 dedicated resources.  In the situation that a server goes offline or becomes
 overwhelmed by the clients, the system is rendered useless.
 
 Centralized organization and decentralized communication systems include the
-first set of popular P2P systems, such as the original Napster, Kazaa, and VPNs
-like Hamachi~\cite{hamachi}.  Similar to the client-server model, clients
+first set of popular P2P systems, such as the original Napster$^\registered$, Kazaa$^\registered$, and VPNs
+like Hamachi$^\registered$~\cite{hamachi}.  Similar to the client-server model, clients
 connect to a server to find other clients, though instead of communicating
 through the server, the clients form direct connections with each other.  These
 approaches are limited by network address translation (NAT) and firewalls that
@@ -269,7 +264,7 @@ In structured overlays, peers organize into topologies by deterministically
 forming connections with peers nearby in the overlay address space creating
 structures such as ring and hybercubes.  Peers can be found deterministically
 using greedy routing approaches in usually $\log(N)$ time.
-Gnutella~\cite{gnutella} file sharing system and Skype~\cite{skype} are popular
+Gnutella~\cite{gnutella} file sharing system and Skype$^\registered$~\cite{skype} are popular
 examples of unstructured systems, while P2PSIP~\cite{p2psip} and distributed
 hash tables (DHTs)~\cite{chord} are popular in structured systems.  A challenge
 in unstructured systems is finding data objects in reasonable amount of time,
@@ -416,11 +411,7 @@ isolation for their local networks.
 \begin{figure}
 \centering
 \epsfig{file=figs/NAT.eps, width=5in}
-\caption[A typical NAT interaction]{A typical NAT interaction. The peer behind
-a NAT has a private address.  When the packet is sent through the NAT, the NAT
-translates the source information into a public mapping, keeping the original
-source information so that if a packet from the remote peer comes back, it can
-be translated and delivered to the original source.}
+\caption{Communication between a peer behind a NAT and one with a public address}
 \label{fig:nat}
 \end{figure}
 
@@ -543,7 +534,7 @@ that can be used to create a trusted, ad-hoc, distributed grid that requires
 little if any expertise in the underlying technology being utilized.
 
 {\bf Decentralized Social Networks}. Traditional approaches to social networks,
-such as Facebook and MySpace, requires trust in a third-party entity.  These
+such as Facebook$^\registered$ and MySpace$^\registered$, requires trust in a third-party entity.  These
 third-parties mine users information for advertisements, potentially violating
 user's privacy.  This dissertation presents a decentralized social network that
 addresses real problems by taking advantage of the P2P system described herein

@@ -8,7 +8,7 @@ the user and the data are at the mercy of the terms dictated by the social
 network infrastructure, which today is typically third-party, centrally owned.
 If the social network engages in activities disagreeable to the user, due to
 change of terms or opt-out programs not well understood by users such as recent
-issues with Facebook's Beacon program~\cite{facebook_beacon}, the options
+issues with Facebook$^\registered$'s Beacon program~\cite{facebook_beacon}, the options
 presented to the user are limited.  The options include leaving the social
 network, surrendering their identity and features provided by the social
 network; accepting the disagreeable activities; or to petition and hope that
@@ -55,19 +55,20 @@ overlays.  Security for a profile is provided by a public key infrastructure
 (CA) and all members have signed certificates.  The overlay stores profile data
 or group information in its distributed data store, supporting decentralized
 access using scalable mechanisms regardless of the profile owner's online
-presence.  In this chapter, I present the architecture of these overlays, as
-presented in Figure~\ref{fig:spo.system}.
+presence.
+
+In this chapter, I present the architecture of these overlays, as presented in
+Figure~\ref{fig:spo.system}.  Alice has a friendship with Bob and Carol, hence
+both are members of her profile overlay. Bob has a friendship with Alice and
+Dave but not Carol; hence Alice and Dave are members of his profile overlay,
+while Carol is not.  Each peer has many overlay memberships but a single root
+represented by dashed lines in various shades of gray.  For clarity, overlay
+shortcut connections are not shown.
 
 \begin{figure}
 \centering
 \epsfig{file=figs/subrings.eps, width=\textwidth}
-\caption[An example OverSoc social overlay network]{An example OverSoc social
-overlay network.  Alice has a friendship with Bob and Carol, hence both are
-members of her profile overlay. Bob has a friendship with Alice and Dave but
-not Carol; hence Alice and Dave are members of his profile overlay, while Carol
-is not.  Each peer has many overlay memberships but a single root represented
-by dashed lines in various shades of gray.  For clarity, overlay shortcut
-connections are not shown.}
+\caption{An example OverSoc social overlay network}
 \label{fig:spo.system}
 \end{figure}
 
@@ -96,7 +97,7 @@ distributed data store which holds the contents of the owner's profile.
 
 Shakimov et al.~\cite{vis-a-vis} take a different approach by depending on
 virtual individual servers (VIS) hosted on a cloud infrastructure such as
-Amazon EC2. Friends contact each other's VIS directly for updates.  A DHT is
+Amazon$^\registered$ EC2. Friends contact each other's VIS directly for updates.  A DHT is
 used as a directory for groups and interest-based searches. Their approach
 assumes bidirectional end-to-end connectivity between each VIS, where a profile
 is only available during the up time of the VIS.  Because of the demands on
@@ -129,7 +130,7 @@ offered by a structured overlay.
 \begin{figure}
 \centering
 \epsfig{file=figs/friendship_request.eps, width=\textwidth}
-\caption{Alice requests and receives a friendship from Bob.}
+\caption{Alice requests and receives a friendship from Bob}
 \label{fig:friend_request}
 \end{figure}
 
@@ -189,7 +190,7 @@ periodically exchange signature packets.
 \begin{figure}
 \centering
 \epsfig{file=figs/friendship_join.eps, width=\textwidth}
-\caption{Alice, already a friend of Bob, connects to his social overlay.}
+\caption{Alice, already a friend of Bob, connects to his social overlay}
 \label{fig:friendship_join}
 \end{figure}
 
@@ -401,17 +402,17 @@ the message.  Prior to presenting Carol the message, the OverSoc decrypts and
 verifies the message.
 
 The OverSoc architecture can leverage existing social networks to bootstrap
-trust.  For example, consider Bob and David are two friends on Facebook.  Bob
-joins a Facebook application called ``OverSoc/Facebook Bridge'', which stores
+trust.  For example, consider Bob and David are two friends on Facebook$^\registered$.  Bob
+joins a Facebook$^\registered$ application called ``OverSoc/Facebook$^\registered$ Bridge'', which stores
 a copy of his OverSoc certificate in his personal profile.  Bob has been
 bragging to David about OverSoc and mentions to him how easy it is to migrate
-from Facebook to OverSoc using this application.  So David joins OverSoc as
+from Facebook$^\registered$ to OverSoc using this application.  So David joins OverSoc as
 well as the application.  When David accesses the application, it pastes his
 certificate to his profile, notifies notifies him that he has a friend already
 using it, Bob, and that he can immediately sign Bob's certificate, and leaves a
 request for Bob to sign his certificate.  Additionally, when David logs into
 OverSoc, he can leave a friend request there as well, so that the next time
-Bob accesses Facebook or OverSoc, he will receive David's request and can sign
+Bob accesses Facebook$^\registered$ or OverSoc, he will receive David's request and can sign
 David's certificate.  At which point, both will have access to each others
 OverSoc profile overlays.  
 
@@ -423,7 +424,7 @@ applications, their use in social profile overlays raises new interesting
 questions, including:
 
 {\bf Handling small overlay networks} - P2P overlay research typically focuses
-on networks larger than the typical user's friend count (Facebook's average is
+on networks larger than the typical user's friend count (Facebook$^\registered$'s average is
 130\footnote{http://www.facebook.com/press/info.php?statistics}).  Because
 social profile overlays are comparatively smaller, this can impact the
 reliability of the overlay and availability of profile data.  A user can host
@@ -462,6 +463,6 @@ in Past~\cite{past} and Kosha~\cite{kosha}.  Application of data stores will be
 heavily dependent on the churn rate associated with the overlay.  If the system
 lacks any reasonably stable membership, large data files may be corrupted while
 smaller data sets are completely lost.  Ideally, the usage model would be
-similar to those of Skype and Twitter, which have active processes for the
+similar to those of Skype$^\registered$ and Twitter, which have active processes for the
 duration of the computers usage.  In an environment like this, data storage
 would be limited only by the available bandwidth of the participants.

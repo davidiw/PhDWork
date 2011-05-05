@@ -186,17 +186,14 @@ public network size for each of these tests was 600.  The results are presented
 in Figure~\ref{fig:private_bootstrapping}~\footnote{I performed measurements
 for many more private network sizes, but all the results were so similar that
 it did not introduce anything of interest and are omitted from the  plots to
-improve clarity.}.
+improve clarity.}.  Using a 100 ms delay like the simulator results in 9.2 and
+9.3 seconds for the analytical model for private network sizes of 68 and 147,
+respectively.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=4in]{figs/private.eps}
-\caption[CDF of private overlay bootstrap time]{CDF (cumulative distribution
-function) of the time to bootstrap a private overlay node in a private overlay
-of the size stated in the legend using a public overlay consisting of 600
-nodes.  Using a 100 ms delay like the simulator results in 9.2 and 9.3 seconds
-for the analytical model for private network sizes of 68 and 147,
-respectively.}
+\caption{CDF of private overlay bootstrap time}
 \label{fig:private_bootstrapping}
 \end{figure}
 
@@ -221,7 +218,7 @@ negligible overhead for both throughput and latency, justifying the use of this
 approach to transparently deal with NAT and firewall traversal.
 
 \begin{table}[ht]
-\caption{Pathing overheads.}
+\caption{Pathing overheads}
 \centering
 \begin{tabular*}{\textwidth}{@{\extracolsep{\fill}}
 l
@@ -282,10 +279,11 @@ that rely on reliable connections, such as SSL (secure sockets layer) or TLS
 userspace implementation of reliable streams (akin to TCP).  As such, I have
 implemented an abstraction called a security filter as presented in
 Figure~\ref{fig:security_filter}, which enables nearly transparent use of
-security libraries and protocols.  To this date, I have implemented both a
-DTLS~\cite{dtls} (datagram transport layer security) filter using the OpenSSL
-implementation of DTLS as well as a protocol that reuses cryptographic
-libraries provided by .NET that behaves similarly to IPsec.
+security libraries and protocols.  In this example, the security filter
+abstraction is used by senders and receivers through an EtE secured chat
+application.  Each receiver and sender use the same abstracted model and thus
+the chat application requires only high-level changes, such as verifying the
+certificate used is Alice's and Bob's, to support security.
 
 A security filter has two components: the manager, and individual sessions or
 filters.  While the individual sessions could act as filters by themselves, by
@@ -293,16 +291,15 @@ combining with a manager, they can be configured for a common purpose and
 security credentials.  This approach enables the use of security to be
 transparent to the other components of the system as the manager handles
 session establishment, garbage collection of expired sessions, and revocation
-of peers.
+of peers.  To this date, I have implemented both a DTLS~\cite{dtls} (datagram
+transport layer security) filter using the OpenSSL implementation of DTLS as
+well as a protocol that reuses cryptographic libraries provided by .NET that
+behaves similarly to IPsec.
 
 \begin{figure}
 \centering
 \includegraphics[width=6in]{figs/secure_sender_stack_generic.png.eps}
-\caption[Security filter]{An example of the security filter abstraction used by
-senders and receivers through an EtE secured chat application.  Each receiver
-and sender use the same abstracted model and thus the chat application requires
-only high-level changes, such as verifying the certificate used is Alice's and
-Bob's, to support security.}
+\caption{Security filter}
 \label{fig:security_filter}
 \end{figure}
 
@@ -356,7 +353,7 @@ used for forming secure connections.
 \begin{figure}[ht]
 \centering
 \includegraphics[width=4in]{figs/dtls.eps}
-\caption{DTLS handshake.}
+\caption{DTLS handshake}
 \label{fig:dtls}
 \end{figure}
 
@@ -389,14 +386,14 @@ peers in the P2P overlay immediately before and after it in the P2P address
 space.  In the simulation, a new overlay is created and afterward a new node
 joins, this is repeated 100 times.  The cumulative distribution functions
 obtained from the different experiments are presented in
-Figure~\ref{fig:add_one}.
+Figure~\ref{fig:add_one}, which uses the following notations: secure (dtls),
+insecure (nosec), PlanetLab (plab), and the Simulator (sim).
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=4in]{figs/addone.eps}
-\caption[Joining a secure overlay]{Time in seconds for a single node to join a
-secure (dtls) and insecure (nosec) structured overlay, using both PlanetLab
-(plab) and the Simulator (sim).} \label{fig:add_one}
+\caption{A single node joining an insecure and secure overlay}
+\label{fig:add_one}
 \end{figure}
 
 \subsubsection{Bootstrapping an Overlay}
@@ -408,14 +405,13 @@ about 5 different nodes in the overlay and then all attempt to connect with
 each other at the same time.  The evaluation completes after the entire overlay
 has all nodes connected and in their proper position.  For each network size,
 the test is performed 100 times and the average result is presented in
-Figure~\ref{fig:bootstrap_eval}.
+Figure~\ref{fig:bootstrap_eval}, which uses the following notations: secure
+(dtls) and insecure (nosec).
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=4in]{figs/bootstrap_time.eps}
-\caption[Bootstrapping a secure overlay]{Time in seconds for a secure (dtls)
-and insecure (nosec) structured overlay to bootstrap, given that all nodes
-bootstrap simultaneously.}
+\caption{Simulataneous bootstrapping of a secure and an insecure overlay}
 \label{fig:bootstrap_eval}
 \end{figure}
 
@@ -492,7 +488,7 @@ $\log(N)$ time.
 \begin{figure}[ht]
 \centering
 \includegraphics[width=4in]{figs/broadcast.eps}
-\caption{Overlay broadcast time.}
+\caption{Overlay broadcast time}
 \label{fig:broadcast_cdf}
 \end{figure}
 
@@ -578,12 +574,12 @@ with a peer, is illustrated in Figure~\ref{fig:groupvpn}.
 \begin{figure}[ht]
 \centering
 \includegraphics[width=3.5in,angle=-90]{figs/groupvpn.ps}
-\caption{Bootstrapping a new GroupVPN.}
+\caption{Bootstrapping a new GroupVPN}
 \label{fig:groupvpn}
 \end{figure}
 
 There are many ways of implementing and hosting the Web site.  For example,
-Google offers free hosting of Python web applications through Google Apps, an
+Google$^\registered$ offers free hosting of Python web applications through Google$^\registered$ Apps, an
 option available if the user owns a domain.  Alternatively, the user could host
 the group site on a public virtual network. In this case, peers interacting
 with the GroupVPN would need to connect with the public virtual network in
@@ -647,10 +643,10 @@ without having to establish a new trusted link first.
 
 \subsection{Leveraging Trust From Facebook}
 
-Trust or friendships already established in Facebook used a now deprecated
-technology that allowed desktop applications access to Facebook.  Certificate
-exchange relied upon a web-based data store component provided by Facebook,
-which was presented as a database.  When SocialVPN first contacts Facebook, it
+Trust or friendships already established in Facebook$^\registered$ used a now deprecated
+technology that allowed desktop applications access to Facebook$^\registered$.  Certificate
+exchange relied upon a web-based data store component provided by Facebook$^\registered$,
+which was presented as a database.  When SocialVPN first contacts Facebook$^\registered$, it
 would add the current certificate, if it did not exist and then download
 certificates for all friends that it did not already have.  Because a user
 might have more than one instance of SocialVPN running, the database was
@@ -659,17 +655,17 @@ certificates.  As mentioned earlier, each certificate contains the friends P2P
 address, which allows a peer to discover a remote peer and establish a trusted,
 direct VPN link with them.
 
-Unfortunately, Facebook's interface was poorly constructed and no longer
+Unfortunately, Facebook$^\registered$'s interface was poorly constructed and no longer
 exists.  Each application had to embed in itself private key information to
-authenticate itself with Facebook.  A malicious attacker could easily discover
-this and change the stored data to suit their needs.  While Facebook never gave
+authenticate itself with Facebook$^\registered$.  A malicious attacker could easily discover
+this and change the stored data to suit their needs.  While Facebook$^\registered$ never gave
 a reason for shutting down the desktop application component of their system,
 this is a probable reason.
 
 As an alternative, I developed a web application, which was used for a short
 period of time to replace the desktop application; however, this was fraught
 with problems.  Unlike the desktop application that only required trust with
-Facebook, the web application required hosting a third-party web site to
+Facebook$^\registered$, the web application required hosting a third-party web site to
 support the system.  The trust model is not significantly different as the
 administrator for the application has access to the trusted material
 regardless, it simply meant another centralized component.  These complications
@@ -677,10 +673,10 @@ led to the development of an XMPP-based SocialVPN.
 
 \subsection{Leveraging Trust from XMPP}
 
-Unlike Facebook, XMPP is a well standardized, open system with many individual
+Unlike Facebook$^\registered$, XMPP is a well standardized, open system with many individual
 members contributing compatible services.  Thus if one of them decides to break
 from the XMPP specification, users can easily migrate to another service
-provider.  After the unfortunate incident with Facebook, this open aspect was
+provider.  After the unfortunate incident with Facebook$^\registered$, this open aspect was
 much more attractive to SocialVPN as a research project
 
 As discussed in Section~\ref{bs:xmpp_bootstrapping}, XMPP is primarily used as
@@ -719,23 +715,23 @@ peers will have a mapping like this.
 
 \subsection{VPNs}
 
-Hamachi~\cite{hamachi} is a centralized P2P VPN provider using the web site for
+Hamachi$^\registered$~\cite{hamachi} is a centralized P2P VPN provider using the web site for
 authentication, peer discovery, and connection establishment.  While the
-Hamachi protocol claims to support various types of
+Hamachi$^\registered$ protocol claims to support various types of
 security~\cite{hamachi_security}, the implementation appears to only support
 the KDC requiring that all peers establish trusted relationship through the
-central website.  The Hamachi approach makes it easy for users to deploy their
+central website.  The Hamachi$^\registered$ approach makes it easy for users to deploy their
 own services, but places limitations on network size, uses a proprietary
 security stack, and does not allow independent VPN deployments.  In contrast,
 my approach presents a completely decoupled environment allowing peers to start
 using the shared system to bootstrap private overlays and migrate away without
 cost if need be.  Furthermore my approach relies only on a central server to
-obtain the certificate otherwise, it is decentralized.  In Hamachi, if the
+obtain the certificate otherwise, it is decentralized.  In Hamachi$^\registered$, if the
 central server goes offline, no new peers can join the VPN.
 
-Campagnol VPN~\cite{campagnol} provides similar features to Hamachi: a P2P VPN
+Campagnol VPN~\cite{campagnol} provides similar features to Hamachi$^\registered$: a P2P VPN
 that relies on a central server for rendezvous or discovery of peers.  The key
-differences between Hamachi and Campagnol is that Campagnol is free and does
+differences between Hamachi$^\registered$ and Campagnol is that Campagnol is free and does
 not provide a service; users must deploy their own rendezvous service.  The
 authors of Campagnol also state that the current approach limits the total
 number of peers sharing a VPN to 100 so not to overload the rendezvous service.
@@ -763,18 +759,18 @@ systems get larger, N2N may not be very efficient.
 
 \subsection{P2P Systems}
 
-BitTorrent~\cite{bittorrent_security}, a P2P data sharing service,  supports
-stream encryption between peers sharing files.  The purpose of BitTorrent
+BitTorrent$^\registered$~\cite{bittorrent_security}, a P2P data sharing service,  supports
+stream encryption between peers sharing files.  The purpose of BitTorrent$^\registered$
 security is to obfuscate packets to prevent traffic shaping due to packet
-sniffing. Thus BitTorrent security uses a weak stream cipher, RC4, and lacks
+sniffing. Thus BitTorrent$^\registered$ security uses a weak stream cipher, RC4, and lacks
 peer authentication as symmetric keys are exchanged through an unauthenticated
 Diffie-Hellman process.
 
-Skype~\cite{skype} provides decentralized audio and video communication to over
-a million concurrent users.  While Skype does not provide documentation
+Skype$^\registered$~\cite{skype} provides decentralized audio and video communication to over
+a million concurrent users.  While Skype$^\registered$ does not provide documentation
 detailing the security of its system, researchers~\cite{skype_auth,
-skype_overview} have discovered that Skype supports both EtE and PtP security.
-Though similar to Hamachi, Skype uses a KDC and does not let users setup their
+skype_overview} have discovered that Skype$^\registered$ supports both EtE and PtP security.
+Though similar to Hamachi$^\registered$, Skype$^\registered$ uses a KDC and does not let users setup their
 own systems.
 
 As of December 2009, the FreePastry group released an SSL enabled
